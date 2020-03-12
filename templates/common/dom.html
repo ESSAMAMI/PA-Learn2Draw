@@ -1,0 +1,57 @@
+{% block dom %}
+<!DOCTYPE html>
+<html lang="en">
+{% block head %}
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Learn2draw {% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/vendors/iconfonts/mdi/css/materialdesignicons.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/shared/style.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/demo_1/style.css')}}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='asssets/images/favicon.ico')}}" />
+</head>
+{% endblock %}
+{% block body %}
+<body class="header-fixed">
+    <nav class="t-header">
+        <div class="t-header-brand-wrapper">
+          <a href="#">
+            <!-- <img class="logo" src="{{ url_for('static', filename='assets/images/logo.svg')}}" alt="">
+            <img class="logo-mini" src="{{ url_for('static', filename='assets/images/logo_mini.svg')}}" alt=""> -->
+          </a>
+        </div>
+        <div class="t-header-content-wrapper">
+          <div class="t-header-content">
+            {% block scope %}
+            {% endblock %}
+          <!-- content viewport ends -->
+          <!-- partial:partials/_footer.html -->
+          <footer class="footer">
+            <div class="row">
+              <div class="col-sm-6 text-center text-sm-right order-sm-1">
+                <ul class="text-gray">
+                  <li><a href="#">Conditions d'utilisation</a></li>
+                  <li><a href="#">Aide</a></li>
+                </ul>
+              </div>
+              <div class="col-sm-6 text-center text-sm-left mt-3 mt-sm-0">
+                <small class="text-muted d-block">Copyright © {{ current_year }} <a href="#" target="_blank">Learn2draw</a>. All rights reserved</small>
+                <small class="text-gray mt-2">NAE <i class="mdi mdi-heart text-danger"></i></small>
+              </div>
+            </div>
+          </footer>
+          <!-- partial -->
+        </div>
+        <!-- page content ends -->
+    </div>
+    <script src="{{ url_for('static', filename='assets/vendors/js/core.js')}}"></script>
+    <script src="{{ url_for('static', filename='assets/vendors/apexcharts/apexcharts.min.js')}}"></script>
+    <script src="{{ url_for('static', filename='assets/vendors/chartjs/Chart.min.js')}}"></script>
+    <script src="{{ url_for('static', filename='assets/js/charts/chartjs.addon.js')}}"></script>
+    <script src="{{ url_for('static', filename='assets/js/template.js')}}"></script>
+    <script src="{{ url_for('static', filename='assets/js/dashboard.js')}}"></script>
+</body>
+{% endblock %}
+</html>
+{% endblock %}
