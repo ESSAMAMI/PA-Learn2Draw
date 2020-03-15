@@ -1,4 +1,5 @@
 from datetime import datetime
+from uuid import uuid4
 
 '''
     GET CURRENT DATE //
@@ -14,3 +15,8 @@ def get_ccurent_date(format="ANG", full=True) -> str:
         return today
 
     return str(today.year)
+
+def generate_token() -> str:
+
+    rand_token = uuid4()
+    return rand_token.hex
