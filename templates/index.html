@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>L2D - Accueil</title>
+
+  <!-- Bootstrap core CSS -->
+  <!--<link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">-->
+  <link href="{{ url_for('static', filename='assets/css/test/bootstrap.min.css')}}" rel="stylesheet">
+  <!-- Custom fonts for this template -->
+  <!--<link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">-->
+  <link href="{{ url_for('static', filename='assets/css/test/all.min.css')}}" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+  <link href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
+
+  <!-- Custom styles for this template -->
+  <!--<link href="css/agency.min.css" rel="stylesheet">-->
+  <link href="{{ url_for('static', filename='assets/css/test/agency.min.css')}}" rel="stylesheet">
+</head>
+
+<body id="page-top">
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav">
+    <div class="container">
+      <a class="navbar-brand js-scroll-trigger" href="/">Learn 2 draw</a>
+      <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        Menu
+        <i class="fas fa-bars"></i>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav text-uppercase ml-auto">
+          <li class="nav-item">
+            <a class="nav-link js-scroll-trigger" href="/explain"><b>Apprenez à jouer!</b></a>
+          </li>
+          <li class="nav-item" id="li-submit_connect">
+            <a class="nav-link js-scroll-trigger" href="/connection"><b>Inscription/Connexion</b></a>
+          </li>
+          <li class="nav-item" id="li-profil">
+            <a class="nav-link js-scroll-trigger" href="/user-profil"><b>Profil</b></a>
+          </li>
+          <li class="nav-item" id="li-note">
+            <a class="nav-link js-scroll-trigger" href="/score"><b>Notez!</b></a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Header -->
+  <header class="masthead">
+    <div class="container">
+      <div class="intro-text">
+        <div class="intro-lead-in">Bienvenue sur Learn 2 Draw</div>
+        <div class="intro-heading text-uppercase">Essayez notre jeu! &#128515;</div>
+        <a class="btn btn-primary btn-xl text-uppercase js-scroll-trigger" href="/play">JOUER !</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Bootstrap core JavaScript -->
+  <!--<script src="vendor/jquery/jquery.min.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>-->
+  <link href="{{ url_for('static', filename='assets/js/test/jquery.min.js')}}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='assets/js/test/bootstrap.bundle.min.js')}}" rel="stylesheet">
+
+  <!-- Plugin JavaScript -->
+  <!--<script src="vendor/jquery-easing/jquery.easing.min.js"></script>-->
+  <link href="{{ url_for('static', filename='assets/js/test/jquery.easing.min.js')}}" rel="stylesheet">
+
+  <!-- Contact form JavaScript -->
+  <!--<script src="js/jqBootstrapValidation.js"></script>
+  <script src="js/contact_me.js"></script>-->
+  <link href="{{ url_for('static', filename='assets/js/test/jqBootstrapValidation.js')}}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='assets/js/test/contact_me.js')}}" rel="stylesheet">
+
+  <!-- Custom scripts for this template -->
+  <!--<script src="js/agency.min.js"></script>-->
+  <link href="{{ url_for('static', filename='assets/js/test/agency.min.js')}}" rel="stylesheet">
+  <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+  <script type="text/javascript">
+      $( document ).ready(function() {
+        if ({{token|tojson}} != null){
+          $('#li-submit_connect').hide();
+        }else{
+           $('#li-profil').hide();
+           $('#li-note').hide();
+        }
+      });
+  </script>
+
+</body>
+
+</html>
