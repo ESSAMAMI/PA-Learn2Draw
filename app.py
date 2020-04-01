@@ -55,6 +55,16 @@ def user_profil():
         current_date = utils.get_ccurent_date(format="fr")
         return render_template("home.html", error=e)
 
+@app.route('/explain', methods=['GET'])
+def explain_page(token=None):
+    try:
+        current_year = utils.get_ccurent_date(format="ang", full=False)
+        return render_template("explain.html", token=token, current_year=current_year)
+
+    except Exception as e:
+        current_date = utils.get_ccurent_date(format="fr")
+        return render_template("explain.html", error=e)
+
 
 @app.errorhandler(404)
 def url_not_found(e):
