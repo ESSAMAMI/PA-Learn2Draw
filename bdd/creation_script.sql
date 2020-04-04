@@ -33,9 +33,9 @@ ENGINE = InnoDB;
 
 
 -- ---------------------------------------------------
--- Table `learn2draw_db`.`CATEGORY`
+-- Table `learn2draw_db`.`CATEGORYS`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `learn2draw_db`.`CATEGORY` (
+CREATE TABLE IF NOT EXISTS `learn2draw_db`.`CATEGORYS` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(200) NOT NULL,
   PRIMARY KEY (`id`))
@@ -43,55 +43,55 @@ ENGINE = InnoDB;
 
 
 -- -- -----------------------------------------------------
--- -- Table `learn2draw_db`.`DRAWING`
+-- -- Table `learn2draw_db`.`DRAWINGS`
 -- -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `learn2draw_db`.`DRAWING` (
+CREATE TABLE IF NOT EXISTS `learn2draw_db`.`DRAWINGS` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `USERS_id` INT NOT NULL,
-  `CATEGORY_id` INT NOT NULL,
+  `CATEGORYS_id` INT NOT NULL,
   `location` VARCHAR(200) NOT NULL,
   `status` CHAR(1) NOT NULL DEFAULT 'U',
   `score` INT NULL,
   `time` INT NOT NULL,
-  PRIMARY KEY (`id`, `USERS_id`, `CATEGORY_id`))
+  PRIMARY KEY (`id`, `USERS_id`, `CATEGORYS_id`))
 ENGINE = InnoDB;
 
---  CONSTRAINT FK DRAWING USERS | CATEGORY
-ALTER TABLE `learn2draw_db`.`DRAWING` ADD
-CONSTRAINT `fk_DRAWING_USERS_idx`
+--  CONSTRAINT FK DRAWINGS USERS | CATEGORYS
+ALTER TABLE `learn2draw_db`.`DRAWINGS` ADD
+CONSTRAINT `fk_DRAWINGS_USERS_idx`
 FOREIGN KEY (`USERS_id`)
 REFERENCES `learn2draw_db`.`USERS` (`id`)
 ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE `learn2draw_db`.`DRAWING` ADD
-CONSTRAINT `fk_DRAWING_CATEGORY1_idx`
-FOREIGN KEY (`CATEGORY_id`)
-REFERENCES `learn2draw_db`.`CATEGORY` (`id`)
+ALTER TABLE `learn2draw_db`.`DRAWINGS` ADD
+CONSTRAINT `fk_DRAWINGS_CATEGORYS1_idx`
+FOREIGN KEY (`CATEGORYS_id`)
+REFERENCES `learn2draw_db`.`CATEGORYS` (`id`)
 ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- -- -----------------------------------------------------
--- -- Table `learn2draw_db`.`NOTATION`
+-- -- Table `learn2draw_db`.`NOTATIONS`
 -- -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `learn2draw_db`.`NOTATION` (
+CREATE TABLE IF NOT EXISTS `learn2draw_db`.`NOTATIONS` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `score` VARCHAR(200) NOT NULL,
   `USERS_id` INT NOT NULL,
-  `DRAWING_id` INT NOT NULL,
-  `DRAWING_USERS_id` INT NOT NULL,
-  `DRAWING_CATEGORY_id` INT NOT NULL,
-  PRIMARY KEY (`id`, `USERS_id`, `DRAWING_id`, `DRAWING_USERS_id`, `DRAWING_CATEGORY_id`))
+  `DRAWINGS_id` INT NOT NULL,
+  `DRAWINGS_USERS_id` INT NOT NULL,
+  `DRAWINGS_CATEGORYS_id` INT NOT NULL,
+  PRIMARY KEY (`id`, `USERS_id`, `DRAWINGS_id`, `DRAWINGS_USERS_id`, `DRAWINGS_CATEGORYS_id`))
 ENGINE = InnoDB;
 
-ALTER TABLE `learn2draw_db`.`NOTATION` ADD
-CONSTRAINT `fk_NOTATION_USERS1_idx`
+ALTER TABLE `learn2draw_db`.`NOTATIONS` ADD
+CONSTRAINT `fk_NOTATIONS_USERS1_idx`
 FOREIGN KEY (`USERS_id`)
 REFERENCES `learn2draw_db`.`USERS` (`id`)
 ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE `learn2draw_db`.`NOTATION` ADD
-CONSTRAINT `fk_NOTATION_DRAWING1`
-FOREIGN KEY (`DRAWING_id` , `DRAWING_USERS_id` , `DRAWING_CATEGORY_id`)
- REFERENCES `learn2draw_db`.`DRAWING` (`id` , `USERS_id` , `CATEGORY_id`)
+ALTER TABLE `learn2draw_db`.`NOTATIONS` ADD
+CONSTRAINT `fk_NOTATIONS_DRAWINGS1`
+FOREIGN KEY (`DRAWINGS_id` , `DRAWINGS_USERS_id` , `DRAWINGS_CATEGORYS_id`)
+ REFERENCES `learn2draw_db`.`DRAWINGS` (`id` , `USERS_id` , `CATEGORYS_id`)
 ON DELETE CASCADE ON UPDATE CASCADE;
 
 
