@@ -1,19 +1,20 @@
-from flask import Flask, render_template, redirect, url_for, request
+from flask import Flask, render_template, redirect, url_for, request, session
 import socket
-from utils import utils
-import json
+from utils import utils, request_bdd
+import os
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = os.urandom(24)
 
 @app.route('/', methods=['GET'])
 def home(token=None):
     try:
         current_year = utils.get_ccurent_date(format="ang", full=False)
-        return render_template("index.html", token=token, current_year=current_year)
+        return render_template("landing.html", token=token, current_year=current_year)
 
     except Exception as e:
         current_date = utils.get_ccurent_date(format="fr")
-        return render_template("index.html", error=e)
+        return render_template("landing.html", error=e)
 
 
 @app.route('/connection', methods=['GET'])
@@ -28,14 +29,31 @@ def connection_page():
         return render_template("login.html", error=e)
 
 
-@app.route('/connection/token/<token>', methods=['POST'])
+@app.route('/connection/token/<token>', methods=['POST', 'GET'])
 def connection(token):
     try:
-        return redirect(url_for('user_profil', token=token), code=307)
+
+        if request.method == 'POST':
+
+            username = request.form['username']
+            pwd = request.form['pwd']
+            user = request_bdd.learn2draw_connect(username, pwd)
+            if user.empty:
+                error_connection = True
+                return render_template('login.html', error_connection=error_connection, token=token)
+            else:
+                session['username'] = str(user.username[0])
+                session['email'] = str(user.email[0])
+                session['pwd'] = str(user.pwd[0])
+                session['score'] = str(user.score[0])
+                return redirect(url_for('user_profil', token=token), code=307)
+
+        return render_template('common/permission.html')
 
     except Exception as e:
+        print(e, "====================================================")
         current_date = utils.get_ccurent_date(format="fr")
-        return render_template("login.html", error=e)
+        return render_template("login.html", error=e, token=token)
 
 
 @app.route('/user-profil/', methods=['POST', 'GET'])
@@ -55,6 +73,31 @@ def user_profil():
     except Exception as e:
         current_date = utils.get_ccurent_date(format="fr")
         return render_template("home.html", error=e)
+
+@app.route('/sign-up', methods=['POST', 'GET'])
+def sign_up():
+    try:
+
+        if request.method == 'POST':
+
+            username = str(request.form['username'])
+            email = str(request.form['email'])
+            pwd = str(request.form['pwd'])
+            cnf_pwd = str(request.form['cnf_pwd'])
+
+            if pwd != cnf_pwd:
+
+                error_identical_pwd = True
+                return render_template('login.html', error_identical_pwd=error_identical_pwd)
+
+            new_account = request_bdd.learn2draw_sign_up(username, email, pwd)
+            return render_template('login.html', new_account=new_account, token=utils.generate_token())
+
+        return render_template("common/permission.html")
+
+    except Exception as e:
+        current_date = utils.get_ccurent_date(format="fr")
+        return render_template("score.html", error=e)
 
 @app.route('/explain', methods=['GET'])
 def explain(token=None):
@@ -80,13 +123,12 @@ def score(token=utils.generate_token()):
         current_date = utils.get_ccurent_date(format="fr")
         return render_template("score.html", error=e)
 
-
 #routes for backend after this comment
 @app.route('/admin-home/', methods=['POST', 'GET'])
 def admin_home():
     try:
+        current_year = utils.get_ccurent_date(format="ang", full=False)
         if request.method == 'POST':
-            current_year = utils.get_ccurent_date(format="ang", full=False)
             return render_template("admin_home.html", current_year=current_year)
             #this is for classic user, we want to be redirected to admin for now
             #return render_template("home.html", current_year=current_year)
@@ -157,6 +199,8 @@ def admin_models(token=None):
     except Exception as e:
         current_date = utils.get_ccurent_date(format="fr")
         return render_template("admin_models.html", error=e)
+
+
 
 # Handle errors section
 @app.errorhandler(404)

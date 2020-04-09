@@ -66,7 +66,7 @@
             <div class="dropdown-body">
             <div class="dropdown-list">
                 <div class="image-wrapper">
-                <img class="profile-img" src="{{ url_for('static', filename='assets/images/profile/male/image_1.jpg')}}" alt="profile image">
+                <img class="profile-img" src="{{ url_for('static', filename='assets/images/profile/male/image_1.png')}}" alt="profile image">
                 <div class="status-indicator rounded-indicator bg-success"></div>
                 </div>
                 <div class="content-wrapper">
@@ -142,11 +142,11 @@
     <div class="sidebar">
     <div class="user-profile">
     <div class="display-avatar animated-avatar">
-        <img class="profile-img img-lg rounded-circle" src="{{ url_for('static', filename='assets/images/profile/male/image_1.jpg')}}" alt="profile image">
+        <img class="profile-img img-lg rounded-circle" src="{{ url_for('static', filename='assets/images/profile/male/image_1.png')}}" alt="profile image">
     </div>
     <div class="info-wrapper">
-        <p class="user-name">ESSAMAMI Hamza</p>
-        <h6 class="display-income">Rewards 30,00 pts</h6>
+        <p class="user-name">{{ session['username'] }}</p>
+        <h6 class="display-income">Rewards {{ session['score'] }} pts</h6>
     </div>
     </div>
     <ul class="navigation-menu">
@@ -196,7 +196,7 @@
     <div class="content-viewport">
         <div class="row">
         <div class="col-12 py-5">
-            <h4>Hello, ESSAMAMI Hamza</h4>
+            <h4>Hello, {{ session['username'] }}</h4>
             <p class="text-gray">Global review</p>
         </div>
         </div>

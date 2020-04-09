@@ -13,16 +13,31 @@
                 <div class="col-lg-7 col-md-8 col-sm-9 col-12 mx-auto form-wrapper">
                 <!-- Form Sign IN -->
                   <form id="form-sign-in" action="/connection/token/{{ token }}" method="POST">
-                    {% if e %}
+                    {% if error %}
                         <div class="alert alert-danger" role="alert">
                             Something went 🤯... Try agin !
                         </div>
                     {% endif %}
+                    {% if error_connection %}
+                        <div class="alert alert-danger" role="alert">
+                            Email or password is incorrect 🤯... Try agin !
+                        </div>
+                    {% endif %}
+                    {% if new_account == True %}
+                        <div class="alert alert-success" role="alert">
+                            Your account was created successfully 😋 !
+                        </div>
+                    {% endif %}
+                    {% if new_account == False %}
+                        <div class="alert alert-danger" role="alert">
+                            Error ! Please try agin 😋 !
+                        </div>
+                    {% endif %}
                     <div class="form-group input-rounded">
-                      <input type="text" class="form-control" placeholder="Email / Username" />
+                      <input type="text" class="form-control" name="username" placeholder="Email / Username" required/>
                     </div>
                     <div class="form-group input-rounded">
-                      <input type="password" class="form-control" placeholder="Password" />
+                      <input type="password" class="form-control" name="pwd" placeholder="Password" required/>
                     </div>
                     <div class="form-inline">
                       <div class="checkbox">
@@ -34,21 +49,28 @@
                     <button type="submit" class="btn btn-primary btn-block"> Login </button>
                   </form>
                     <!-- Form Sign UP -->
-                    <form id="form-sign-up" action="#">
+                    <form id="form-sign-up" action="/sign-up" method="POST">
+
+                    {% if error_identical_pwd %}
+                        <div class="alert alert-danger" role="alert">
+                            Passwords are not match 🤯... Try agin !
+                        </div>
+                    {% endif %}
+
                     <div class="form-group input-rounded">
-                        <input type="text" class="form-control" placeholder="Username *" required/>
+                        <input type="text" class="form-control" name="username" placeholder="Username *" required/>
                         <div class="required"></div>
                     </div>
                     <div class="form-group input-rounded">
-                        <input type="email" class="form-control" placeholder="Email *" required/>
+                        <input type="email" class="form-control" name="email" placeholder="Email *" required/>
                         <div class="required"></div>
                     </div>
                     <div class="form-group input-rounded">
-                        <input type="password" class="form-control" placeholder="Password *" required/>
+                        <input type="password" class="form-control" name="pwd" placeholder="Password *" required/>
                         <div class="required"></div>
                     </div>
                     <div class="form-group input-rounded">
-                        <input type="password" class="form-control" placeholder="Confirme password *" required/>
+                        <input type="password" class="form-control" name="cnf_pwd" placeholder="Confirme password *" required/>
                         <div class="required"></div>
                     </div>
                     <button type="submit" class="btn btn-primary btn-block"> Sign Up </button>
@@ -85,8 +107,14 @@
                 $(this).remove();
             });
             }, 3000);
-
         </script>
+        {% if error_identical_pwd %}
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $('#sign-up').click();
+                });
+            </script>
+        {% endif %}
     </div>
     {% endblock %}
 {% endblock %}
