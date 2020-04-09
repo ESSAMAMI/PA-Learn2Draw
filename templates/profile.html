@@ -1,5 +1,6 @@
 {% extends 'common/dom.html' %}
 {% block scope %}
+
     <button class="t-header-toggler t-header-mobile-toggler d-block d-lg-none">
         <i class="mdi mdi-menu"></i>
     </button>
@@ -142,11 +143,11 @@
     <div class="sidebar">
     <div class="user-profile">
     <div class="display-avatar animated-avatar">
-        <img class="profile-img img-lg rounded-circle" src="{{ url_for('static', filename='assets/images/profile/male/image_1.png')}}" alt="profile image">
+        <img class="profile-img img-lg rounded-circle" src="{{ url_for('static', filename='assets/images/profile/male/image_1.png')}}" alt="toto image">
     </div>
     <div class="info-wrapper">
         <p class="user-name">{{ session['username'] }}</p>
-        <h6 class="display-income">Rewards {{ session['score'] }} pts</h6>
+        <h6 class="display-income">Rewards {{ username['score'] }} pts</h6>
     </div>
     </div>
     <ul class="navigation-menu">

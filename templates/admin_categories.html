@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Categories - SB Admin</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='/assets/css/backend/styles.css') }}">
+        <link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet" crossorigin="anonymous" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/js/all.min.js" crossorigin="anonymous"></script>
+    </head>
+    <body class="sb-nav-fixed">
+        <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+            <a class="navbar-brand" href="http://192.168.99.1:9893/admin-home">Learn 2 draw ADMIN</a><button class="btn btn-link btn-sm order-1 order-lg-0" id="sidebarToggle" href="#"><i class="fas fa-bars"></i></button
+            ><!-- Navbar Search-->
+            <div class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0">
+            </div>
+            <!-- Navbar-->
+            <ul class="navbar-nav ml-auto ml-md-0">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" id="userDropdown" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+                        <a class="dropdown-item" href="#">Settings</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="http://192.168.99.1:9893/connection">Logout</a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+        <div id="layoutSidenav">
+            <div id="layoutSidenav_nav">
+                <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+                    <div class="sb-sidenav-menu">
+                        <div class="nav">
+                            <div class="sb-sidenav-menu-heading">Home</div>
+                            <a class="nav-link" href="http://192.168.99.1:9893/admin-home"
+                                ><div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                                Dashboard Home</a
+                            >
+                            <!--
+                            <div class="sb-sidenav-menu-heading">Application Content</div>
+                            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages"
+                                ><div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
+                                Pages
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div
+                            ></a>
+                            <div class="collapse" id="collapsePages" aria-labelledby="headingTwo" data-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
+                                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#pagesCollapseAuth" aria-expanded="false" aria-controls="pagesCollapseAuth"
+                                        >Authentication
+                                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div
+                                    ></a>
+                                    <div class="collapse" id="pagesCollapseAuth" aria-labelledby="headingOne" data-parent="#sidenavAccordionPages">
+                                        <nav class="sb-sidenav-menu-nested nav"><a class="nav-link" href="login.html">Login</a><a class="nav-link" href="register.html">Register</a><a class="nav-link" href="password.html">Forgot Password</a></nav>
+                                    </div>
+                                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#pagesCollapseError" aria-expanded="false" aria-controls="pagesCollapseError"
+                                        >Error
+                                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div
+                                    ></a>
+                                    <div class="collapse" id="pagesCollapseError" aria-labelledby="headingOne" data-parent="#sidenavAccordionPages">
+                                        <nav class="sb-sidenav-menu-nested nav"><a class="nav-link" href="401.html">401 Page</a><a class="nav-link" href="404.html">404 Page</a><a class="nav-link" href="500.html">500 Page</a></nav>
+                                    </div>
+                                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#pagesCollapseOther" aria-expanded="false" aria-controls="pagesCollapseOther"
+                                        >Other pages
+                                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div
+                                    ></a>
+                                    <div class="collapse" id="pagesCollapseOther" aria-labelledby="headingOne" data-parent="#sidenavAccordionPages">
+                                        <nav class="sb-sidenav-menu-nested nav"><a class="nav-link" href="401.html">Home</a><a class="nav-link" href="401.html">Rules</a><a class="nav-link" href="404.html">User profile</a><a class="nav-link" href="500.html">Doodle evaluation</a><a class="nav-link" href="500.html">Contact support</a></nav>
+                                    </div>
+                                </nav>
+                            </div>
+                            -->
+                            <div class="sb-sidenav-menu-heading">Databases</div>
+                            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTables" aria-expanded="false" aria-controls="collapseTables"
+                                ><div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                                Tables
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div
+                            ></a>
+                            <div class="collapse" id="collapseTables" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav"><a class="nav-link" href="http://192.168.99.1:9893/admin-home/tables/users">Users</a><a class="nav-link" href="http://192.168.99.1:9893/admin-home/tables/drawings">Drawings</a><a class="nav-link" href="http://192.168.99.1:9893/admin-home/tables/categories">Categories</a><a class="nav-link" href="http://192.168.99.1:9893/admin-home/tables/notations">Notations</a></nav>
+                            </div>
+                            <div class="sb-sidenav-menu-heading">Train models</div>
+                            <a class="nav-link" href="http://192.168.99.1:9893/admin-models">  
+                                <div class="sb-nav-link-icon">
+                                    <i class="fas fa-brain"></i>
+                                </div>
+                                Models
+                            </a>
+                            
+                            <!--<div class="collapse" id="collapseModels" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav"><a class="nav-link" href="layout-static.html">CNN</a><a class="nav-link" href="layout-sidenav-light.html">LSTM</a><a class="nav-link" href="layout-sidenav-light.html">OTHERS</a>
+                                </nav>
+                            </div>-->
+                        </div>
+                    </div>
+                    <div class="sb-sidenav-footer">
+                        <div class="small">Logged in as:</div>
+                        Admin user
+                    </div>
+                </nav>
+            </div>
+            <div id="layoutSidenav_content">
+                <main>
+                    <div class="container-fluid">
+                        <h1 class="mt-4">Categories</h1>
+                        <ol class="breadcrumb mb-4">
+                            <li class="breadcrumb-item active">Table where all our categories are stored</li>
+                        </ol>
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <i class="fas fa-table mr-1"></i>
+                                Our categories
+                                <a class="float-right text-success" href="" data-toggle="modal" data-target="#addModal" style="font-size: 18px;">
+                                    <i class="fas fa-plus"></i> Add 
+                                </a>
+                                <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel1">Add category</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <form id="form-add" action="#">
+                                                <div class="modal-body">
+                                                    <!-- Form Sign UP -->
+                                                    <div class="form-group input-rounded">
+                                                        <input type="text" class="form-control" placeholder="Category name *" required/>
+                                                        <div class="required"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                    <button type="submit" class="btn btn-primary"> Add </button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                 <div class="table-responsive">
+                                    <table id="categories-table" class="table table-striped table-bordered">
+                                      <thead>
+                                        <tr>
+                                          <th width="70%"> Category </th>
+                                          <th> Edit </th>
+                                          <th> Delete </th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        <tr>
+                                          <td>Apple</td>
+                                          <td>
+                                            <a class="text-primary" href="" data-toggle="modal" data-target="#editModal" data-whatever="Apple">
+                                              <i class="fas fa-pencil-alt text-primary"></i> Edit 
+                                            </a>
+
+                                            <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="exampleModalLabel2">Edit category</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <form id="form-edit" action="#">
+                                                            <div class="modal-body">
+                                                                <!-- Form Sign UP -->
+                                                                <div class="form-group input-rounded">
+                                                                    <input id="category_input" type="text" class="form-control" placeholder="Username *" required/>
+                                                                    <div class="required"></div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                                <button type="submit" class="btn btn-primary"> Edit </button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                          </td>
+                                          <td>
+                                            <!--<a class="text-danger" href="#">
+                                              <i class="fa fa-trash text-danger"></i> Delete 
+                                            </a>-->
+                                            <!-- Link trigger modal -->
+                                            <a class="text-danger" href="" data-toggle="modal" data-target="#exampleModal3">
+                                                <i class="fas fa-trash text-danger"></i> Delete 
+                                            </a>
+
+                                            <!-- Modal -->
+                                            <div class="modal fade" id="exampleModal3" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="exampleModalLabel3">Deletion</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            Are you sure that you want to delete this record ?
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                            <a class="btn btn-danger" href="">Yes</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                          </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>Car</td>
+                                            <td>
+                                              <a class="text-primary" href="#">
+                                                <i class="fas fa-pencil-alt text-primary"></i> Edit 
+                                              </a>
+                                            </td>
+                                            <td>
+                                              <a class="text-danger" href="#">
+                                                <i class="fa fa-trash text-danger"></i> Delete 
+                                              </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Banana</td>
+                                            <td>
+                                              <a class="text-primary" href="#">
+                                                <i class="fas fa-pencil-alt text-primary"></i> Edit 
+                                              </a>
+                                            </td>
+                                            <td>
+                                              <a class="text-danger" href="#">
+                                                <i class="fa fa-trash text-danger"></i> Delete 
+                                              </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Boat</td>
+                                            <td>
+                                              <a class="text-primary" href="#">
+                                                <i class="fas fa-pencil-alt text-primary"></i> Edit 
+                                              </a>
+                                            </td>
+                                            <td>
+                                              <a class="text-danger" href="#">
+                                                <i class="fa fa-trash text-danger"></i> Delete 
+                                              </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Monkey</td>
+                                            <td>
+                                              <a class="text-primary" href="#">
+                                                <i class="fas fa-pencil-alt text-primary"></i> Edit 
+                                              </a>
+                                            </td>
+                                            <td>
+                                              <a class="text-danger" href="#">
+                                                <i class="fa fa-trash text-danger"></i> Delete 
+                                              </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Dog</td>
+                                            <td>
+                                              <a class="text-primary" href="#">
+                                                <i class="fas fa-pencil-alt text-primary"></i> Edit 
+                                              </a>
+                                            </td>
+                                            <td>
+                                              <a class="text-danger" href="#">
+                                                <i class="fa fa-trash text-danger"></i> Delete 
+                                              </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Fish</td>
+                                            <td>
+                                              <a class="text-primary" href="#">
+                                                <i class="fas fa-pencil-alt text-primary"></i> Edit 
+                                              </a>
+                                            </td>
+                                            <td>
+                                              <a class="text-danger" href="#">
+                                                <i class="fa fa-trash text-danger"></i> Delete 
+                                              </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Table</td>
+                                            <td>
+                                              <a class="text-primary" href="#">
+                                                <i class="fas fa-pencil-alt text-primary"></i> Edit 
+                                              </a>
+                                            </td>
+                                            <td>
+                                              <a class="text-danger" href="#">
+                                                <i class="fa fa-trash text-danger"></i> Delete 
+                                              </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Chair</td>
+                                            <td>
+                                              <a class="text-primary" href="#">
+                                                <i class="fas fa-pencil-alt text-primary"></i> Edit 
+                                              </a>
+                                            </td>
+                                            <td>
+                                              <a class="text-danger" href="#">
+                                                <i class="fa fa-trash text-danger"></i> Delete 
+                                              </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Cat</td>
+                                            <td>
+                                              <a class="text-primary" href="#">
+                                                <i class="fas fa-pencil-alt text-primary"></i> Edit 
+                                              </a>
+                                            </td>
+                                            <td>
+                                              <a class="text-danger" href="#">
+                                                <i class="fa fa-trash text-danger"></i> Delete 
+                                              </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Computer</td>
+                                            <td>
+                                              <a class="text-primary" href="#">
+                                                <i class="fas fa-pencil-alt text-primary"></i> Edit 
+                                              </a>
+                                            </td>
+                                            <td>
+                                              <a class="text-danger" href="#">
+                                                <i class="fa fa-trash text-danger"></i> Delete 
+                                              </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Glasses</td>
+                                            <td>
+                                              <a class="text-primary" href="#">
+                                                <i class="fas fa-pencil-alt text-primary"></i> Edit 
+                                              </a>
+                                            </td>
+                                            <td>
+                                              <a class="text-danger" href="#">
+                                                <i class="fa fa-trash text-danger"></i> Delete 
+                                              </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Window</td>
+                                            <td>
+                                              <a class="text-primary" href="#">
+                                                <i class="fas fa-pencil-alt text-primary"></i> Edit 
+                                              </a>
+                                            </td>
+                                            <td>
+                                              <a class="text-danger" href="#">
+                                                <i class="fa fa-trash text-danger"></i> Delete 
+                                              </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Plane</td>
+                                            <td>
+                                              <a class="text-primary" href="#">
+                                                <i class="fas fa-pencil-alt text-primary"></i> Edit 
+                                              </a>
+                                            </td>
+                                            <td>
+                                              <a class="text-danger" href="#">
+                                                <i class="fa fa-trash text-danger"></i> Delete 
+                                              </a>
+                                            </td>
+                                        </tr>
+                                      </tbody>
+                                    </table>
+                                  </div>
+                                <!--
+                                <div class="table-responsive">
+                                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                        <thead>
+                                            <tr>
+                                                <th>Username</th>
+                                                <th>Email</th>
+                                                <th>Password</th>
+                                                <th>Admin</th>
+                                                <th>Score</th>
+                                            </tr>
+                                        </thead>
+                                        <tfoot>
+                                            <tr>
+                                                <th>Username</th>
+                                                <th>Email</th>
+                                                <th>Password</th>
+                                                <th>Admin</th>
+                                                <th>Score</th>
+                                            </tr>
+                                        </tfoot>
+                                        <tbody>
+                                            <tr>
+                                                <td>Tiger Nixon</td>
+                                                <td>samplemail1@gmail.com</td>
+                                                <td>******</td>
+                                                <td>0</td>
+                                                <td>200</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Garrett Winters</td>
+                                                <td>samplemail2@gmail.com</td>
+                                                <td>******</td>
+                                                <td>0</td>
+                                                <td>180</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Ashton Cox</td>
+                                                <td>samplemail3@gmail.com</td>
+                                                <td>******</td>
+                                                <td>0</td>
+                                                <td>170</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Cedric Kelly</td>
+                                                <td>samplemail4@gmail.com</td>
+                                                <td>******</td>
+                                                <td>0</td>
+                                                <td>145</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Airi Satou</td>
+                                                <td>samplemail5@gmail.com</td>
+                                                <td>******</td>
+                                                <td>0</td>
+                                                <td>142</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Brielle Williamson</td>
+                                                <td>samplemail6@gmail.com</td>
+                                                <td>******</td>
+                                                <td>0</td>
+                                                <td>130</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Herrod Chandler</td>
+                                                <td>samplemail7@gmail.com</td>
+                                                <td>******</td>
+                                                <td>0</td>
+                                                <td>128</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Rhona Davidson</td>
+                                                <td>samplemail8@gmail.com</td>
+                                                <td>******</td>
+                                                <td>0</td>
+                                                <td>120</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Colleen Hurst</td>
+                                                <td>samplemail9@gmail.com</td>
+                                                <td>******</td>
+                                                <td>0</td>
+                                                <td>100</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Sonya Frost</td>
+                                                <td>samplemail10@gmail.com</td>
+                                                <td>******</td>
+                                                <td>0</td>
+                                                <td>95</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Jena Gaines</td>
+                                                <td>samplemail11@gmail.com</td>
+                                                <td>******</td>
+                                                <td>0</td>
+                                                <td>50</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Quinn Flynn</td>
+                                                <td>samplemail12@gmail.com</td>
+                                                <td>******</td>
+                                                <td>0</td>
+                                                <td>20</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Charde Marshall</td>
+                                                <td>samplemail13@gmail.com</td>
+                                                <td>******</td>
+                                                <td>0</td>
+                                                <td>10</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Haley Kennedy</td>
+                                                <td>samplemail14@gmail.com</td>
+                                                <td>******</td>
+                                                <td>0</td>
+                                                <td>2</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                -->
+                            </div>
+                        </div>
+                    </div>
+                </main>
+                <footer class="py-4 bg-light mt-auto">
+                    <div class="container-fluid">
+                        <div class="d-flex align-items-center justify-content-between small">
+                            <div class="text-muted">Copyright &copy; Learn2draw 2020</div>
+                            <div>
+                                <a href="#">Privacy Policy</a>
+                                &middot;
+                                <a href="#">Terms &amp; Conditions</a>
+                            </div>
+                        </div>
+                    </div>
+                </footer>
+            </div>
+        </div>
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+        <script src="{{ url_for('static', filename='/assets/js/backend/scripts.js') }}"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+        <script src="{{ url_for('static', filename='/assets/js/backend/chart-area-demo.js') }}"></script>
+        <script src="{{ url_for('static', filename='/assets/js/backend/chart-bar-demo.js') }}"></script>
+        <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js" crossorigin="anonymous"></script>
+        <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js" crossorigin="anonymous"></script>
+        <script src="{{ url_for('static', filename='/assets/js/backend/datatables-demo.js') }}"></script>
+
+        <!-- CUSTOM SCRIPT FOR MODAL EDIT-->
+        <script type="text/javascript">
+            console.log("BONSOIR")
+            $('#editModal').on('show.bs.modal', function (event) {
+              var button = $(event.relatedTarget) // Button that triggered the modal
+              var recipient = button.data('whatever') // Extract info from data-* attributes
+              // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+              // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+              $('#exampleModalLabel2').text('Edit category ' + recipient)
+              $('#category_input').val(recipient)
+            })
+        </script>
+    </body>
+</html>
