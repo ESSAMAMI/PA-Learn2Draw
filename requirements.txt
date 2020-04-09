@@ -4,3 +4,4 @@
 # Flask Framework
 Flask==1.1.1
 pandas==1.0.3
+pymysql==0.9.3

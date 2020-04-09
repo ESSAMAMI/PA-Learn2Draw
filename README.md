@@ -15,6 +15,7 @@ Please run this command line in your shell to install all of
 requirements dependencies:
 - Flask
 - pandas
+- pymysql
 - (...)
 
 ```md
