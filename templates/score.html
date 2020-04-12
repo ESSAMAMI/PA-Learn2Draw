@@ -1,146 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <meta name="description" content="">
-        <meta name="author" content="">
-
-        <title>L2D - Notez!</title>
-
-
-        <!-- Bootstrap core CSS -->
-        <!--<link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">-->
-        <link href="{{ url_for('static', filename='assets/css/test/bootstrap.min.css')}}" rel="stylesheet">
-        <!-- Custom fonts for this template -->
-        <!--<link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">-->
-        <link href="{{ url_for('static', filename='assets/css/test/all.min.css')}}" rel="stylesheet">
-
-        <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
-        <link href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
-        <link href='https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
-        <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
-
-        <!-- Custom styles for this template -->
-        <!--<link href="css/agency.min.css" rel="stylesheet">-->
-        <link href="{{ url_for('static', filename='assets/css/test/agency.css')}}" rel="stylesheet">
-        <link href="{{ url_for('static', filename='assets/css/test/test.css')}}" rel="stylesheet" id="bootstrap-css">
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/js/all.min.js" crossorigin="anonymous"></script>
-
-    </head>
-
-    <body id="page-top">
-        <!-- Navigation -->
-        <nav class="navbar navbar-expand-lg navbar-dark" id="mainNav" style="padding:0px;padding-right:16px;margin-bottom:40px" >
-            <div class="container">
-                <a class="navbar-brand js-scroll-trigger" href="/">Learn 2 draw</a>
-                <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-                Menu
-                <i class="fas fa-bars"></i>
-            </button>
-                <div class="collapse navbar-collapse" id="navbarResponsive">
-                    <ul class="navbar-nav text-uppercase ml-auto">
-                        <li class="nav-item">
-                            <a class="nav-link js-scroll-trigger" href="/explain"><b>Apprenez à jouer!</b></a>
-                        </li>
-                        <li class="nav-item" id="li-submit_connect">
-                            <a class="nav-link js-scroll-trigger" href="/connection"><b>Inscription/Connexion</b></a>
-                        </li>
-                        <li class="nav-item" id="li-profil">
-                            <a class="nav-link js-scroll-trigger" href="/user-profil"><b>Profil</b></a>
-                        </li>
-                        <li class="nav-item" id="li-note">
-                            <a class="nav-link js-scroll-trigger" href="/score"><b>Notez!</b></a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-
-        <div class="container">
-            <h4 style="text-align:center;margin:0px;">Dessins de la communauté qu'il vous reste à noter!</h4>
-            <div class="row justify-content-md-center ads">
-                <!-- Category Card -->
-                <div class="col-md-4">
-                    <div class="card rounded">
-                        <div class="card-image">
-                            <span class="card-notify-username">de &#x3c;Username&#x3e;</span>
-                            <span class="card-notify-note">Note</span>
-                            <img class="img-fluid" src="https://imageonthefly.autodatadirect.com/images/?USER=eDealer&PW=edealer872&IMG=USC80HOC011A021001.jpg&width=440&height=262" alt="Alternate Text" />
-                        </div>
-                        <div class="card-image-overlay m-auto">
-                            <span class="card-detail-badge">&#x3c;catégorie&#x3e;</span>
-                            <span class="card-detail-badge">temps : &#x3c;temps&#x3e;</span>
-                            <button class="card-detail-button" data-toggle="modal" data-target="#detailImage"
-                            data-whatever="username;categorie;time;location;detect_categorie">noter</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card rounded">
-                        <div class="card-image">
-                            <span class="card-notify-username">de &#x3c;Username&#x3e;</span>
-                            <span class="card-notify-note">Note</span>
-                            <img class="img-fluid" src="https://imageonthefly.autodatadirect.com/images/?USER=eDealer&PW=edealer872&IMG=USC80HOC011A021001.jpg&width=440&height=262" alt="Alternate Text" />
-                        </div>
-                        <div class="card-image-overlay m-auto">
-                            <span class="card-detail-badge">&#x3c;catégorie&#x3e;</span>
-                            <span class="card-detail-badge">temps : &#x3c;temps&#x3e;</span>
-                            <button class="card-detail-button" data-toggle="modal" data-target="#detailImage"
-                            data-whatever="username;categorie;time;location;detect_categorie">noter</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card rounded">
-                        <div class="card-image">
-                            <span class="card-notify-username">de &#x3c;Username&#x3e;</span>
-                            <span class="card-notify-note">Note</span>
-                            <img class="img-fluid" src="https://imageonthefly.autodatadirect.com/images/?USER=eDealer&PW=edealer872&IMG=USC80HOC011A021001.jpg&width=440&height=262" alt="Alternate Text" />
-                        </div>
-                        <div class="card-image-overlay m-auto">
-                            <span class="card-detail-badge">&#x3c;catégorie&#x3e;</span>
-                            <span class="card-detail-badge">temps : &#x3c;temps&#x3e;</span>
-                            <button class="card-detail-button" data-toggle="modal" data-target="#detailImage"
-                            data-whatever="username;categorie;time;location;detect_categorie">noter</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row justify-content-md-center ads">
-                <!-- Category Card -->
-                <div class="col-md-4">
-                    <div class="card rounded">
-                        <div class="card-image">
-                            <span class="card-notify-username">de &#x3c;Username&#x3e;</span>
-                            <span class="card-notify-note">Note</span>
-                            <img class="img-fluid" src="https://imageonthefly.autodatadirect.com/images/?USER=eDealer&PW=edealer872&IMG=USC80HOC011A021001.jpg&width=440&height=262" alt="Alternate Text" />
-                        </div>
-                        <div class="card-image-overlay m-auto">
-                            <span class="card-detail-badge">&#x3c;catégorie&#x3e;</span>
-                            <span class="card-detail-badge">temps : &#x3c;temps&#x3e;</span>
-                            <button class="card-detail-button" data-toggle="modal" data-target="#detailImage"
-                            data-whatever="username;categorie;time;location;detect_categorie">noter</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card rounded">
-                        <div class="card-image">
-                            <span class="card-notify-username">de &#x3c;Username&#x3e;</span>
-                            <span class="card-notify-note">Note</span>
-                            <img class="img-fluid" src="https://imageonthefly.autodatadirect.com/images/?USER=eDealer&PW=edealer872&IMG=USC80HOC011A021001.jpg&width=440&height=262" alt="Alternate Text" />
-                        </div>
-                        <div class="card-image-overlay m-auto">
-                            <span class="card-detail-badge">&#x3c;catégorie&#x3e;</span>
-                            <span class="card-detail-badge">temps : &#x3c;temps&#x3e;</span>
-                            <button class="card-detail-button" data-toggle="modal" data-target="#detailImage"
-                            data-whatever="username;categorie;time;location;detect_categorie">noter</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+{% extends 'common/dom_landing.html' %}
+{% block scope %}
+        <div class="container" style="position:relative;top:50px" id="container">
         </div>
 
         <div class="modal fade" id="detailImage" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
@@ -156,60 +16,103 @@
                         <img class="img-fluid" id="draw" alt="Alternate Text" />
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger col-1 m-auto" data-dismiss="modal">Non</button>
-                        <span class="card-detail-badge col-8 m-auto" id="question"></span>
-                        <button type="button" class="btn btn-success col-1 m-auto" data-dismiss="modal">oui</button>
+                        <form id="form_scoring" method = "POST">
+                            <button type="submit" class="btn btn-danger col-1 m-auto" name="button" value="no">Non</button>
+                            <span class="card-detail-badge col-8 m-auto" id="question"></span>
+                            <button type="submit" class="btn btn-success col-1 m-auto" name="button" value="yes">oui</button>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
-
-
-
-
-        <!-- Bootstrap core JavaScript -->
-        <!--<script src="vendor/jquery/jquery.min.js"></body>
-        <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>-->
-        <script src="{{ url_for('static', filename='assets/js/test/jquery.min.js')}}"></script>
-        <script src="{{ url_for('static', filename='assets/js/test/bootstrap.bundle.min.js')}}"></script>
-
-        <!-- Plugin JavaScript -->
-        <!--<script src="vendor/jquery-easing/jquery.easing.min.js"></script>-->
-        <script src="{{ url_for('static', filename='assets/js/test/jquery.easing.min.js')}}"></script>
-
-        <!-- Contact form JavaScript -->
-        <!--<script src="js/jqBootstrapValidation.js"></script>
-        <script src="js/contact_me.js"></script>-->
-        <script src="{{ url_for('static', filename='assets/js/test/jqBootstrapValidation.js')}}"></script>
-        <script src="{{ url_for('static', filename='assets/js/test/contact_me.js')}}"></script>
-
-        <!-- Custom scripts for this template -->
-        <!--<script src="js/agency.min.js"></script>-->
-        <script src="{{ url_for('static', filename='assets/js/test/agency.min.js')}}"></script>
-
         <script type="text/javascript">
-            $( document ).ready(function() {
-                if ({{token|tojson}} != null){
-                    $('#li-submit_connect').hide();
-                }else{
-                    $('#li-profil').hide();
-                    $('#li-note').hide();
+            window.onload = function create() {
+                var list = {{ list_drawings | tojson }};
+
+                var container = document.getElementById("container");
+
+                console.log(list[0].split(';'));
+
+                for (i=0; i < list.length; i++){
+                    var content = list[i].split(';');
+
+                    if(i % 3 == 0){
+                        var container = document.getElementById("container");
+                        var row = document.createElement("div");
+                        row.setAttribute("class", "row justify-content-md-center ads");
+                        container.appendChild(row);
+                    }
+
+                    var element = document.createElement("div");
+                    element.setAttribute("class", "col-md-4");
+                    row.appendChild(element);
+
+                    var card = document.createElement("div");
+                    card.setAttribute("class", "card rounded");
+                    element.appendChild(card);
+
+
+                    var image = document.createElement("div");
+                    image.setAttribute("class", "card-image");
+                    card.appendChild(image);
+
+                    var span_username = document.createElement("span");
+                    span_username.setAttribute("class","card-notify-username");
+                    span_username.textContent = "de " + content[0];
+                    image.appendChild(span_username);
+
+                    var span_score = document.createElement("span");
+                    span_score.setAttribute("class","card-notify-note");
+                    span_score.textContent = content[3];
+                    image.appendChild(span_score);
+
+                    var drawing = document.createElement("img");
+                    drawing.setAttribute("class", "img-fluid");
+                    drawing.setAttribute("src", content[2]);
+                    card.appendChild(drawing);
+
+                    var overlay = document.createElement("div");
+                    overlay.setAttribute("class", "card-image-overlay m-auto");
+                    card.appendChild(overlay);
+
+                    var span_category = document.createElement("span");
+                    span_category.setAttribute("class","card-detail-badge");
+                    span_category.textContent = content[1];
+                    overlay.appendChild(span_category);
+
+                    var span_time = document.createElement("span");
+                    span_time.setAttribute("class","card-detail-badge");
+                    span_time.textContent = "time: " + content[4] + "s";
+                    overlay.appendChild(span_time);
+
+                    var btn_score = document.createElement("button");
+                    btn_score.setAttribute("class","card-detail-button");
+                    btn_score.setAttribute("data-toggle","modal");
+                    btn_score.setAttribute("data-target","#detailImage");
+                    btn_score.setAttribute("data-whatever",list[i]);
+                    btn_score.setAttribute("onclick","create_modal(this)");
+                    btn_score.textContent = "noter";
+                    overlay.appendChild(btn_score);
                 }
-            });
+            }
 
-            $('#detailImage').on('show.bs.modal', function (event) {
-              var button = $(event.relatedTarget) // Button that triggered the modal
-              var content = button.data('whatever').split(";") // Extract info from data-* attributes
-              var modal = $(this)
+            function create_modal(btn){
+                var split = location.search.replace('?', '').split('&').map(function(val){
+                  return val.split('=');
+                });
+                var token = split[0][1];
 
-              console.log(content)
+                console.log(token)
 
-              modal.find('#title').text("Dessin de " + content[1] + "<br>" + content[2] + "<br> temps : " + content[3])
-              modal.find('#draw').attr("src","https://imageonthefly.autodatadirect.com/images/?USER=eDealer&PW=edealer872&IMG=USC80HOC011A021001.jpg&width=440&height=262")
-              modal.find('#question').text("Lorem ipsum dolor sit amet, consectetur adipisicing elit.")
-            });
+                var data = btn.getAttribute("data-whatever");
+                var content = data.split(';');
+
+                document.getElementById("title").innerHTML = "fait par " + content[0] + " en " + content[4] + "s";
+                document.getElementById("question").innerHTML = "Lorem ipsum dolor sit amet, consectetur adipisicing elit.";
+                document.getElementById("draw").src = content[2];
+                document.getElementById("form_scoring").action = "/scoring/?token=" + token + "&infos=" + data;
+
+            }
+
         </script>
-
-    </body>
-
-</html>
+{% endblock %}

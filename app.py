@@ -6,16 +6,15 @@ import os
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(24)
 
-@app.route('/', methods=['GET'])
-def home(token=None):
+@app.route('/', methods=['GET','POST'])
+def home():
     try:
         current_year = utils.get_ccurent_date(format="ang", full=False)
-        return render_template("landing.html", token=token, current_year=current_year)
+        return render_template("landing.html", current_year=current_year)
 
     except Exception as e:
         current_date = utils.get_ccurent_date(format="fr")
         return render_template("landing.html", error=e)
-
 
 @app.route('/connection', methods=['GET'])
 def connection_page():
@@ -27,7 +26,6 @@ def connection_page():
     except Exception as e:
         current_date = utils.get_ccurent_date(format="fr")
         return render_template("login.html", error=e)
-
 
 @app.route('/connection/token/<token>', methods=['POST', 'GET'])
 def connection(token):
@@ -46,7 +44,7 @@ def connection(token):
                 session['email'] = str(user.email[0])
                 session['pwd'] = str(user.pwd[0])
                 session['score'] = str(user.score[0])
-                return redirect(url_for('user_profil', token=token), code=307)
+                return redirect(url_for('home', token=token), code=307)
 
         return render_template('common/permission.html')
 
@@ -54,7 +52,6 @@ def connection(token):
         print(e, "====================================================")
         current_date = utils.get_ccurent_date(format="fr")
         return render_template("login.html", error=e, token=token)
-
 
 @app.route('/user-profil/', methods=['POST', 'GET'])
 def user_profil():
@@ -99,29 +96,36 @@ def sign_up():
         current_date = utils.get_ccurent_date(format="fr")
         return render_template("score.html", error=e)
 
-@app.route('/explain', methods=['GET'])
-def explain(token=None):
+@app.route('/explain/', methods=['GET', 'POST'])
+def explain():
     try:
         current_year = utils.get_ccurent_date(format="ang", full=False)
-        return render_template("explain.html", token=token, current_year=current_year)
+        return render_template("explain.html", current_year=current_year)
 
     except Exception as e:
         current_date = utils.get_ccurent_date(format="fr")
         return render_template("explain.html", error=e)
 
-@app.route('/score', methods=['GET'])
-def score(token=utils.generate_token()):
+@app.route('/score/', methods=['GET', 'POST'])
+def score():
     try:
-        if(token==None):
-            current_date = utils.get_ccurent_date(format="fr")
-            return render_template("common/error.html")
-        else:
-            current_year = utils.get_ccurent_date(format="ang", full=False)
-            return render_template("score.html", token=token, current_year=current_year)
+        list_drawings = request_bdd.learn2draw_list_draw_to_score('user1')
+        current_year = utils.get_ccurent_date(format="ang", full=False)
+        return render_template("score.html", current_year=current_year, list_drawings=list_drawings)
 
     except Exception as e:
         current_date = utils.get_ccurent_date(format="fr")
         return render_template("score.html", error=e)
+
+@app.route('/scoring/', methods=['GET', 'POST'])
+def score_image():
+    if request.method == 'POST':
+        token = request.args['token']
+        infos = request.args['infos']
+        btn = request.form['button']
+        result = request_bdd.learn2draw_insert_score('user1', infos, btn)
+        return redirect(url_for('score', token=token), code=307)
+
 
 #routes for backend after this comment
 @app.route('/admin-home/', methods=['POST', 'GET'])
@@ -147,7 +151,6 @@ def admin_home():
         #tempo redirect to admin_home
         return render_template("admin_home.html", error=e)   
         #return render_template("home.html", error=e)
-
 
 @app.route('/admin-home/tables/users', methods=['GET'])
 def users():
@@ -178,7 +181,6 @@ def categories():
     except Exception as e:
         current_date = utils.get_ccurent_date(format="fr")
         return render_template("admin_categories.html", error=e)
-
 
 @app.route('/admin-home/tables/notations', methods=['GET'])
 def notations():
