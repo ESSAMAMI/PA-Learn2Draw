@@ -1,0 +1,146 @@
+{% extends 'common/dom_landing.html' %}
+{% block scope %}
+    <section id="container-start">
+        <div class="container">
+          <div class="card" style="width: auto;">
+              <div class="card-body">
+                    <div style="display: none" id="alert-danger" class="alert alert-danger" role="alert">
+                      Tous les champs doivent être rensignés !
+                    </div>
+                  <div class="form-group">
+                    <label for="inputTime">Temps</label>
+                    <input type="email" class="form-control" id="inputTime" aria-describedby="emailHelp" placeholder="Entrer le temps en sconde">
+                    <small id="emailHelp" class="form-text text-muted">Le temps que vous saisissez correspond au temps que vous allez mettre pour réaliser le dessin.</small>
+                  </div>
+                  <div class="form-group">
+                    <label for="inputCategory">Catégorie</label>
+                    <input type="text" class="form-control" id="inputCategory" placeholder="Entrer la catégorie">
+                  </div>
+
+                  <button type="button" id="start" class="btn btn-primary">Commencer !</button>
+              </div>
+          </div>
+
+        </div>
+    </section>
+    <section class="page-section" id="container-draw">
+      <div class="container">
+          <div class="row">
+              <div class="col-md-6">
+                <button class="u-full-width" id="undo" disabled>Temps</button>
+              </div>
+              <div class="col-md-6">
+                  <button class="u-full-width" id="redo" disabled>Catégorie</button>
+              </div>
+          </div>
+          <div class="row">
+              <div class="col-md-6">
+                <button class="u-full-width" id="clear">Effacer</button>
+              </div>
+              <div class="col-md-6">
+                  <button class="u-full-width" id="clear">Valider</button>
+              </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div id="sketchpad"></div>
+            </div>
+          </div>
+
+      </div>
+    </section>
+      <!-- Scripts
+      –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+      <script src="{{ url_for('static', filename='assets/js/sketchpad/responsive-sketchpad.js')}}"></script>
+
+
+      <script type="text/javascript">
+
+        var el = document.getElementById('sketchpad');
+        var pad = new Sketchpad(el);
+        pad.setCanvasSize(960,400);
+        // setLineColor
+        function setLineColor(e) {
+            var color = e.target.value;
+            if (!color.startsWith('#')) {
+                color = '#' + color;
+            }
+            pad.setLineColor(color);
+        }
+        document.getElementById('line-color-input').oninput = setLineColor;
+
+        // setLineSize
+        function setLineSize(e) {
+            var size = e.target.value;
+            pad.setLineSize(size);
+        }
+        document.getElementById('line-size-input').oninput = setLineSize;
+
+        // undo
+        function undo() {
+            pad.undo();
+        }
+        document.getElementById('undo').onclick = undo;
+
+        // redo
+        function redo() {
+            pad.redo();
+        }
+        document.getElementById('redo').onclick = redo;
+
+        // clear
+        function clear() {
+            pad.clear();
+        }
+        document.getElementById('clear').onclick = clear;
+
+        // resize
+        window.onresize = function (e) {
+          pad.resize(el.offsetWidth);
+        }
+      </script>
+      <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+      <script type="text/javascript">
+
+          $(document).ready(function () {
+              $('#container-draw').hide();
+          })
+          $("#start").on('click', function () {
+
+              if($("#inputTime").val() === "" || $("#inputCategory").val() === ""){
+                  $('#alert-danger').css('display','block');
+              }else {
+
+                  $('#container-draw').show();
+                  $("#container-start").hide();
+                  $("#container-draw").fadeIn();
+                  // Choix de la categ, Temps qu'il faut,
+                  var timeleft = document.getElementById("inputTime").value;
+                  var category = document.getElementById("inputCategory").value;
+
+                  var downloadTimer = setInterval(function () {
+                      document.getElementById("redo").innerHTML = "Déssinez : "+category;
+                      if (timeleft <= 0) {
+                          clearInterval(downloadTimer);
+                          document.getElementById("undo").innerHTML = "C'est fini";
+                          // $("#container-draw").hide();
+                          // Here to get element !
+                      } else {
+                          document.getElementById("undo").innerHTML = "<b>" + timeleft + ":00<b>";
+                      }
+                      timeleft -= 1;
+                  }, 1000);
+              }
+          })
+      </script>
+      {% if token %}
+          <script type="text/javascript">
+            $('#li-submit_connect').hide();
+          </script>
+        {% else %}
+          <script type="text/javascript">
+            $('#li-profil').hide();
+            $('#li-note').hide();
+          </script>
+        {% endif %}
+{% endblock %}

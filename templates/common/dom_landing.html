@@ -20,7 +20,11 @@
           <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
           <link href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
           <link href='https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
-          <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
+
+            <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
+          <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+          <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/sketchpad/custom.css')}}">
+          <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/sketchpad/skeleton.css')}}">
 
           <!-- Custom styles for this template -->
           <!--<link href="css/agency.min.css" rel="stylesheet">-->
@@ -29,8 +33,11 @@
         </head>
     {% endblock %}
     {% block body %}
-    <body id="page-top" class="page-background">>
-
+    {% if play %}
+        <body id="page-top">
+    {% else %}
+        <body id="page-top" class="page-background">
+    {% endif %}
         <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav" style="padding:0px;margin-bottom:10px" >
             <div class="container">
               <a class="navbar-brand js-scroll-trigger" href="/">Learn 2 draw</a>
@@ -79,17 +86,16 @@
         <!--<script src="js/agency.min.js"></script>-->
         <script src="{{ url_for('static', filename='assets/js/test/agency.min.js')}}"></script>
         <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
-        <script type="text/javascript">
-        $( document ).ready(function() {
-            if ({{token|tojson}} != null){
-              $('#li-submit_connect').hide();
-            }else{
-               $('#li-profil').hide();
-               $('#li-note').hide();
-            }
-         });
-        </script>
-
+        {% if token %}
+          <script type="text/javascript">
+            $('#li-submit_connect').hide();
+          </script>
+        {% else %}
+          <script type="text/javascript">
+            $('#li-profil').hide();
+            $('#li-note').hide();
+          </script>
+        {% endif %}
     </body>
     {% endblock %}
 </html>

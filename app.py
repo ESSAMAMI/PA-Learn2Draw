@@ -106,8 +106,17 @@ def explain(token=None):
         return render_template("explain.html", token=token, current_year=current_year)
 
     except Exception as e:
+
         current_date = utils.get_ccurent_date(format="fr")
         return render_template("explain.html", error=e)
+
+@app.route('/play', methods=['GET'])
+def play():
+    token = None
+    play = True
+    return render_template("play.html", token=None, play=play)
+
+
 
 @app.route('/score', methods=['GET'])
 def score(token=utils.generate_token()):
