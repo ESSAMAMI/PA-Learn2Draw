@@ -9,14 +9,18 @@
                     </div>
                   <div class="form-group">
                     <label for="inputTime">Temps</label>
-                    <input type="email" class="form-control" id="inputTime" aria-describedby="emailHelp" placeholder="Entrer le temps en sconde">
+                    <input type="email" class="form-control u-full-width" id="inputTime" placeholder="Entrer le temps en sconde">
                     <small id="emailHelp" class="form-text text-muted">Le temps que vous saisissez correspond au temps que vous allez mettre pour réaliser le dessin.</small>
                   </div>
                   <div class="form-group">
                     <label for="inputCategory">Catégorie</label>
-                    <input type="text" class="form-control" id="inputCategory" placeholder="Entrer la catégorie">
+                    <!--<input type="text" class="form-control" id="inputCategory" placeholder="Entrer la catégorie">-->
+                    <select id="categorie" class="u-full-width form-text text-muted">
+                        <option disabled selected value="">Catégorie</option>
+                        <option value="Animal">Animal</option>
+                        <option value="Objet">Objet</option>
+                    </select>
                   </div>
-
                   <button type="button" id="start" class="btn btn-primary">Commencer !</button>
               </div>
           </div>
@@ -35,10 +39,10 @@
           </div>
           <div class="row">
               <div class="col-md-6">
-                <button class="u-full-width" id="clear">Effacer</button>
+                <button type="button" class="u-full-width" id="clear">Effacer</button>
               </div>
               <div class="col-md-6">
-                  <button class="u-full-width" id="clear">Valider</button>
+                  <button class="u-full-width" id="#">Valider</button>
               </div>
           </div>
           <div class="row">
@@ -52,7 +56,7 @@
       <!-- Scripts
       –––––––––––––––––––––––––––––––––––––––––––––––––– -->
       <script src="{{ url_for('static', filename='assets/js/sketchpad/responsive-sketchpad.js')}}"></script>
-
+    <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
 
       <script type="text/javascript">
 
@@ -67,63 +71,44 @@
             }
             pad.setLineColor(color);
         }
-        document.getElementById('line-color-input').oninput = setLineColor;
-
-        // setLineSize
-        function setLineSize(e) {
-            var size = e.target.value;
-            pad.setLineSize(size);
-        }
-        document.getElementById('line-size-input').oninput = setLineSize;
-
-        // undo
-        function undo() {
-            pad.undo();
-        }
-        document.getElementById('undo').onclick = undo;
-
-        // redo
-        function redo() {
-            pad.redo();
-        }
-        document.getElementById('redo').onclick = redo;
-
-        // clear
         function clear() {
             pad.clear();
         }
         document.getElementById('clear').onclick = clear;
-
+        
         // resize
         window.onresize = function (e) {
           pad.resize(el.offsetWidth);
         }
       </script>
-      <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+
       <script type="text/javascript">
 
           $(document).ready(function () {
               $('#container-draw').hide();
           })
           $("#start").on('click', function () {
-
-              if($("#inputTime").val() === "" || $("#inputCategory").val() === ""){
+              var e = document.getElementById("categorie");
+              var category = e.options[e.selectedIndex].value;
+              if($("#inputTime").val() === "" || category === ""){
                   $('#alert-danger').css('display','block');
               }else {
 
                   $('#container-draw').show();
                   $("#container-start").hide();
                   $("#container-draw").fadeIn();
-                  // Choix de la categ, Temps qu'il faut,
+
                   var timeleft = document.getElementById("inputTime").value;
-                  var category = document.getElementById("inputCategory").value;
+                  //var category = document.getElementById("inputCategory").value;
+                  // var e = document.getElementById("categorie");
+                  // var category = e.options[e.selectedIndex].value;
 
                   var downloadTimer = setInterval(function () {
-                      document.getElementById("redo").innerHTML = "Déssinez : "+category;
+                      document.getElementById("redo").innerHTML = "Dessiner : "+category;
                       if (timeleft <= 0) {
                           clearInterval(downloadTimer);
                           document.getElementById("undo").innerHTML = "C'est fini";
-                          // $("#container-draw").hide();
+                          //$("#container-draw").hide();
                           // Here to get element !
                       } else {
                           document.getElementById("undo").innerHTML = "<b>" + timeleft + ":00<b>";
