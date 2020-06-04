@@ -46,11 +46,16 @@
               </div>
           </div>
           <div class="row">
-            <div class="col-md-12">
-              <div id="sketchpad"></div>
-            </div>
+            <form action="/play/get_drawing/" method="POST">
+                <div class="col-md-12">
+                  <div id="sketchpad"></div>
+                    <input id="inputDrawing" type="hidden" name="drawing">
+                    <input id="inputCategory" type="hidden" name="category_drawing">
+                    <input id="submitFormDrawing" type="submit" style="display: none">
+                </div>
+            </form>
           </div>
-
+          <input type="button" id="btnSave" style="display:none;">
       </div>
     </section>
       <!-- Scripts
@@ -75,13 +80,34 @@
             pad.clear();
         }
         document.getElementById('clear').onclick = clear;
-        
+
         // resize
         window.onresize = function (e) {
           pad.resize(el.offsetWidth);
         }
       </script>
+    <script src="https://files.codepedia.info/files/uploads/iScripts/html2canvas.js"></script>
+    <script type="text/javascript">
 
+          $('#btnSave').click(function(){
+            html2canvas($('#sketchpad'),
+            {
+              onrendered: function (canvas) {
+                var a = document.createElement('a');
+                // toDataURL defaults to png, so we need to request a jpeg, then convert for file download.
+                a.href = canvas.toDataURL("image/jpg").replace("image/jpg", "image/octet-stream");
+
+                a.download = 'drawing.png';
+                $("#inputDrawing").val(a.href);
+                var e = document.getElementById("categorie");
+                var category = e.options[e.selectedIndex].value;
+                $("#inputCategory").val(category);
+                $("#submitFormDrawing").click();
+              }
+            });
+          });
+
+    </script>
       <script type="text/javascript">
 
           $(document).ready(function () {
@@ -108,8 +134,9 @@
                       if (timeleft <= 0) {
                           clearInterval(downloadTimer);
                           document.getElementById("undo").innerHTML = "C'est fini";
-                          //$("#container-draw").hide();
-                          // Here to get element !
+                          document.getElementById("btnSave").click();
+                          $("#container-draw").hide();
+
                       } else {
                           document.getElementById("undo").innerHTML = "<b>" + timeleft + ":00<b>";
                       }

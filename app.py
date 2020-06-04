@@ -209,10 +209,21 @@ def admin_models(token=None):
         current_date = utils.get_ccurent_date(format="fr")
         return render_template("admin_models.html", error=e)
 
+@app.route('/play/get_drawing/', methods=['POST', 'GET'])
+def get_drawing(token=None):
+    if request.method == 'POST':
+        image_base_64 = request.form['drawing']
+        category = request.form['category_drawing']
 
+        check_is = utils.decode_uploaded_file(image_base_64, category)
+
+        return check_is
+
+    return redirect(url_for('url_not_found'))
 
 # Handle errors section
 @app.errorhandler(404)
+@app.route('/url_not_found/', methods=['GET'])
 def url_not_found(e):
 
     return render_template("common/error.html")
