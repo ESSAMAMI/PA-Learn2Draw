@@ -27,7 +27,10 @@
         </div>
         <script type="text/javascript">
             window.onload = function create() {
+                console.log("Bonjour");
                 var list = {{ list_drawings | tojson }};
+                console.log("dico : ");
+                console.log(list);
 
                 var container = document.getElementById("container");
 

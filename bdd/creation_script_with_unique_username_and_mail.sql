@@ -23,8 +23,8 @@ USE `learn2draw_db` ;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `learn2draw_db`.`USERS` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `username` VARCHAR(200) NOT NULL,
-  `email` VARCHAR(200) NOT NULL,
+  `username` VARCHAR(200) NOT NULL UNIQUE,
+  `email` VARCHAR(200) NOT NULL UNIQUE,
   `pwd` CHAR(64) NOT NULL,
   `admin` TINYINT NULL,
   `score` INT NULL DEFAULT 0,
