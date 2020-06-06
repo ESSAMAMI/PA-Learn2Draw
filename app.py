@@ -6,7 +6,8 @@ import os
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(24)
 
-@app.route('/', methods=['GET'])
+# basic access routes
+@app.route('/', methods=['GET', 'POST'])
 def home(token=None):
     try:
         current_year = utils.get_ccurent_date(format="ang", full=False)
@@ -38,6 +39,10 @@ def connection(token):
             username = request.form['username']
             pwd = request.form['pwd']
             user = request_bdd.learn2draw_connect(username, pwd)
+            
+            # redirect to admin is username == admin, temprary method
+            if username == "admin":
+                return redirect(url_for('admin_home', token=token), code=307)
             if user.empty:
                 error_connection = True
                 return render_template('login.html', error_connection=error_connection, token=token)
@@ -46,7 +51,8 @@ def connection(token):
                 session['email'] = str(user.email[0])
                 session['pwd'] = str(user.pwd[0])
                 session['score'] = str(user.score[0])
-                return redirect(url_for('user_profil', token=token), code=307)
+                return redirect(url_for('home', token=token), code=307)
+                #return redirect(url_for('user_profil', token=token), code=307)
 
         return render_template('common/permission.html')
 
@@ -64,7 +70,9 @@ def user_profil():
             return render_template("home.html", current_year=current_year)
 
         elif request.method == 'GET':
-            return render_template("common/permission.html")
+            # handle permission later if possible
+            return render_template("profile.html", current_year=current_year)
+            #return render_template("common/permission.html")
 
         else:
             e = "something went wrong"
@@ -85,6 +93,12 @@ def sign_up():
             pwd = str(request.form['pwd'])
             cnf_pwd = str(request.form['cnf_pwd'])
 
+            # check if the username / email is already used
+            verif = request_bdd.learn2draw_sign_up_verif(username, email, pwd)
+            if verif == False:
+                error_user_already_created = True
+                return render_template('login.html', error_user_already_created=error_user_already_created)
+
             if pwd != cnf_pwd:
 
                 error_identical_pwd = True
@@ -99,14 +113,13 @@ def sign_up():
         current_date = utils.get_ccurent_date(format="fr")
         return render_template("score.html", error=e)
 
-@app.route('/explain', methods=['GET'])
-def explain(token=None):
+@app.route('/explain/', methods=['GET', 'POST'])
+def explain():
     try:
         current_year = utils.get_ccurent_date(format="ang", full=False)
-        return render_template("explain.html", token=token, current_year=current_year)
+        return render_template("explain.html", current_year=current_year)
 
     except Exception as e:
-
         current_date = utils.get_ccurent_date(format="fr")
         return render_template("explain.html", error=e)
 
@@ -118,21 +131,29 @@ def play():
 
 
 
-@app.route('/score', methods=['GET'])
-def score(token=utils.generate_token()):
+@app.route('/score/', methods=['GET', 'POST'])
+def score():
     try:
-        if(token==None):
-            current_date = utils.get_ccurent_date(format="fr")
-            return render_template("common/error.html")
-        else:
-            current_year = utils.get_ccurent_date(format="ang", full=False)
-            return render_template("score.html", token=token, current_year=current_year)
+        list_drawings = request_bdd.learn2draw_list_draw_to_score('arnaud_lasticotier')
+        current_year = utils.get_ccurent_date(format="ang", full=False)
+        return render_template("score.html", current_year=current_year, list_drawings=list_drawings)
 
     except Exception as e:
         current_date = utils.get_ccurent_date(format="fr")
         return render_template("score.html", error=e)
 
-#routes for backend after this comment
+# route to insert new score in bdd
+@app.route('/scoring/', methods=['GET', 'POST'])
+def score_image():
+    if request.method == 'POST':
+        token = request.args['token']
+        infos = request.args['infos']
+        btn = request.form['button']
+        print("\nbtn : ", btn)
+        result = request_bdd.learn2draw_insert_score('user1', infos, btn)
+        return redirect(url_for('score', token=token), code=307)
+
+#routes for backend access
 @app.route('/admin-home/', methods=['POST', 'GET'])
 def admin_home():
     try:
@@ -157,12 +178,15 @@ def admin_home():
         return render_template("admin_home.html", error=e)   
         #return render_template("home.html", error=e)
 
-
-@app.route('/admin-home/tables/users', methods=['GET'])
+@app.route('/admin-home/tables/users/', methods=['GET', 'POST'])
 def users():
     try:
+        query_result = request.args.get('query_result')
+        users_infos = request_bdd.learn2draw_list_all_users()
         current_year = utils.get_ccurent_date(format="ang", full=False)
-        return render_template("admin_users.html", current_year=current_year)
+        #query_result = ""
+        print("query_result :", query_result)
+        return render_template("admin_users.html", current_year=current_year, users_infos=users_infos, query_result=query_result)
 
     except Exception as e:
         current_date = utils.get_ccurent_date(format="fr")
@@ -188,7 +212,6 @@ def categories():
         current_date = utils.get_ccurent_date(format="fr")
         return render_template("admin_categories.html", error=e)
 
-
 @app.route('/admin-home/tables/notations', methods=['GET'])
 def notations():
     try:
@@ -209,6 +232,94 @@ def admin_models(token=None):
         current_date = utils.get_ccurent_date(format="fr")
         return render_template("admin_models.html", error=e)
 
+
+# Routes for CRUD Operations in Backend
+@app.route('/adding_user/', methods=['GET', 'POST'])
+def create_user():
+    try:
+        #token = request.args['token']
+        # infos = request.args['infos']
+        # btn = request.form['button']
+        print("WELCOME IN ADD USER FUNC")
+
+        new_username = request.form['username_input']
+        new_email = request.form['email_input']
+        new_password = request.form['password_input']
+        new_confirm_password = request.form['confirm_password_input']
+        # new_score = request.form['score_input']
+        # print("infos : ", infos)
+        # print("\nbtn : ", btn)
+        print("\nusername : ", new_username)
+        print("\nemail : ", new_email)
+        print("\npassword : ", new_password)
+        print("\nconfirm password : ", new_confirm_password)
+
+        query_result = request_bdd.learn2draw_create_user(new_username, new_email, new_password, new_confirm_password)
+        
+        print("GOOD ROUTE")
+        if query_result == "True" or query_result == "False":
+            # Nothing if 0 problems
+            return redirect(url_for('users'), code=307)
+        else:
+            return redirect(url_for('users', query_result=query_result), code=307)
+
+    except Exception as e:
+        print("ECHEC")
+        current_date = utils.get_ccurent_date(format="fr")
+        return render_template("admin_users.html", error=e)
+
+@app.route('/updating_username/', methods=['GET', 'POST'])
+def crud_users():
+    try:
+        #token = request.args['token']
+        infos = request.args['infos']
+        btn = request.form['button']
+        new_username = request.form['username_input']
+        new_email = request.form['email_input']
+        new_score = request.form['score_input']
+        print("infos : ", infos)
+        print("\nbtn : ", btn)
+        print("\nusername : ", new_username)
+        print("\nemail : ", new_email)
+        print("\nscore : ", new_score)
+        query_result = request_bdd.learn2draw_update_user(infos, new_username, new_email, new_score)
+
+        print("GOOD ROUTE")
+        if query_result == "True" or query_result == "False":
+            # Nothing if 0 problems
+            return redirect(url_for('users'), code=307)
+        else:
+            return redirect(url_for('users', query_result=query_result), code=307)
+
+    except Exception as e:
+        print("ECHEC")
+        current_date = utils.get_ccurent_date(format="fr")
+        return render_template("admin_users.html", error=e)
+
+@app.route('/delete_user/', methods=['GET', 'POST'])
+def delete_user():
+    try:
+        #token = request.args['token']
+        infos = request.args['infos']
+        # btn = request.form['button']
+        print("WELCOME IN DELETE USER FUNC")
+
+        query_result = request_bdd.learn2draw_delete_user(infos)
+
+        if query_result == "True" or query_result == "False":
+            # Nothing if 0 problems
+            return redirect(url_for('users'), code=307)
+        else:
+            return redirect(url_for('users', query_result=query_result), code=307)
+        
+
+    except Exception as e:
+        print("ECHEC")
+        current_date = utils.get_ccurent_date(format="fr")
+        return render_template("admin_users.html", error=e)
+
+
+# routes for drawings actions and everything linked to it
 @app.route('/play/get_drawing/', methods=['POST', 'GET'])
 def get_drawing(token=None):
     if request.method == 'POST':

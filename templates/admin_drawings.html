@@ -24,7 +24,7 @@
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
                         <a class="dropdown-item" href="#">Settings</a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="http://192.168.99.1:9893/connection">Logout</a>
+                        <a class="dropdown-item" href="/connection">Logout</a>
                     </div>
                 </li>
             </ul>
@@ -35,7 +35,7 @@
                     <div class="sb-sidenav-menu">
                         <div class="nav">
                             <div class="sb-sidenav-menu-heading">Home</div>
-                            <a class="nav-link" href="http://192.168.99.1:9893/admin-home"
+                            <a class="nav-link" href="/admin-home"
                                 ><div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                                 Dashboard Home</a
                             >
@@ -79,15 +79,17 @@
                                 <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div
                             ></a>
                             <div class="collapse" id="collapseTables" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
-                                <nav class="sb-sidenav-menu-nested nav"><a class="nav-link" href="http://192.168.99.1:9893/admin-home/tables/users">Users</a><a class="nav-link" href="http://192.168.99.1:9893/admin-home/tables/drawings">Drawings</a><a class="nav-link" href="http://192.168.99.1:9893/admin-home/tables/categories">Categories</a><a class="nav-link" href="http://192.168.99.1:9893/admin-home/tables/notations">Notations</a></nav>
+                                <nav class="sb-sidenav-menu-nested nav"><a class="nav-link" href="/admin-home/tables/users">Users</a><a class="nav-link" href="/admin-home/tables/drawings">Drawings</a><a class="nav-link" href="/admin-home/tables/categories">Categories</a><a class="nav-link" href="/admin-home/tables/notations">Notations</a></nav>
                             </div>
                             <div class="sb-sidenav-menu-heading">Train models</div>
-                            <a class="nav-link" href="http://192.168.99.1:9893/admin-models">  
+                            <a class="nav-link" href="/admin-models">
                                 <div class="sb-nav-link-icon">
                                     <i class="fas fa-brain"></i>
                                 </div>
                                 Models
                             </a>
+
+                                <!--<div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>-->
                             <!--<div class="collapse" id="collapseModels" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
                                 <nav class="sb-sidenav-menu-nested nav"><a class="nav-link" href="layout-static.html">CNN</a><a class="nav-link" href="layout-sidenav-light.html">LSTM</a><a class="nav-link" href="layout-sidenav-light.html">OTHERS</a>
                                 </nav>
