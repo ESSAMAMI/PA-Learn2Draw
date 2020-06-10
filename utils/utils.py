@@ -33,7 +33,8 @@ def decode_uploaded_file(image_base_64:str, category:str)-> str:
         file_name = 'doodle/' + category.lower() + '/' + category.lower() + '_' + str(len(open_dir) + 1) + '.jpg'
         with open(file_name, 'wb') as f:
             f.write(img_data)
-        return "True"
+        #return "True"
+        return file_name
 
     else:
         os.mkdir('doodle/' + category.lower())
@@ -42,6 +43,7 @@ def decode_uploaded_file(image_base_64:str, category:str)-> str:
         with open(file_name, 'wb') as f:
             f.write(img_data)
 
-        return "True"
+        #return "True"
+        return file_name
 
 

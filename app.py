@@ -1,6 +1,7 @@
 from flask import Flask, render_template, redirect, url_for, request, session
 import socket
 from utils import utils, request_bdd
+from models import cnn
 import os
 
 app = Flask(__name__)
@@ -328,7 +329,9 @@ def get_drawing(token=None):
 
         check_is = utils.decode_uploaded_file(image_base_64, category)
 
-        return check_is
+        prediction = cnn.get_predict_sample_cnn_baseball_broom_dolphin(check_is, category)
+
+        return "image name : " + str(check_is) + " | " + prediction
 
     return redirect(url_for('url_not_found'))
 

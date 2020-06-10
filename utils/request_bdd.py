@@ -6,7 +6,7 @@ import pandas as pd
 
 def create_engine_db() -> str:
     config = ConfigParser()
-    config.read("D:\\Projets_annuels\\PA4A\\PA-Learn2Draw\\utils\\config.ini")
+    config.read("C:\\Users\\arnau\\git_projects\\projets_annuels\\PA4A\\PA-Learn2Draw\\utils\\config.ini")
     #config.read("D:/Skoula/utils/config.ini")
 
     get_connection = 'mysql+pymysql://'\

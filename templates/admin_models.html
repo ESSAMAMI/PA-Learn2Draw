@@ -8,8 +8,8 @@
         <meta name="author" content="" />
         <title>Dashboard - SB Admin</title>
 
-        <link rel="stylesheet" href="{{ url_for('static', filename='/assets/css/backend/test.css') }}">
-        <link rel="stylesheet" href="{{ url_for('static', filename='/assets/css/backend/styles.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/backend/test.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/backend/styles.css') }}">
         <link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet" crossorigin="anonymous" />
         <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/js/all.min.js" crossorigin="anonymous"></script>
     </head>
@@ -21,7 +21,7 @@
             </div>
             <!-- Navbar-->
             <ul class="navbar-nav ml-auto ml-md-0">
-                <li class="nav-item dropdown">
+                <li class="nav-item dropdown" style="padding-top: 20px;">
                     <a class="nav-link dropdown-toggle" id="userDropdown" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
                         <a class="dropdown-item" href="#">Settings</a>
@@ -748,11 +748,11 @@
 
         <script src="https://code.jquery.com/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-        <script src="{{ url_for('static', filename='/assets/js/backend/scripts.js') }}"></script>
+        <script src="{{ url_for('static', filename='assets/js/backend/scripts.js') }}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
         <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js" crossorigin="anonymous"></script>
         <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js" crossorigin="anonymous"></script>
-        <script src="{{ url_for('static', filename='/assets/js/backend/datatables-demo.js') }}"></script>
+        <script src="{{ url_for('static', filename='assets/js/backend/datatables-demo.js') }}"></script>
 
         <script type="text/javascript">
             $('#creation-model').on('show.bs.modal', function (event) {
