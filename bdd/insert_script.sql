@@ -20,6 +20,6 @@ INSERT INTO drawings VALUES(13,2,1,"\\static\\assets\\images\\test\\draw.jpg",0,
 INSERT INTO drawings VALUES(14,2,1,"\\static\\assets\\images\\test\\draw.jpg",0,60,30);
 INSERT INTO drawings VALUES(15,2,1,"\\static\\assets\\images\\test\\draw.jpg",0,60,30);
 
-INSERT INTO notations VALUES(1,"yes",2,1,2,1);
-INSERT INTO notations VALUES(2,"no",2,1,2,1);
+INSERT INTO notations VALUES(1,"yes",1,1,2,1);
+INSERT INTO notations VALUES(2,"no",1,2,2,1);
 

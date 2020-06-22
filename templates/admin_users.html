@@ -127,7 +127,7 @@
                                         <div class="modal-dialog" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title" id="exampleModalLabel1">Add user</h5>
+                                                    <h5 class="modal-title" id="exampleModalLabel1"><b>Add user</b></h5>
                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                         <span aria-hidden="true">&times;</span>
                                                     </button>
@@ -136,18 +136,22 @@
                                                     <div class="modal-body">
                                                         <!-- Form Sign UP -->
                                                         <div class="form-group input-rounded">
+                                                            <label for="username_input"><b>Username</b></label>
                                                             <input name="username_input" type="text" class="form-control" placeholder="Username *" required/>
                                                             <div class="required"></div>
                                                         </div>
                                                         <div class="form-group input-rounded">
+                                                            <label for="email_input"><b>Email</b></label>
                                                             <input name="email_input" type="email" class="form-control" placeholder="Email *" required/>
                                                             <div class="required"></div>
                                                         </div>
                                                         <div class="form-group input-rounded">
+                                                            <label for="password_input"><b>Password</b></label>
                                                             <input name="password_input" type="password" class="form-control" placeholder="Password *" required/>
                                                             <div class="required"></div>
                                                         </div>
                                                         <div class="form-group input-rounded">
+                                                            <label for="confirm_password_input"><b>Confirm password</b></label>
                                                             <input name="confirm_password_input" type="password" class="form-control" placeholder="Confirm password *" required/>
                                                             <div class="required"></div>
                                                         </div>
@@ -166,7 +170,7 @@
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title" id="exampleModalLabel">Edit user</h5>
+                                                <h5 class="modal-title" id="exampleModalLabel"><b>Edit user</b></h5>
                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                     <span aria-hidden="true">&times;</span>
                                                 </button>
@@ -175,14 +179,17 @@
                                                 <div class="modal-body">
                                                      <!--Form Sign UP -->
                                                     <div class="form-group input-rounded">
+                                                        <label for="username_input"><b>Username</b></label>
                                                         <input id="username_input" name="username_input" type="text" class="form-control" placeholder="Username *" required/>
                                                         <div class="required"></div>
                                                     </div>
                                                     <div class="form-group input-rounded">
+                                                        <label for="email_input"><b>Email</b></label>
                                                         <input id="email_input" name="email_input" type="email" class="form-control" placeholder="Email *" required/>
                                                         <div class="required"></div>
                                                     </div>
                                                     <div class="form-group input-rounded">
+                                                        <label for="score_input"><b>Score</b></label>
                                                         <input id="score_input" name="score_input" type="number" class="form-control" placeholder="Score *" required/>
                                                         <div class="required"></div>
                                                     </div>
@@ -200,7 +207,7 @@
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title" id="exampleModalLabelDelete">Delete user</h5>
+                                                <h5 class="modal-title" id="exampleModalLabelDelete"><b>Delete user</b></h5>
                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                     <span aria-hidden="true">&times;</span>
                                                 </button>
@@ -251,7 +258,7 @@
                                             </tr>
                                           </thead>
                                           <tbody id="table_content">
-                                              <tr></tr>
+                                              
                                               <!--
                                               <tr>
                                               <td>Tiger Nixon</td>
@@ -682,11 +689,11 @@
             </div>
             <script src="https://code.jquery.com/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
             <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-            <script src="{{ url_for('static', filename='/assets/js/backend/scripts.js') }}"></script>
+            <script src="{{ url_for('static', filename='assets/js/backend/scripts.js') }}"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
             <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js" crossorigin="anonymous"></script>
             <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js" crossorigin="anonymous"></script>
-            <script src="{{ url_for('static', filename='/assets/js/backend/datatables-demo.js') }}"></script>
+            <script src="{{ url_for('static', filename='assets/js/backend/datatables-demo.js') }}"></script>
 
             <!-- CUSTOM SCRIPT FOR MODAL EDIT AND TESTS DYNAMIC USERS LIST-->
             <script type="text/javascript">

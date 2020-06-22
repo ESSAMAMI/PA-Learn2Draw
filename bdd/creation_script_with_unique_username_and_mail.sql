@@ -37,7 +37,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `learn2draw_db`.`CATEGORIES` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(200) NOT NULL,
+  `name` VARCHAR(200) NOT NULL UNIQUE,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 

@@ -193,31 +193,38 @@ def users():
         current_date = utils.get_ccurent_date(format="fr")
         return render_template("admin_users.html", error=e)
 
-@app.route('/admin-home/tables/drawings', methods=['GET'])
+@app.route('/admin-home/tables/drawings', methods=['GET', 'POST'])
 def drawings():
     try:
+        query_result = request.args.get('query_result')
+        drawings_infos = request_bdd.learn2draw_list_all_drawings()
         current_year = utils.get_ccurent_date(format="ang", full=False)
-        return render_template("admin_drawings.html", current_year=current_year)
+        return render_template("admin_drawings.html", current_year=current_year, drawings_infos=drawings_infos, query_result=query_result)
 
     except Exception as e:
         current_date = utils.get_ccurent_date(format="fr")
         return render_template("admin_drawings.html", error=e)
 
-@app.route('/admin-home/tables/categories', methods=['GET'])
+@app.route('/admin-home/tables/categories', methods=['GET', 'POST'])
 def categories():
     try:
+        query_result = request.args.get('query_result')
+        categories_infos = request_bdd.learn2draw_list_all_categories()
         current_year = utils.get_ccurent_date(format="ang", full=False)
-        return render_template("admin_categories.html", current_year=current_year)
+        return render_template("admin_categories.html", current_year=current_year, categories_infos=categories_infos, query_result=query_result)
 
     except Exception as e:
         current_date = utils.get_ccurent_date(format="fr")
         return render_template("admin_categories.html", error=e)
 
-@app.route('/admin-home/tables/notations', methods=['GET'])
+@app.route('/admin-home/tables/notations', methods=['GET', 'POST'])
 def notations():
     try:
+        query_result = request.args.get('query_result')
+        notations_infos = request_bdd.learn2draw_list_all_notations()
+        print("notations_infos : ", notations_infos)
         current_year = utils.get_ccurent_date(format="ang", full=False)
-        return render_template("admin_notations.html", current_year=current_year)
+        return render_template("admin_notations.html", current_year=current_year, notations_infos=notations_infos, query_result=query_result)
 
     except Exception as e:
         current_date = utils.get_ccurent_date(format="fr")
@@ -235,6 +242,7 @@ def admin_models(token=None):
 
 
 # Routes for CRUD Operations in Backend
+# user operations
 @app.route('/adding_user/', methods=['GET', 'POST'])
 def create_user():
     try:
@@ -318,6 +326,274 @@ def delete_user():
         print("ECHEC")
         current_date = utils.get_ccurent_date(format="fr")
         return render_template("admin_users.html", error=e)
+
+
+# drawing operations
+@app.route('/adding_drawing/', methods=['GET', 'POST'])
+def create_drawing():
+    try:
+        #token = request.args['token']
+        # infos = request.args['infos']
+        # btn = request.form['button']
+        print("WELCOME IN ADD DRAWING FUNC")
+
+        new_user_id = request.form['user_id_input']
+        new_category_id = request.form['category_id_input']
+        new_location = "\\static\\assets\\images\\test\\plot.png"
+        new_status = 0
+        new_score = request.form['score_input']
+        new_time = request.form['time_input']
+        # new_score = request.form['score_input']
+        # print("infos : ", infos)
+        # print("\nbtn : ", btn)
+        print("\nuser_id : ", new_user_id)
+        print("\ncategory_id : ", new_category_id)
+        print("\nlocation : ", new_location)
+        print("\nstatus : ", new_status)
+        print("\nscore : ", new_score)
+        print("\ntime : ", new_time)
+
+        query_result = request_bdd.learn2draw_create_drawing(new_user_id, new_category_id, new_location, new_status, new_score, new_time)
+        
+        print("GOOD ROUTE")
+        if query_result == "True" or query_result == "False":
+            # Nothing if 0 problems
+            return redirect(url_for('drawings'), code=307)
+        else:
+            return redirect(url_for('drawings', query_result=query_result), code=307)
+
+    except Exception as e:
+        print("ECHEC")
+        current_date = utils.get_ccurent_date(format="fr")
+        return render_template("admin_users.html", error=e)
+
+@app.route('/updating_drawing/', methods=['GET', 'POST'])
+def crud_drawing():
+    try:
+        #token = request.args['token']
+        infos = request.args['infos']
+        btn = request.form['button']
+        new_user_id = request.form['user_id_input']
+        new_category_id = request.form['category_id_input']
+        new_location = "\\static\\assets\\images\\test\\plot.png"
+        new_status = request.form['status_input'] 
+        new_score = request.form['score_input']
+        new_time = request.form['time_input']
+        print("infos : ", infos)
+        print("\nbtn : ", btn)
+        print("\nuser_id : ", new_user_id)
+        print("\ncategory_id : ", new_category_id)
+        print("\nlocation : ", new_location)
+        print("\nstatus : ", new_status)
+        print("\nscore : ", new_score)
+        print("\ntime : ", new_time)
+
+        query_result = request_bdd.learn2draw_update_drawing(infos, new_user_id, new_category_id, new_location, new_status, new_score, new_time)
+
+        print("GOOD ROUTE")
+        if query_result == "True" or query_result == "False":
+            # Nothing if 0 problems
+            return redirect(url_for('drawings'), code=307)
+        else:
+            return redirect(url_for('drawings', query_result=query_result), code=307)
+
+    except Exception as e:
+        print("ECHEC")
+        current_date = utils.get_ccurent_date(format="fr")
+        return render_template("admin_users.html", error=e)
+
+@app.route('/delete_drawing/', methods=['GET', 'POST'])
+def delete_drawing():
+    try:
+        #token = request.args['token']
+        infos = request.args['infos']
+        # btn = request.form['button']
+        print("WELCOME IN DELETE DRAWING FUNC")
+
+        query_result = request_bdd.learn2draw_delete_drawing(infos)
+
+        if query_result == "True" or query_result == "False":
+            # Nothing if 0 problems
+            return redirect(url_for('drawings'), code=307)
+        else:
+            return redirect(url_for('drawings', query_result=query_result), code=307)
+        
+
+    except Exception as e:
+        print("ECHEC")
+        current_date = utils.get_ccurent_date(format="fr")
+        return render_template("admin_drawings.html", error=e)
+
+# Operations for categories
+@app.route('/adding_category/', methods=['GET', 'POST'])
+def create_category():
+    try:
+        #token = request.args['token']
+        # infos = request.args['infos']
+        # btn = request.form['button']
+        print("WELCOME IN ADD CATEGORY FUNC")
+
+        new_category = request.form['category_input']
+        # new_score = request.form['score_input']
+        # print("infos : ", infos)
+        # print("\nbtn : ", btn)
+        print("\ncategory : ", new_category)
+
+        query_result = request_bdd.learn2draw_create_category(new_category)
+        
+        print("GOOD ROUTE")
+        if query_result == "True" or query_result == "False":
+            # Nothing if 0 problems
+            return redirect(url_for('categories'), code=307)
+        else:
+            return redirect(url_for('categories', query_result=query_result), code=307)
+
+    except Exception as e:
+        print("ECHEC")
+        current_date = utils.get_ccurent_date(format="fr")
+        return render_template("admin_categories.html", error=e)
+
+@app.route('/updating_category/', methods=['GET', 'POST'])
+def crud_categories():
+    try:
+        #token = request.args['token']
+        infos = request.args['infos']
+        btn = request.form['button']
+        new_category = request.form['category_input']
+        print("infos : ", infos)
+        print("\nbtn : ", btn)
+        print("\ncategory : ", new_category)
+        query_result = request_bdd.learn2draw_update_category(infos, new_category)
+
+        print("GOOD ROUTE")
+        if query_result == "True" or query_result == "False":
+            # Nothing if 0 problems
+            return redirect(url_for('categories'), code=307)
+        else:
+            return redirect(url_for('categories', query_result=query_result), code=307)
+
+    except Exception as e:
+        print("ECHEC")
+        current_date = utils.get_ccurent_date(format="fr")
+        return render_template("admin_categories.html", error=e)
+
+@app.route('/delete_category/', methods=['GET', 'POST'])
+def delete_category():
+    try:
+        #token = request.args['token']
+        infos = request.args['infos']
+        # btn = request.form['button']
+        print("WELCOME IN DELETE CATEGORY FUNC")
+
+        query_result = request_bdd.learn2draw_delete_category(infos)
+
+        if query_result == "True" or query_result == "False":
+            # Nothing if 0 problems
+            return redirect(url_for('categories'), code=307)
+        else:
+            return redirect(url_for('categories', query_result=query_result), code=307)
+        
+
+    except Exception as e:
+        print("ECHEC")
+        current_date = utils.get_ccurent_date(format="fr")
+        return render_template("admin_categories.html", error=e)
+
+
+# notation operations
+@app.route('/adding_notation/', methods=['GET', 'POST'])
+def create_notation():
+    try:
+        #token = request.args['token']
+        # infos = request.args['infos']
+        # btn = request.form['button']
+        print("WELCOME IN ADD DRAWING FUNC")
+
+        new_score = request.form['score_input']
+        new_user_id = request.form['user_id_input']
+        new_drawing_id = request.form['drawing_id_input']
+        new_drawing_user_id = request.form['drawing_user_id_input']
+        new_drawing_category_id = request.form['drawing_category_id_input']
+        
+        # new_score = request.form['score_input']
+        # print("infos : ", infos)
+        # print("\nbtn : ", btn)
+        print("\nscore : ", new_score)
+        print("\nuser_id : ", new_user_id)
+        print("\ndrawing_id : ", new_drawing_id)
+        print("\new_drawing_user_id : ", new_drawing_user_id)
+        print("\new_drawing_category_id : ", new_drawing_category_id)
+
+        query_result = request_bdd.learn2draw_create_notation(new_score, new_user_id, new_drawing_id, new_drawing_user_id, new_drawing_category_id)
+        
+        print("GOOD ROUTE")
+        if query_result == "True" or query_result == "False":
+            # Nothing if 0 problems
+            return redirect(url_for('notations'), code=307)
+        else:
+            return redirect(url_for('notations', query_result=query_result), code=307)
+
+    except Exception as e:
+        print("ECHEC")
+        current_date = utils.get_ccurent_date(format="fr")
+        return render_template("admin_notations.html", error=e)
+
+@app.route('/updating_notation/', methods=['GET', 'POST'])
+def crud_notation():
+    try:
+        #token = request.args['token']
+        infos = request.args['infos']
+        btn = request.form['button']
+        new_score = request.form['score_input']
+        new_user_id = request.form['user_id_input']
+        new_drawing_id = request.form['drawing_id_input']
+        new_drawing_user_id = request.form['drawing_user_id_input']
+        new_drawing_category_id = request.form['drawing_category_id_input']
+        
+        print("infos : ", infos)
+        print("\nbtn : ", btn)
+        print("\nscore : ", new_score)
+        print("\nuser_id : ", new_user_id)
+        print("\ndrawing_id : ", new_drawing_id)
+        print("\new_drawing_user_id : ", new_drawing_user_id)
+        print("\new_drawing_category_id : ", new_drawing_category_id)
+
+        query_result = request_bdd.learn2draw_update_notation(infos, new_score, new_user_id, new_drawing_id, new_drawing_user_id, new_drawing_category_id)
+
+        print("GOOD ROUTE")
+        if query_result == "True" or query_result == "False":
+            # Nothing if 0 problems
+            return redirect(url_for('notations'), code=307)
+        else:
+            return redirect(url_for('notations', query_result=query_result), code=307)
+
+    except Exception as e:
+        print("ECHEC")
+        current_date = utils.get_ccurent_date(format="fr")
+        return render_template("admin_notations.html", error=e)
+
+@app.route('/delete_notation/', methods=['GET', 'POST'])
+def delete_notation():
+    try:
+        #token = request.args['token']
+        infos = request.args['infos']
+        # btn = request.form['button']
+        print("WELCOME IN DELETE NOTATION FUNC")
+
+        query_result = request_bdd.learn2draw_delete_notation(infos)
+
+        if query_result == "True" or query_result == "False":
+            # Nothing if 0 problems
+            return redirect(url_for('notations'), code=307)
+        else:
+            return redirect(url_for('notations', query_result=query_result), code=307)
+        
+
+    except Exception as e:
+        print("ECHEC")
+        current_date = utils.get_ccurent_date(format="fr")
+        return render_template("admin_notations.html", error=e)
+
 
 
 # routes for drawings actions and everything linked to it
