@@ -1,7 +1,7 @@
 # **PA - Project : Learn2draw** :art:
 
 The aim of this project is to identify the objects created in drawings, specially doodles, 
-but also to help people who have difficulties to improve their level of 
+but also to help people who have difficulties to improve their level of
 drawing.  
 
 ### **Members** :construction_worker:
