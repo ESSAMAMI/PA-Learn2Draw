@@ -56,4 +56,4 @@ def get_predict_sample_cnn_baseball_broom_dolphin(image_name: str, category: str
 	predict_final = model.predict(im)
 	print("prediction finale = ", labels[np.argmax(predict_final)]," => ", predict_final[0][np.argmax(predict_final)])
 	print("toutes les predict : ", predict_final)
-	return "prediction finale = " + str(labels[np.argmax(predict_final)]) + " => " + str(predict_final[0][np.argmax(predict_final)])
+	return str(labels[np.argmax(predict_final)]) + ";" + str(predict_final[0][np.argmax(predict_final)])

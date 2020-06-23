@@ -17,18 +17,28 @@
                     <!--<input type="text" class="form-control" id="inputCategory" placeholder="Entrer la catégorie">-->
                     <select id="categorie" class="u-full-width form-text text-muted">
                         <option disabled selected value="">Catégorie</option>
-                        <option value="Animal">Animal</option>
-                        <option value="Dolphin">Dolphin</option>
-                        <option value="Objet">Objet</option>
-                        <option value="Broom">Broom</option>
                         <option value="Baseball">Baseball</option>
+                        <option value="Baseball">Broom</option>
+                        <option value="Dolphin">Dolphin</option>
                     </select>
                   </div>
                   <button type="button" id="start" class="btn btn-primary">Commencer !</button>
               </div>
           </div>
-
         </div>
+        {% if current_prediction %}
+          <div class="container">
+            <div class="card" style="width: auto;">
+                <div class="card-body">
+                  <h5>Nous pensons que vous avez representé la catégorie {{ current_prediction_label }}</h5>
+                  <p>Si vous aviez un compte, vous auriez gagné {{ current_prediction }} points.</p> 
+                  <p>En vous inscrivant vous pourrez également proposer vos propres catégories et faire noter vos dessins par la communauté si vous n'êtes pas d'accord avec le résultat fourni par le jeu !</p> 
+                  <p>Un tas d'autres fonctionnalités vous attendent, rejoignez nous vite 😀</p>
+                </div>
+            </div>
+
+          </div>
+    {% endif %}
     </section>
     <section class="page-section" id="container-draw">
       <div class="container">
@@ -148,7 +158,7 @@
               }
           })
       </script>
-      {% if token %}
+      <!--{% if token %}
           <script type="text/javascript">
             $('#li-submit_connect').hide();
           </script>
@@ -157,5 +167,5 @@
             $('#li-profil').hide();
             $('#li-note').hide();
           </script>
-        {% endif %}
+        {% endif %}-->
 {% endblock %}

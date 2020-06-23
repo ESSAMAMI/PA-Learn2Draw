@@ -124,12 +124,20 @@ def explain():
         current_date = utils.get_ccurent_date(format="fr")
         return render_template("explain.html", error=e)
 
-@app.route('/play', methods=['GET'])
+@app.route('/play/', methods=['GET'])
 def play():
+    current_prediction = request.args.get('current_prediction')
+    print("current prediction = ", current_prediction)
+    
+    if current_prediction:
+        current_prediction = current_prediction.split(";")
+        current_prediction[1] = str(int(round(float(current_prediction[1]),2)*100))
+        token = None
+        play = True
+        return render_template("play.html", token=None, play=play, current_prediction=current_prediction[1], current_prediction_label=current_prediction[0])
     token = None
     play = True
     return render_template("play.html", token=None, play=play)
-
 
 
 @app.route('/score/', methods=['GET', 'POST'])
@@ -596,7 +604,7 @@ def delete_notation():
 
 
 
-# routes for drawings actions and everything linked to it
+# routes for drawings actions and everything linked to it, here get file + prediction
 @app.route('/play/get_drawing/', methods=['POST', 'GET'])
 def get_drawing(token=None):
     if request.method == 'POST':
@@ -607,7 +615,9 @@ def get_drawing(token=None):
 
         prediction = cnn.get_predict_sample_cnn_baseball_broom_dolphin(check_is, category)
 
-        return "image name : " + str(check_is) + " | " + prediction
+        current_prediction = str(prediction)
+        return redirect(url_for('play', current_prediction=current_prediction, code=307))
+        #return "image name : " + str(check_is) + " | " + prediction
 
     return redirect(url_for('url_not_found'))
 

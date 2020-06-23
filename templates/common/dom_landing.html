@@ -98,7 +98,7 @@
                 });
 
 
-                if (split[0][1] != undefined){
+                if (split[0][1] != undefined && split[0][0].includes("token")){
                   $('#li-submit_connect').hide();
 
                   $('#home_link').attr("href","/?token=" + split[0][1]);
