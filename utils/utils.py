@@ -1,5 +1,8 @@
 from datetime import datetime
 from uuid import uuid4
+import base64
+import os
+
 
 '''
     GET CURRENT DATE //
@@ -20,3 +23,26 @@ def generate_token() -> str:
 
     rand_token = uuid4()
     return rand_token.hex
+
+def decode_uploaded_file(image_base_64:str, category:str)-> str:
+
+    img_data = image_base_64.split(",")[1]
+    img_data = base64.b64decode(img_data)
+    if os.path.exists('static/doodle/' + category.lower()):
+        open_dir = os.listdir('static/doodle/' + category.lower() + '/')
+        file_name = 'static/doodle/' + category.lower() + '/' + category.lower() + '_' + str(len(open_dir) + 1) + '.jpg'
+        with open(file_name, 'wb') as f:
+            f.write(img_data)
+        #return "True"
+        return file_name
+
+    else:
+        os.mkdir('static/doodle/' + category.lower())
+        open_dir = os.listdir('static/doodle/' + category.lower() + '/')
+        file_name = 'static/doodle/' + category.lower() + '/' + category.lower() + '_' + str(len(open_dir) + 1) + '.jpg'
+        with open(file_name, 'wb') as f:
+            f.write(img_data)
+
+        #return "True"
+        return file_name
+

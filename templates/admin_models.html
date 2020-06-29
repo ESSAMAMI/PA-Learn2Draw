@@ -8,8 +8,8 @@
         <meta name="author" content="" />
         <title>Dashboard - SB Admin</title>
 
-        <link rel="stylesheet" href="{{ url_for('static', filename='/assets/css/backend/test.css') }}">
-        <link rel="stylesheet" href="{{ url_for('static', filename='/assets/css/backend/styles.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/backend/test.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/backend/styles.css') }}">
         <link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet" crossorigin="anonymous" />
         <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/js/all.min.js" crossorigin="anonymous"></script>
     </head>
@@ -21,12 +21,12 @@
             </div>
             <!-- Navbar-->
             <ul class="navbar-nav ml-auto ml-md-0">
-                <li class="nav-item dropdown">
+                <li class="nav-item dropdown" style="padding-top: 20px;">
                     <a class="nav-link dropdown-toggle" id="userDropdown" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
                         <a class="dropdown-item" href="#">Settings</a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="http://192.168.99.1:9893/connection">Logout</a>
+                        <a class="dropdown-item" href="/connection">Logout</a>
                     </div>
                 </li>
             </ul>
@@ -37,7 +37,7 @@
                     <div class="sb-sidenav-menu">
                         <div class="nav">
                             <div class="sb-sidenav-menu-heading">Home</div>
-                            <a class="nav-link" href="http://192.168.99.1:9893/admin-home"
+                            <a class="nav-link" href="/admin-home"
                                 ><div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                                 Dashboard Home</a
                             >
@@ -81,15 +81,17 @@
                                 <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div
                             ></a>
                             <div class="collapse" id="collapseTables" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
-                                <nav class="sb-sidenav-menu-nested nav"><a class="nav-link" href="http://192.168.99.1:9893/admin-home/tables/users">Users</a><a class="nav-link" href="http://192.168.99.1:9893/admin-home/tables/drawings">Drawings</a><a class="nav-link" href="http://192.168.99.1:9893/admin-home/tables/categories">Categories</a><a class="nav-link" href="http://192.168.99.1:9893/admin-home/tables/notations">Notations</a></nav>
+                                <nav class="sb-sidenav-menu-nested nav"><a class="nav-link" href="/admin-home/tables/users">Users</a><a class="nav-link" href="/admin-home/tables/drawings">Drawings</a><a class="nav-link" href="/admin-home/tables/categories">Categories</a><a class="nav-link" href="/admin-home/tables/notations">Notations</a></nav>
                             </div>
                             <div class="sb-sidenav-menu-heading">Train models</div>
-                            <a class="nav-link" href="http://192.168.99.1:9893/admin-models">  
+                            <a class="nav-link" href="/admin-models">
                                 <div class="sb-nav-link-icon">
                                     <i class="fas fa-brain"></i>
                                 </div>
                                 Models
                             </a>
+
+                                <!--<div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>-->
                             <!--<div class="collapse" id="collapseModels" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
                                 <nav class="sb-sidenav-menu-nested nav"><a class="nav-link" href="layout-static.html">CNN</a><a class="nav-link" href="layout-sidenav-light.html">LSTM</a><a class="nav-link" href="layout-sidenav-light.html">OTHERS</a>
                                 </nav>
@@ -110,11 +112,16 @@
                         <ol class="breadcrumb mb-4">
                             <li class="breadcrumb-item active">Models utilisés pour catégoriser les images des utilisateurs</li>
                         </ol>
+                        {% if query_result %}
+                                <div class="alert alert-danger" role="alert">
+                                    🤯 {{ query_result }} !
+                                </div>
+                        {% endif %}
                     </div>
 
-                    <div class="container-fluid bg-gradient p-5">
-                      <div class="row m-auto text-center">
-                        <div class="col-3 princing-item red">
+                    <div class="container-fluid bg-gradient p-5" id="model_content">
+                      <div class="row m-auto text-center" id="model_content_1">
+                        <!--<div class="col-3 princing-item red">
                           <div class="pricing-divider ">
                               <h3 class="text-light">CNN-model 1</h3>
                             <h4 class="my-0 display-2 text-light font-weight-normal mb-3"> 0.725 </h4>
@@ -218,7 +225,7 @@
                                     None;plot.png;model.png">détails</button>
                           </div>
                         </div>
-                      </div>
+                      </div>-->
                     </div>
                 </main>
                 <footer class="py-4 bg-light mt-auto">
@@ -306,11 +313,19 @@
                                   <button type="button" class="btn btn-info" data-toggle="popover" title="title" id="learning-rate"
                                           data-content="Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod">Learning-Rate</button>
                                   <button type="button" class="btn btn-info" data-toggle="popover" title="title" id="data-augmentation"
-                                          data-content="Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod">data-augmentation</button>
+                                          data-content="Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod">categories used</button>
                               </div>
                               <div class="row justify-content-center" style="margin-bottom:5px">
                                   <a type="button" class="btn btn-success btn-block" id="model-link"
                                      download><i class="fas fa-cloud-download-alt"></i> Download Model</a>
+                              </div>
+                              <div class="row justify-content-between" style="margin-bottom:5px">
+                                  <p>Is current model ?</p>
+                                  <form id="form-change-current" method="POST", action="/change_current_model/">
+                                    <input type="hidden" class="form-control" id="the_model_name" name="the_model_name" value="">
+                                    <button type="submit" class="btn btn-danger" id="current_model" style="margin-right: 10px">NO</button>
+                                  </form>
+                                  <button type='button' id='btn_update_model' class='btn btn-warning' data-dismiss="modal" data-toggle='modal' data-target='#update-model' data-whatever=''>Update</button>
                               </div>
                           </div>
                       </div>
@@ -318,7 +333,8 @@
                     </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">fermer</button>
-                    <button type="button" class="btn btn-lg btn-outline-danger" data-toggle="modal" data-target="#confirm"><i class="fa fa-trash" aria-hidden="true"></i></button>
+                    <button type="button" class="btn btn-lg btn-outline-danger" id="delete_button" data-toggle="modal" data-target="#confirm"><i class="fa fa-trash" aria-hidden="true"></i></button>
+                    
                   </div>
                 </div>
               </div>
@@ -327,7 +343,7 @@
               <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                   <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Création de model</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Création de model (+ entrainement, attendre quelques minutes avant de l'utiliser)</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
                     </button>
@@ -336,76 +352,80 @@
                     <form id="form-select">
                         <div class="form-row">
                             <label for="model-type">type de model :</label>
-                            <select id="model-type" class="form-control" onchange="changeform()">
+                            <select id="model-type" name="model-type" class="form-control" onchange="changeform()">
                                 <option selected >Choose...</option>
                                 <option value="mlp">Multilayer Perceptron</option>
                                 <option value="cnn">Convolutional Neural Network</option>
+                                <!--
                                 <option value="rnn-conv2d">Recurrent neural network with Conv2d layers</option>
                                 <option value="rnn-dense">Recurrent neural network with dense layers</option>
+                                -->
                             </select>
                         </div>
                     </form>
-                    <form id="form-model" style="margin-top:10px">
+                    <form id="form-model" style="margin-top:10px" method="POST", action="/adding_model/">
+                        <input type="hidden" class="form-control" id="model_type" name="model_type" value="cnn">
                         <div class="form-row">
                             <div class="form-group col-md-4">
                               <label for="inputName">Name
                                   <i class="fas fa-question-circle" data-toggle="tooltip" title="Name of the model"></i>
                               </label>
-                              <input type="text" class="form-control" id="inputName">
+                              <input type="text" class="form-control" id="inputName" name="inputName" value="model_1">
                             </div>
                             <div class="form-group col-md-2">
                               <label for="inputEpochs">Epochs
                                   <i class="fas fa-question-circle" data-toggle="tooltip" title="Name of the model"></i>
                               </label>
-                              <input type="number" class="form-control" id="inputEpochs">
+                              <input type="number" class="form-control" id="inputEpochs" name="inputEpochs" value="100">
                             </div>
                             <div class="form-group col-md-2">
                               <label for="inputEpochs">Batch Size
                                   <i class="fas fa-question-circle" data-toggle="tooltip" title="Name of the model"></i>
                               </label>
-                              <input type="number" class="form-control" id="inputBatchSize">
+                              <input type="number" class="form-control" id="inputBatchSize" name="inputBatchSize" value="128">
                             </div>
                             <div class="form-group col-md-2">
                               <label for="inputOptimizer">Optimizer
                                   <i class="fas fa-question-circle" data-toggle="tooltip" title="Name of the model"></i>
                               </label>
-                              <select id="inputOptimizer" class="form-control" required>
-                                <option value="" selected>Choose...</option>
+                              <select id="inputOptimizer" name="inputOptimizer" class="form-control" required>
+                                <option value="" disabled>Choose...</option>
                                 <option value="adam">Adam</option>
                                 <option value="sgd">SGD</option>
+                                <option value="adadelta" selected="selected">Adadelta</option>
                               </select>
                             </div>
                             <div class="form-group col-md-2">
-                              <label for="inputName">Learning Rate
+                              <label for="inputLearningRate">Learning Rate
                                   <i class="fas fa-question-circle" data-toggle="tooltip" title="Name of the model"></i>
                               </label>
-                              <input type="number" class="form-control" id="inputLearningRate" step="0.0001">
+                              <input type="number" class="form-control" id="inputLearningRate" name="inputLearningRate" step="0.0001" value="0.001">
                             </div>
-                        </div i>
-                        <div class="form-row">
+                        </div>
+                        <!--<div class="form-row">
                             <div class="form-group col-md-2">
                               <label for="inputEpochs">Momentum
                                   <i class="fas fa-question-circle" data-toggle="tooltip" title="Name of the model"></i>
                               </label>
-                              <input type="number" class="form-control" id="inputMomentum" step="0.01">
+                              <input type="number" class="form-control" id="inputMomentum" step="0.01" value="0">
                             </div>
                             <div class="form-group col-md-2">
                               <label for="inputEpochs">L1
                                   <i class="fas fa-question-circle" data-toggle="tooltip" title="Name of the model"></i>
                               </label>
-                              <input type="number" class="form-control" id="inputL1" step="0.0001">
+                              <input type="number" class="form-control" id="inputL1" step="0.0001" value="0">
                             </div>
                             <div class="form-group col-md-2">
                               <label for="inputL2">L2
                                   <i class="fas fa-question-circle" data-toggle="tooltip" title="Name of the model"></i>
                               </label>
-                              <input type="number" class="form-control" id="inputL2" step="0.0001">
+                              <input type="number" class="form-control" id="inputL2" step="0.0001" value="0">
                             </div>
                             <div class="form-group col-md-2">
                               <label for="inputDropout">Dropout
                                   <i class="fas fa-question-circle" data-toggle="tooltip" title="Name of the model"></i>
                               </label>
-                              <input type="number" class="form-control" id="inputDropout" step="0.01">
+                              <input type="number" class="form-control" id="inputDropout" step="0.01" value="0.25">
                             </div>
                             <div class="form-group col-md-4">
                               <label for="inputDataAugmentation">Data Augmentation
@@ -418,40 +438,40 @@
                                 <option value="large">Grosse data augmentation</option>
                               </select>
                             </div>
-                        </div>
+                        </div>-->
                         <div id="mlp">
-                            <div class="form-row justify-content-between">
+                            <!--<div class="form-row justify-content-between">
                                 <div class="form-group col-md-2">
                                   <label for="inputBlockNb">Blocks
                                       <i class="fas fa-question-circle" data-toggle="tooltip" title="Name of the model"></i>
                                   </label>
-                                  <input type="number" class="form-control" id="inputBlockNb">
+                                  <input type="number" class="form-control" id="inputBlockNb" value="3">
                                 </div>
                                 <div class="form-group col-md-2">
                                   <label for="inputBlockSize">Taille
                                       <i class="fas fa-question-circle" data-toggle="tooltip" title="Name of the model"></i>
                                   </label>
-                                  <input type="number" class="form-control" id="inputBlockSize">
+                                  <input type="number" class="form-control" id="inputBlockSize" value="2">
                                 </div>
                                 <div class="form-group col-md-2">
                                   <label for="inputFiltersPerLayers">Filtres
                                       <i class="fas fa-question-circle" data-toggle="tooltip" title="Name of the model"></i>
                                   </label>
-                                  <input type="number" class="form-control" id="inputFiltersPerLayers">
+                                  <input type="number" class="form-control" id="inputFiltersPerLayers" value="32">
                                 </div>
                                 <div class="form-group col-md-2">
                                   <label for="inputFiltersDouble">Duplication
                                       <i class="fas fa-question-circle" data-toggle="tooltip" title="Name of the model"></i>
                                   </label>
-                                  <input type="number" class="form-control" id="inputFiltersDouble">
+                                  <input type="number" class="form-control" id="inputFiltersDouble" value="2">
                                 </div>
                                 <div class="form-group col-md-3">
                                   <label for="inputMaxAvg">Type Pool
                                       <i class="fas fa-question-circle" data-toggle="tooltip" title="Name of the model"></i>
                                   </label>
                                   <select id="inputMaxAvg" class="form-control" required>
-                                    <option selected>Choose ...</option>
-                                    <option value="max">Max Pooling</option>
+                                    <option disabled>Choose ...</option>
+                                    <option value="max" selected>Max Pooling</option>
                                     <option value="avg">Average Pooling</option>
                                   </select>
                                 </div>
@@ -461,15 +481,15 @@
                                   <label for="inputPoolFrequency">Fréquence Pool
                                       <i class="fas fa-question-circle" data-toggle="tooltip" title="Name of the model"></i>
                                   </label>
-                                  <input type="number" class="form-control" id="inputPoolFrequency">
+                                  <input type="number" class="form-control" id="inputPoolFrequency" value="2">
                                 </div>
                                 <div class="form-group col-md-3">
                                   <label for="inputFirstKernel">Premier kernel
                                       <i class="fas fa-question-circle" data-toggle="tooltip" title="Name of the model"></i>
                                   </label>
                                    <select id="inputFirstKernel" class="form-control" required>
-                                    <option selected>Choose ...</option>
-                                    <option value="3x3">(3,3)</option>
+                                    <option disabled>Choose ...</option>
+                                    <option value="3x3" selected>(3,3)</option>
                                     <option value="7x7">(7,7)</option>
                                   </select>
                                 </div>
@@ -478,8 +498,8 @@
                                       <i class="fas fa-question-circle" data-toggle="tooltip" title="Name of the model"></i>
                                   </label>
                                    <select id="inputKernels" class="form-control" required>
-                                    <option selected>Choose ...</option>
-                                    <option value="3x3">(3,3)</option>
+                                    <option disabled>Choose ...</option>
+                                    <option value="3x3" selected>(3,3)</option>
                                     <option value="7x7">(7,7)</option>
                                   </select>
                                 </div>
@@ -488,44 +508,47 @@
                                       <i class="fas fa-question-circle" data-toggle="tooltip" title="Name of the model"></i>
                                   </label>
                                    <select id="inputPadding" class="form-control" required>
-                                    <option value="same" selected>same</option>
+                                    <option value="same">same</option>
+                                    <option value="valid" selected>valid</option>
                                   </select>
                                 </div>
-                            </div>
+                            </div>-->
+                            <!--<input type="hidden" class="form-control" id="model_type" name="model_type" value="mlp">-->
+                            <button type="submit" class="btn btn-outline-success">Créer</button>
                         </div>
                         <div id="cnn">
-                            <div class="form-row justify-content-between">
+                            <!--<div class="form-row justify-content-between">
                                 <div class="form-group col-md-2">
                                   <label for="inputBlockNb">Blocks
                                       <i class="fas fa-question-circle" data-toggle="tooltip" title="Name of the model"></i>
                                   </label>
-                                  <input type="number" class="form-control" id="inputBlockNb">
+                                  <input type="number" class="form-control" id="inputBlockNb" value="3">
                                 </div>
                                 <div class="form-group col-md-2">
                                   <label for="inputBlockSize">Taille
                                       <i class="fas fa-question-circle" data-toggle="tooltip" title="Name of the model"></i>
                                   </label>
-                                  <input type="number" class="form-control" id="inputBlockSize">
+                                  <input type="number" class="form-control" id="inputBlockSize" value="2">
                                 </div>
                                 <div class="form-group col-md-2">
                                   <label for="inputFiltersPerLayers">Filtres
                                       <i class="fas fa-question-circle" data-toggle="tooltip" title="Name of the model"></i>
                                   </label>
-                                  <input type="number" class="form-control" id="inputFiltersPerLayers">
+                                  <input type="number" class="form-control" id="inputFiltersPerLayers" value="32">
                                 </div>
                                 <div class="form-group col-md-2">
                                   <label for="inputFiltersDouble">Duplication
                                       <i class="fas fa-question-circle" data-toggle="tooltip" title="Name of the model"></i>
                                   </label>
-                                  <input type="number" class="form-control" id="inputFiltersDouble">
+                                  <input type="number" class="form-control" id="inputFiltersDouble" value="2">
                                 </div>
                                 <div class="form-group col-md-3">
                                   <label for="inputMaxAvg">Type Pool
                                       <i class="fas fa-question-circle" data-toggle="tooltip" title="Name of the model"></i>
                                   </label>
                                   <select id="inputMaxAvg" class="form-control" required>
-                                    <option selected>Choose ...</option>
-                                    <option value="max">Max Pooling</option>
+                                    <option disabled>Choose ...</option>
+                                    <option value="max" selected>Max Pooling</option>
                                     <option value="avg">Average Pooling</option>
                                   </select>
                                 </div>
@@ -535,15 +558,15 @@
                                   <label for="inputPoolFrequency">Fréquence Pool
                                       <i class="fas fa-question-circle" data-toggle="tooltip" title="Name of the model"></i>
                                   </label>
-                                  <input type="number" class="form-control" id="inputPoolFrequency">
+                                  <input type="number" class="form-control" id="inputPoolFrequency" value="2">
                                 </div>
                                 <div class="form-group col-md-3">
                                   <label for="inputFirstKernel">Premier kernel
                                       <i class="fas fa-question-circle" data-toggle="tooltip" title="Name of the model"></i>
                                   </label>
                                    <select id="inputFirstKernel" class="form-control" required>
-                                    <option selected>Choose ...</option>
-                                    <option value="3x3">(3,3)</option>
+                                    <option disabled>Choose ...</option>
+                                    <option value="3x3" selected>(3,3)</option>
                                     <option value="7x7">(7,7)</option>
                                   </select>
                                 </div>
@@ -552,8 +575,8 @@
                                       <i class="fas fa-question-circle" data-toggle="tooltip" title="Name of the model"></i>
                                   </label>
                                    <select id="inputKernels" class="form-control" required>
-                                    <option selected>Choose ...</option>
-                                    <option value="3x3">(3,3)</option>
+                                    <option disabled>Choose ...</option>
+                                    <option value="3x3" selected>(3,3)</option>
                                     <option value="7x7">(7,7)</option>
                                   </select>
                                 </div>
@@ -562,13 +585,16 @@
                                       <i class="fas fa-question-circle" data-toggle="tooltip" title="Name of the model"></i>
                                   </label>
                                    <select id="inputPadding" class="form-control" required>
-                                    <option value="same" selected>same</option>
+                                    <option value="same">same</option>
+                                    <option value="valid" selected>valid</option>
                                   </select>
                                 </div>
-                            </div>
+                            </div>-->
+                            <!--<input type="hidden" class="form-control" id="model_type" name="model_type" value="cnn">-->
+                            <button type="submit" class="btn btn-outline-success">Créer</button>
                         </div>
                         <div id="rnn-conv2d">
-                            <div class="form-row justify-content-between">
+                            <!--<div class="form-row justify-content-between">
                                 <div class="form-group col-md-2">
                                   <label for="inputBlockNb">Blocks
                                       <i class="fas fa-question-circle" data-toggle="tooltip" title="Name of the model"></i>
@@ -639,10 +665,10 @@
                                     <option value="same" selected>same</option>
                                   </select>
                                 </div>
-                            </div>
+                            </div>-->
                         </div>
                         <div id="rnn-dense">
-                            <div class="form-row justify-content-between">
+                            <!--<div class="form-row justify-content-between">
                                 <div class="form-group col-md-2">
                                   <label for="inputBlockNb">Blocks
                                       <i class="fas fa-question-circle" data-toggle="tooltip" title="Name of the model"></i>
@@ -713,17 +739,105 @@
                                     <option value="same" selected>same</option>
                                   </select>
                                 </div>
-                            </div>
+                            </div>-->
                         </div>
+
                     </form>
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-                    <button type="button" class="btn btn-outline-success">Créer</button>
+                    <!--<button type="button" class="btn btn-outline-success">Créer</button>-->
                   </div>
                 </div>
               </div>
             </div>
+
+            <div class="modal fade" id="update-model" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel1" aria-hidden="true">
+              <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel1">Mise à jour du modèle (+ entrainement, attendre quelques minutes avant de l'utiliser)</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body" id="generate_update_modal">
+                    <!--<form id="form-select2">
+                        <div class="form-row">
+                            <label for="model-type2">type de model :</label>
+                            <select id="model-type2" name="model-type2" class="form-control" onchange="changeform2()">
+                                <option>Choose...</option>
+                                <option value="mlp2">Multilayer Perceptron</option>
+                                <option value="cnn2">Convolutional Neural Network</option>
+                                !--
+                                <option value="rnn-conv2d">Recurrent neural network with Conv2d layers</option>
+                                <option value="rnn-dense">Recurrent neural network with dense layers</option>
+                                --
+                            </select>
+                        </div>
+                    </form>-->
+                    <form id="form-model2" style="margin-top:10px" method="POST", action="/update_model/">
+                        <input type="hidden" class="form-control" id="model_type2" name="model_type2" value="cnn">
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                              <label for="inputName2">Name
+                                  <i class="fas fa-question-circle" data-toggle="tooltip" title="Name of the model"></i>
+                              </label>
+                              <input disabled type="text" class="form-control" id="inputName2" name="inputName2" value="model_1">
+                              <input hidden type="text" class="form-control" id="inputName2Send" name="inputName2Send" value="model_1">
+                              <input hidden type="text" class="form-control" id="modelTypeSend" name="modelTypeSend" value="mlp">
+                            </div>
+                            <div class="form-group col-md-2">
+                              <label for="inputEpochs2">Epochs
+                                  <i class="fas fa-question-circle" data-toggle="tooltip" title="Name of the model"></i>
+                              </label>
+                              <input type="number" class="form-control" id="inputEpochs2" name="inputEpochs2" value="100">
+                            </div>
+                            <div class="form-group col-md-2">
+                              <label for="inputBatchSize2">Batch Size
+                                  <i class="fas fa-question-circle" data-toggle="tooltip" title="Name of the model"></i>
+                              </label>
+                              <input type="number" class="form-control" id="inputBatchSize2" name="inputBatchSize2" value="128">
+                            </div>
+                            <div class="form-group col-md-2">
+                              <label for="inputOptimize2r">Optimizer
+                                  <i class="fas fa-question-circle" data-toggle="tooltip" title="Name of the model"></i>
+                              </label>
+                              <select id="inputOptimizer2" name="inputOptimizer2" class="form-control" required>
+                                <option value="" disabled>Choose...</option>
+                                <option value="adam">Adam</option>
+                                <option value="sgd">SGD</option>
+                                <option value="adadelta" selected="selected">Adadelta</option>
+                              </select>
+                            </div>
+                            <div class="form-group col-md-2">
+                              <label for="inputLearningRate2">Learning Rate
+                                  <i class="fas fa-question-circle" data-toggle="tooltip" title="Name of the model"></i>
+                              </label>
+                              <input type="number" class="form-control" id="inputLearningRate2" name="inputLearningRate2" step="0.0001" value="0.001">
+                            </div>
+                        </div>
+                        <div id="mlp2">
+                            <button type="submit" class="btn btn-outline-success">Créer</button>
+                        </div>
+                        <div id="cnn2">
+                            <button type="submit" class="btn btn-outline-success">Créer</button>
+                        </div>
+                        <div id="rnn-conv2d2">
+                        </div>
+                        <div id="rnn-dense2">
+                        </div>
+
+                    </form>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                    <!--<button type="button" class="btn btn-outline-success">Créer</button>-->
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <div class="modal fade" id="confirm" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
               <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -735,7 +849,10 @@
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
-                    <button type="button" class="btn btn-outline-danger" onclick="window.location.href ='/admin-models/';">Supprimer</button>
+                    <form id="form-delete" method="POST" action="/delete_model/">
+                        <input type="hidden" class="form-control" id="the_model_name2" name="the_model_name2" value="">
+                        <button type="submit" class="btn btn-outline-danger">Supprimer</button>
+                    </form>
                   </div>
                 </div>
               </div>
@@ -746,15 +863,185 @@
 
         <script src="https://code.jquery.com/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-        <script src="{{ url_for('static', filename='/assets/js/backend/scripts.js') }}"></script>
+        <script src="{{ url_for('static', filename='assets/js/backend/scripts.js') }}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
         <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js" crossorigin="anonymous"></script>
         <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js" crossorigin="anonymous"></script>
-        <script src="{{ url_for('static', filename='/assets/js/backend/datatables-demo.js') }}"></script>
+        <script src="{{ url_for('static', filename='assets/js/backend/datatables-demo.js') }}"></script>
 
         <script type="text/javascript">
+            window.onload = function create() {
+                    console.log("Loaded");
+                    var list = {{ models_infos | tojson }};
+                    console.log("dico : ");
+                    console.log(list);
+                    console.log(list[0].split(';'));
+
+                    //get container element
+                    var container = document.getElementById("model_content_1");
+
+                    //print each user in the table
+                    for (i=0; i < list.length; i++){
+                        var content = list[i].split(';');
+                        console.log("content for " + i + " " + content);
+                        console.log(content[content.length-2])
+
+                        //create and modify elements
+                        var color_div = document.createElement("div");
+                        color_div.innerHTML = "<div class='col-3 princing-item red'></div>";
+
+                        var svg_and_path_div = document.createElement("div");
+                        svg_and_path_div.innerHTML = "<div class='pricing-divider '></div>";
+
+                        var h3_title = document.createElement("h3");
+                        h3_title.innerHTML = "<h3>"+content[0]+"</h3>";
+
+                        var h4_title = document.createElement("h4");
+                        h4_title.innerHTML = "<h4>"+content[4]+"</h4>";
+
+                        var svg = document.createElement("svg");
+                        svg.innerHTML = "<svg class='pricing-divider-img' enable-background='new 0 0 300 100' height='100px' id='Layer_1' preserveAspectRatio='none' version='1.1' viewBox='0 0 300 100' width='300px' x='0px' xml:space='preserve' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns='http://www.w3.org/2000/svg' y='0px'></svg>";
+                        var path1 = document.createElement("path");
+                        path1.innerHTML = "<path class='deco-layer deco-layer--1' d='M30.913,43.944c0,0,42.911-34.464,87.51-14.191c77.31,35.14,113.304-1.952,146.638-4.729c48.654-4.056,69.94,16.218,69.94,16.218v54.396H30.913V43.944z' fill='#FFFFFF' opacity='0.6'></path>";
+                        var path2 = document.createElement("path");
+                        path2.innerHTML = "<path class='deco-layer deco-layer--2' d='M-35.667,44.628c0,0,42.91-34.463,87.51-14.191c77.31,35.141,113.304-1.952,146.639-4.729c48.653-4.055,69.939,16.218,69.939,16.218v54.396H-35.667V44.628z' fill='#FFFFFF' opacity='0.6'></path>";
+                        var path3 = document.createElement("path");
+                        path3.innerHTML = "<path class='deco-layer deco-layer--3' d='M43.415,98.342c0,0,48.283-68.927,109.133-68.927c65.886,0,97.983,67.914,97.983,67.914v3.716H42.401L43.415,98.342z' fill='#FFFFFF' opacity='0.7'></path>";
+                        var path4 = document.createElement("path");
+                        path4.innerHTML = "<path class='deco-layer deco-layer--4' d='M-34.667,62.998c0,0,56-45.667,120.316-27.839C167.484,57.842,197,41.332,232.286,30.428c53.07-16.399,104.047,36.903,104.047,36.903l1.333,36.667l-372-2.954L-34.667,62.998z' fill='#FFFFFF'></path>";
+
+                        var div_card_body = document.createElement("div");
+                        div_card_body.innerHTML = "<div class='card-body bg-white mt-0 shadow' style='padding-top:0px;'><ul class='list-unstyled mb-5 position-relative'><li><b>0.725</b> val_accuracy</li><li><b>0.924</b> val_loss</li><li><b>10</b> epochs</li></ul><button type='button' class='btn btn-lg btn-outline-danger' data-toggle='modal' data-target='#model' data-whatever='CNN-model 1;0.387;0.924;0.864;0.725;73.47;50000;10000;10;10;0;0;Adam;350;0;0.001;None;plot.png;model.png'>détails</button></div>";
+
+                        
+                        // margin every 4 models
+                        if(i != 0 && (i + 1) % 4 == 0){
+                            var br = "</br></br>";
+                            console.log("BR")
+                        }else{
+                            var br = "";
+                        }
+
+                        var all_content = document.createElement("div");
+
+                        // change color (based on model type)
+                        if(content[0].includes("mlp")){
+                            var model_color = "green";
+                        }else{
+                            var model_color = "red";
+                        }
+
+                        all_content.className = "col-3 princing-item "+model_color;
+                        all_content.innerHTML = "<div class='pricing-divider '><h3 class='text-light'>"+content[0]+"</h3><h4 class='my-0 display-2 text-light font-weight-normal mb-3'>"+content[4]+"</h4><svg class='pricing-divider-img' enable-background='new 0 0 300 100' height='100px' id='Layer_1' preserveAspectRatio='none' version='1.1' viewBox='0 0 300 100' width='300px' x='0px' xml:space='preserve' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns='http://www.w3.org/2000/svg' y='0px'><path class='deco-layer deco-layer--1' d='M30.913,43.944c0,0,42.911-34.464,87.51-14.191c77.31,35.14,113.304-1.952,146.638-4.729c48.654-4.056,69.94,16.218,69.94,16.218v54.396H30.913V43.944z' fill='#FFFFFF' opacity='0.6'></path><path class='deco-layer deco-layer--2' d='M-35.667,44.628c0,0,42.91-34.463,87.51-14.191c77.31,35.141,113.304-1.952,146.639-4.729c48.653-4.055,69.939,16.218,69.939,16.218v54.396H-35.667V44.628z' fill='#FFFFFF' opacity='0.6'></path><path class='deco-layer deco-layer--3' d='M43.415,98.342c0,0,48.283-68.927,109.133-68.927c65.886,0,97.983,67.914,97.983,67.914v3.716H42.401L43.415,98.342z' fill='#FFFFFF' opacity='0.7'></path><path class='deco-layer deco-layer--4' d='M-34.667,62.998c0,0,56-45.667,120.316-27.839C167.484,57.842,197,41.332,232.286,30.428c53.07-16.399,104.047,36.903,104.047,36.903l1.333,36.667l-372-2.954L-34.667,62.998z' fill='#FFFFFF'></path></svg></div><div class='card-body bg-white mt-0 shadow' style='padding-top:0px;'><ul class='list-unstyled mb-5 position-relative'><li><b>"+content[4]+"</b> val_accuracy</li><li><b>"+content[5]+"</b> val_loss</li><li><b>"+content[1]+"</b> epochs</li></ul><button type='button' class='btn btn-lg btn-outline-danger' data-toggle='modal' data-target='#model' data-whatever='"+content[0]+";"+content[3]+";"+content[5]+";"+content[2]+";"+content[4]+";73.47;50000;10000;10;"+content[1]+";0;0;"+content[9]+";"+content[7]+";0;"+content[11]+";"+content[content.length-2]+";plot_"+content[content.length-3]+".png;model_"+content[content.length-3]+".png;"+content[content.length-1]+"'>détails</button></div>"+br;
+
+                        // svg.append(path1, path2, path3, path4)
+                        
+                        // svg_and_path_div.appendChild(h3_title);
+                        // svg_and_path_div.appendChild(h4_title);
+                        // svg_and_path_div.appendChild(svg);
+
+                        // color_div.appendChild(svg_and_path_div);
+                        // color_div.appendChild(div_card_body);
+                        // container.appendChild(color_div);
+
+                        container.appendChild(all_content);
+
+
+                        // basic elements
+                    }
+
+
+            }
+
             $('#creation-model').on('show.bs.modal', function (event) {
                 $('#form-model').hide()
+            });
+
+            $('#update-model').on('show.bs.modal', function (event) {
+                $('#form-model2').hide();
+                var button = $(event.relatedTarget); // Button that triggered the modal
+                var content = button.data('whatever').split(",");
+
+        
+                if(content[0].includes("mlp")){
+                    x = "mlp";
+                }else{
+                    x = "cnn";
+                }
+                console.log("x = ", x.value);
+
+                // prepare to send this info
+                var model_type_send = document.getElementById("modelTypeSend");
+                model_type_send.value = x;
+
+                /*var type_model = document.getElementById("model_type")
+                type_model.setAttribute("value", x);*/
+
+                $('#form-model2').show();
+
+                $('#mlp2').hide();
+                $('#cnn2').hide();
+                $('#rnn-conv2d2').hide();
+                $('#rnn-dense2').hide();
+
+                if(x == "mlp"){
+                    $('#mlp2').show();
+                }
+                else if(x == "cnn"){
+                    $('#cnn2').show();
+                }else if(x == "rnn-conv2d"){
+                    $('#rnn-conv2d').show();
+                }else if(x == "rnn-dense"){
+                    $('#rnn-dense2').show();
+                }else{
+                    $('#form-model2').hide();
+                }
+                
+                // //set all basic values
+                // var model_type2 = document.getElementById("model-type2");
+                // if(content[0].includes("mlp")){
+                //     model_type2.value = "mlp2";
+                // }else{
+                //     model_type2.value = "cnn2"
+                // }
+
+                var model_name = document.getElementById("inputName2");
+                model_name.value = content[0];
+
+                var model_name_send = document.getElementById("inputName2Send");
+                model_name_send.value = content[0];
+
+                var model_epochs = document.getElementById("inputEpochs2");
+                model_epochs.value = content[9];
+
+                var model_bacthsize = document.getElementById("inputBatchSize2");
+                model_bacthsize.value = content[13];
+
+                var model_optimizer = document.getElementById("inputOptimizer2");
+                model_optimizer.value = content[12];
+
+                var model_learning_rate = document.getElementById("inputLearningRate2");
+                model_learning_rate.value = content[15];
+                //changeform2(content)
+
+
+
+            });
+
+            $('#update-model').on('hidden.bs.modal', function () {
+                console.log("time to hide");
+                document.location.reload();
+            });
+
+            $('#confirm').on('show.bs.modal', function (event) {
+                console.log("ready to update delete");
+                var button = $(event.relatedTarget) // Button that triggered the modal
+                var model_name = button.data('whatever') // Extract info from data-* attributes
+                var hidden_input = document.getElementById("the_model_name2");
+                hidden_input.value = model_name;
+
+                
+
             });
 
             $('#model').on('show.bs.modal', function (event) {
@@ -779,15 +1066,44 @@
               modal.find('#batch-size').attr("data-original-title","Batch size : " + content[13])
               modal.find('#dropout').attr("data-original-title","Dropout : " + content[14])
               modal.find('#learning-rate').attr("data-original-title","Learning Rate : " + content[15])
-              modal.find('#data-augmentation').attr("data-original-title","Data augmentation : " + content[16])
+              modal.find('#data-augmentation').attr("data-original-title","categories used : " + content[16])
 
 
-              modal.find('#plot-image').attr("src", "/static/assets/images/test/" + content[17])
-              modal.find('#model-link').attr("href", "/static/assets/images/test/" + content[18])
+              modal.find('#plot-image').attr("src", "/static/models/"+content[0]+"/" + content[17])
+              modal.find('#model-link').attr("href", "/static/models/"+content[0]+"/" + content[18])
+
+              var elt = document.getElementById("current_model");
+              var hidden_input = document.getElementById("the_model_name");
+
+              if(content[19] == "yes"){
+                elt.className = "btn btn-success";
+                elt.innerHTML = "YES";
+                elt.type = "button";
+
+                //modal.find("#current_model").text("YES")
+
+              }else{
+                elt.className = "btn btn-danger";
+                elt.innerHTML = "NO";
+                elt.type = "submit";
+                hidden_input.value = content[0];
+              }
+
+              // set data whatever attribute of delete button
+              var delete_button = document.getElementById("delete_button");
+              delete_button.setAttribute("data-whatever", content[0]);
+
+
+              console.log("update-btn whatever");
+              var btn_update_model = document.getElementById("btn_update_model");
+              btn_update_model.setAttribute("data-whatever", content)
+
             })
 
             function changeform() {
                 var x = document.getElementById("model-type").value;
+                var type_model = document.getElementById("model_type")
+                type_model.setAttribute("value", x);
 
                 $('#form-model').show();
 
@@ -808,9 +1124,60 @@
                     $('#form-model').hide();
                 }
             }
+
+            /*function changeform2(content) {
+                console.log("content : ", content);
+                content = content.split(";") ;               // //set all basic values
+                var model_type2 = document.getElementById("model-type2");
+                if(content[0].includes("mlp")){
+                    model_type2.value = "mlp2";
+                }else{
+                    model_type2.value = "cnn2"
+                }
+
+                // var model_name = document.getElementById("inputName2");
+                // model_name.value = content[0]
+
+                // var model_epochs = document.getElementById("inputEpochs2");
+                // model_epochs.value = content[0]
+
+                // var model_bacthsize = document.getElementById("inputBatchSize2");
+                // model_bacthsize.value = content[7]
+                console.log("ET O");
+                var x = document.getElementById("model-type2").value;
+                console.log("x = ", x);
+                var type_model = document.getElementById("model_type2")
+                type_model.setAttribute("value", x);
+
+                $('#form-model2').show();
+
+                $('#mlp2').hide();
+                $('#cnn2').hide();
+                $('#rnn-conv2d2').hide();
+                $('#rnn-dense2').hide();
+
+
+                if(x == "mlp2"){
+                    $('#mlp2').show();
+                }else if(x == "cnn2"){
+                    $('#cnn2').show();
+                }else if(x == "rnn-conv2d2"){
+                    $('#rnn-conv2d2').show();
+                }else if(x == "rnn-dense2"){
+                    $('#rnn-dense2').show();
+                }else{
+                    $('#form-model2').hide();
+                }
+            }*/
+
             $(function () {
                 $('[data-toggle="popover"]').popover()
             })
+            window.setTimeout(function () {
+                $(".alert-danger").fadeTo(500, 0).slideUp(500, function () {
+                    $(this).remove();
+                });
+            }, 3000);
         </script>
     </body>
 </html>

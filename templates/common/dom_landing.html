@@ -22,18 +22,29 @@
           <link href='https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
           <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
 
+          <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css"> 
+          {% if play %}
+          <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/sketchpad/custom.css')}}"> 
+          <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/sketchpad/skeleton.css')}}">
+          {% endif %}
+
           <!-- Custom styles for this template -->
           <!--<link href="css/agency.min.css" rel="stylesheet">-->
           <link href="{{ url_for('static', filename='assets/css/test/agency.css')}}" rel="stylesheet">
+          <link href="{{ url_for('static', filename='assets/css/test/test.css')}}" rel="stylesheet">
           <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/js/all.min.js" crossorigin="anonymous"></script>
         </head>
     {% endblock %}
     {% block body %}
-    <body id="page-top">
+    {% if play %} 
+        <body id="page-top">  
+    {% else %}  
+        <body id="page-top" class="page-background">  
+    {% endif %}
 
         <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav" style="padding:0px;margin-bottom:10px" >
             <div class="container">
-              <a class="navbar-brand js-scroll-trigger" href="/">Learn 2 draw</a>
+              <a class="navbar-brand js-scroll-trigger" id="home_link" href="/">Learn 2 draw</a>
               <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
                 Menu
                 <i class="fas fa-bars"></i>
@@ -41,16 +52,16 @@
               <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav text-uppercase ml-auto">
                   <li class="nav-item">
-                    <a class="nav-link js-scroll-trigger" href="/explain"><b>Apprenez à jouer!</b></a>
+                    <a class="nav-link js-scroll-trigger" id="learn_link" href="/explain"><b>Apprenez à jouer!</b></a>
                   </li>
                   <li class="nav-item" id="li-submit_connect">
                     <a class="nav-link js-scroll-trigger" href="/connection"><b>Inscription/Connexion</b></a>
                   </li>
-                  <li class="nav-item" id="li-profil">
-                    <a class="nav-link js-scroll-trigger" href="/user-profil"><b>Profil</b></a>
-                  </li>
                   <li class="nav-item" id="li-note">
-                    <a class="nav-link js-scroll-trigger" href="/score"><b>Notez!</b></a>
+                    <a class="nav-link js-scroll-trigger" id="score_link" href="/score"><b>Notez!</b></a>
+                  </li>
+                  <li class="nav-item" id="li-profil">
+                    <a class="nav-link js-scroll-trigger" id="profil_link" href="/user-profil"><b>Profil</b></a>
                   </li>
                 </ul>
               </div>
@@ -58,7 +69,7 @@
         </nav>
         {% block scope %}
         {% endblock %}
-        
+
         <!-- Bootstrap core JavaScript -->
         <!--<script src="vendor/jquery/jquery.min.js"></body>
         <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>-->
@@ -80,14 +91,26 @@
         <script src="{{ url_for('static', filename='assets/js/test/agency.min.js')}}"></script>
         <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
         <script type="text/javascript">
-        $( document ).ready(function() {
-            if ({{token|tojson}} != null){
-              $('#li-submit_connect').hide();
-            }else{
-               $('#li-profil').hide();
-               $('#li-note').hide();
-            }
-         });
+            $( document ).ready(function() {
+
+                var split = location.search.replace('?', '').split('&').map(function(val){
+                  return val.split('=');
+                });
+
+
+                if (split[0][1] != undefined && split[0][0].includes("token")){
+                  $('#li-submit_connect').hide();
+
+                  $('#home_link').attr("href","/?token=" + split[0][1]);
+                  $('#learn_link').attr("href","/explain/?token=" + split[0][1]);
+                  $('#score_link').attr("href","/score/?token=" + split[0][1]);
+                  $('#profil_link').attr("href","/user-profil/?token=" + split[0][1]);
+                }else{
+                   $('#li-profil').hide();
+                   $('#li-note').hide();
+                }
+             });
+
         </script>
 
     </body>

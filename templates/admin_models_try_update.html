@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Dashboard - SB Admin</title>
+
+        <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/backend/test.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/backend/styles.css') }}">
+        <link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet" crossorigin="anonymous" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/js/all.min.js" crossorigin="anonymous"></script>
+    </head>
+    <body class="sb-nav-fixed">
+        <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+            <a class="navbar-brand" href="/admin-home">Learn 2 draw ADMIN</a><button class="btn btn-link btn-sm order-1 order-lg-0" id="sidebarToggle" href="#"><i class="fas fa-bars"></i></button
+            ><!-- Navbar Search-->
+            <div class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0">
+            </div>
+            <!-- Navbar-->
+            <ul class="navbar-nav ml-auto ml-md-0">
+                <li class="nav-item dropdown" style="padding-top: 20px;">
+                    <a class="nav-link dropdown-toggle" id="userDropdown" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+                        <a class="dropdown-item" href="#">Settings</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="/connection">Logout</a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+        <div id="layoutSidenav">
+            <div id="layoutSidenav_nav">
+                <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+                    <div class="sb-sidenav-menu">
+                        <div class="nav">
+                            <div class="sb-sidenav-menu-heading">Home</div>
+                            <a class="nav-link" href="/admin-home"
+                                ><div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                                Dashboard Home</a
+                            >
+                            <!--
+                            <div class="sb-sidenav-menu-heading">Application Content</div>
+                            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages"
+                                ><div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
+                                Pages
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div
+                            ></a>
+                            <div class="collapse" id="collapsePages" aria-labelledby="headingTwo" data-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
+                                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#pagesCollapseAuth" aria-expanded="false" aria-controls="pagesCollapseAuth"
+                                        >Authentication
+                                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div
+                                    ></a>
+                                    <div class="collapse" id="pagesCollapseAuth" aria-labelledby="headingOne" data-parent="#sidenavAccordionPages">
+                                        <nav class="sb-sidenav-menu-nested nav"><a class="nav-link" href="login.html">Login</a><a class="nav-link" href="register.html">Register</a><a class="nav-link" href="password.html">Forgot Password</a></nav>
+                                    </div>
+                                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#pagesCollapseError" aria-expanded="false" aria-controls="pagesCollapseError"
+                                        >Error
+                                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div
+                                    ></a>
+                                    <div class="collapse" id="pagesCollapseError" aria-labelledby="headingOne" data-parent="#sidenavAccordionPages">
+                                        <nav class="sb-sidenav-menu-nested nav"><a class="nav-link" href="401.html">401 Page</a><a class="nav-link" href="404.html">404 Page</a><a class="nav-link" href="500.html">500 Page</a></nav>
+                                    </div>
+                                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#pagesCollapseOther" aria-expanded="false" aria-controls="pagesCollapseOther"
+                                        >Other pages
+                                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div
+                                    ></a>
+                                    <div class="collapse" id="pagesCollapseOther" aria-labelledby="headingOne" data-parent="#sidenavAccordionPages">
+                                        <nav class="sb-sidenav-menu-nested nav"><a class="nav-link" href="401.html">Home</a><a class="nav-link" href="401.html">Rules</a><a class="nav-link" href="404.html">User profile</a><a class="nav-link" href="500.html">Doodle evaluation</a><a class="nav-link" href="500.html">Contact support</a></nav>
+                                    </div>
+                                </nav>
+                            </div>
+                            -->
+                            <div class="sb-sidenav-menu-heading">Databases</div>
+                            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTables" aria-expanded="false" aria-controls="collapseTables"
+                                ><div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                                Tables
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div
+                            ></a>
+                            <div class="collapse" id="collapseTables" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav"><a class="nav-link" href="/admin-home/tables/users">Users</a><a class="nav-link" href="/admin-home/tables/drawings">Drawings</a><a class="nav-link" href="/admin-home/tables/categories">Categories</a><a class="nav-link" href="/admin-home/tables/notations">Notations</a></nav>
+                            </div>
+                            <div class="sb-sidenav-menu-heading">Train models</div>
+                            <a class="nav-link" href="/admin-models">
+                                <div class="sb-nav-link-icon">
+                                    <i class="fas fa-brain"></i>
+                                </div>
+                                Models
+                            </a>
+
+                                <!--<div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>-->
+                            <!--<div class="collapse" id="collapseModels" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav"><a class="nav-link" href="layout-static.html">CNN</a><a class="nav-link" href="layout-sidenav-light.html">LSTM</a><a class="nav-link" href="layout-sidenav-light.html">OTHERS</a>
+                                </nav>
+                            </div>-->
+                        </div>
+                    </div>
+                    <div class="sb-sidenav-footer">
+                        <div class="small">Logged in as:</div>
+                        Admin user
+                    </div>
+                </nav>
+            </div>
+            <div id="layoutSidenav_content">
+                <main>
+                    <div class="container-fluid">
+                        <h1 class="mt-4">Models</h1>
+                        <button class="btn btn-lg btn-info" id="adding-models-button" data-toggle="modal" data-target="#creation-model">créer</button>
+                        <ol class="breadcrumb mb-4">
+                            <li class="breadcrumb-item active">Models utilisés pour catégoriser les images des utilisateurs</li>
+                        </ol>
+                        {% if query_result %}
+                                <div class="alert alert-danger" role="alert">
+                                    🤯 {{ query_result }} !
+                                </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="container-fluid bg-gradient p-5">
+                      <div class="row m-auto text-center">
+                        <div class="col-3 princing-item red">
+                          <div class="pricing-divider ">
+                              <h3 class="text-light">CNN-model 1</h3>
+                            <h4 class="my-0 display-2 text-light font-weight-normal mb-3"> 0.725 </h4>
+                             <svg class='pricing-divider-img' enable-background='new 0 0 300 100' height='100px' id='Layer_1' preserveAspectRatio='none' version='1.1' viewBox='0 0 300 100' width='300px' x='0px' xml:space='preserve' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns='http://www.w3.org/2000/svg' y='0px'>
+                          <path class='deco-layer deco-layer--1' d='M30.913,43.944c0,0,42.911-34.464,87.51-14.191c77.31,35.14,113.304-1.952,146.638-4.729
+                    c48.654-4.056,69.94,16.218,69.94,16.218v54.396H30.913V43.944z' fill='#FFFFFF' opacity='0.6'></path>
+                          <path class='deco-layer deco-layer--2' d='M-35.667,44.628c0,0,42.91-34.463,87.51-14.191c77.31,35.141,113.304-1.952,146.639-4.729
+                    c48.653-4.055,69.939,16.218,69.939,16.218v54.396H-35.667V44.628z' fill='#FFFFFF' opacity='0.6'></path>
+                          <path class='deco-layer deco-layer--3' d='M43.415,98.342c0,0,48.283-68.927,109.133-68.927c65.886,0,97.983,67.914,97.983,67.914v3.716
+                    H42.401L43.415,98.342z' fill='#FFFFFF' opacity='0.7'></path>
+                          <path class='deco-layer deco-layer--4' d='M-34.667,62.998c0,0,56-45.667,120.316-27.839C167.484,57.842,197,41.332,232.286,30.428
+                    c53.07-16.399,104.047,36.903,104.047,36.903l1.333,36.667l-372-2.954L-34.667,62.998z' fill='#FFFFFF'></path>
+                        </svg>
+                          </div>
+                          <div class="card-body bg-white mt-0 shadow" style="padding-top:0px;">
+                            <ul class="list-unstyled mb-5 position-relative">
+                              <li><b>0.725</b> val_accuracy</li>
+                              <li><b>0.924</b> val_loss</li>
+                              <li><b>10</b> epochs</li>
+                            </ul>
+                            <button type="button" class="btn btn-lg btn-outline-danger" data-toggle="modal" data-target="#model"
+                                    data-whatever="CNN-model 1;0.387;0.924;0.864;0.725;73.47;50000;10000;10;10;0;0;Adam;350;0;0.001;
+                                    None;plot.png;model.png">détails</button>
+                          </div>
+                        </div>
+                        <div class="col-3 princing-item blue">
+                          <div class="pricing-divider ">
+                              <h3 class="text-light">PMC-model 1</h3>
+                            <h4 class="my-0 display-2 text-light font-weight-normal mb-3"> 0.725 </h4>
+                             <svg class='pricing-divider-img' enable-background='new 0 0 300 100' height='100px' id='Layer_1' preserveAspectRatio='none' version='1.1' viewBox='0 0 300 100' width='300px' x='0px' xml:space='preserve' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns='http://www.w3.org/2000/svg' y='0px'>
+                          <path class='deco-layer deco-layer--1' d='M30.913,43.944c0,0,42.911-34.464,87.51-14.191c77.31,35.14,113.304-1.952,146.638-4.729
+                    c48.654-4.056,69.94,16.218,69.94,16.218v54.396H30.913V43.944z' fill='#FFFFFF' opacity='0.6'></path>
+                          <path class='deco-layer deco-layer--2' d='M-35.667,44.628c0,0,42.91-34.463,87.51-14.191c77.31,35.141,113.304-1.952,146.639-4.729
+                    c48.653-4.055,69.939,16.218,69.939,16.218v54.396H-35.667V44.628z' fill='#FFFFFF' opacity='0.6'></path>
+                          <path class='deco-layer deco-layer--3' d='M43.415,98.342c0,0,48.283-68.927,109.133-68.927c65.886,0,97.983,67.914,97.983,67.914v3.716
+                    H42.401L43.415,98.342z' fill='#FFFFFF' opacity='0.7'></path>
+                          <path class='deco-layer deco-layer--4' d='M-34.667,62.998c0,0,56-45.667,120.316-27.839C167.484,57.842,197,41.332,232.286,30.428
+                    c53.07-16.399,104.047,36.903,104.047,36.903l1.333,36.667l-372-2.954L-34.667,62.998z' fill='#FFFFFF'></path>
+                        </svg>
+                          </div>
+                          <div class="card-body bg-white mt-0 shadow" style="padding-top:0px;">
+                            <ul class="list-unstyled mb-5 position-relative">
+                              <li><b>0.725</b> val_accuracy</li>
+                              <li><b>0.924</b> val_loss</li>
+                              <li><b>10</b> epochs</li>
+                            </ul>
+                            <button type="button" class="btn btn-lg btn-outline-custom" data-toggle="modal" data-target="#model"
+                                    data-whatever="PMC-model 1;0.387;0.924;0.864;0.725;73.47;50000;10000;10;10;0;0;Adam;350;0;0.001;
+                                    None;plot.png;model.png">détails</button>
+                          </div>
+                        </div>
+                        <div class="col-3 princing-item green">
+                          <div class="pricing-divider ">
+                              <h3 class="text-light">RNN-model 1</h3>
+                            <h4 class="my-0 display-2 text-light font-weight-normal mb-3"> 0.725 </h4>
+                             <svg class='pricing-divider-img' enable-background='new 0 0 300 100' height='100px' id='Layer_1' preserveAspectRatio='none' version='1.1' viewBox='0 0 300 100' width='300px' x='0px' xml:space='preserve' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns='http://www.w3.org/2000/svg' y='0px'>
+                          <path class='deco-layer deco-layer--1' d='M30.913,43.944c0,0,42.911-34.464,87.51-14.191c77.31,35.14,113.304-1.952,146.638-4.729
+                    c48.654-4.056,69.94,16.218,69.94,16.218v54.396H30.913V43.944z' fill='#FFFFFF' opacity='0.6'></path>
+                          <path class='deco-layer deco-layer--2' d='M-35.667,44.628c0,0,42.91-34.463,87.51-14.191c77.31,35.141,113.304-1.952,146.639-4.729
+                    c48.653-4.055,69.939,16.218,69.939,16.218v54.396H-35.667V44.628z' fill='#FFFFFF' opacity='0.6'></path>
+                          <path class='deco-layer deco-layer--3' d='M43.415,98.342c0,0,48.283-68.927,109.133-68.927c65.886,0,97.983,67.914,97.983,67.914v3.716
+                    H42.401L43.415,98.342z' fill='#FFFFFF' opacity='0.7'></path>
+                          <path class='deco-layer deco-layer--4' d='M-34.667,62.998c0,0,56-45.667,120.316-27.839C167.484,57.842,197,41.332,232.286,30.428
+                    c53.07-16.399,104.047,36.903,104.047,36.903l1.333,36.667l-372-2.954L-34.667,62.998z' fill='#FFFFFF'></path>
+                        </svg>
+                          </div>
+                          <div class="card-body bg-white mt-0 shadow" style="padding-top:0px;">
+                            <ul class="list-unstyled mb-5 position-relative">
+                              <li><b>0.725</b> val_accuracy</li>
+                              <li><b>0.924</b> val_loss</li>
+                              <li><b>10</b> epochs</li>
+                            </ul>
+                            <button type="button" class="btn btn-lg btn-outline-success" data-toggle="modal" data-target="#model"
+                                    data-whatever="RNN-model 1;0.387;0.924;0.864;0.725;73.47;50000;10000;10;10;0;0;Adam;350;0;0.001;
+                                    None;plot.png;model.png">détails</button>
+                          </div>
+                        </div>
+                        <div class="col-3 princing-item green">
+                          <div class="pricing-divider ">
+                              <h3 class="text-light">RNN-model 2</h3>
+                            <h4 class="my-0 display-2 text-light font-weight-normal mb-3"> 0.725 </h4>
+                             <svg class='pricing-divider-img' enable-background='new 0 0 300 100' height='100px' id='Layer_1' preserveAspectRatio='none' version='1.1' viewBox='0 0 300 100' width='300px' x='0px' xml:space='preserve' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns='http://www.w3.org/2000/svg' y='0px'>
+                          <path class='deco-layer deco-layer--1' d='M30.913,43.944c0,0,42.911-34.464,87.51-14.191c77.31,35.14,113.304-1.952,146.638-4.729
+                    c48.654-4.056,69.94,16.218,69.94,16.218v54.396H30.913V43.944z' fill='#FFFFFF' opacity='0.6'></path>
+                          <path class='deco-layer deco-layer--2' d='M-35.667,44.628c0,0,42.91-34.463,87.51-14.191c77.31,35.141,113.304-1.952,146.639-4.729
+                    c48.653-4.055,69.939,16.218,69.939,16.218v54.396H-35.667V44.628z' fill='#FFFFFF' opacity='0.6'></path>
+                          <path class='deco-layer deco-layer--3' d='M43.415,98.342c0,0,48.283-68.927,109.133-68.927c65.886,0,97.983,67.914,97.983,67.914v3.716
+                    H42.401L43.415,98.342z' fill='#FFFFFF' opacity='0.7'></path>
+                          <path class='deco-layer deco-layer--4' d='M-34.667,62.998c0,0,56-45.667,120.316-27.839C167.484,57.842,197,41.332,232.286,30.428
+                    c53.07-16.399,104.047,36.903,104.047,36.903l1.333,36.667l-372-2.954L-34.667,62.998z' fill='#FFFFFF'></path>
+                        </svg>
+                          </div>
+                          <div class="card-body bg-white mt-0 shadow" style="padding-top:0px;">
+                            <ul class="list-unstyled mb-5 position-relative">
+                              <li><b>0.725</b> val_accuracy</li>
+                              <li><b>0.924</b> val_loss</li>
+                              <li><b>10</b> epochs</li>
+                            </ul>
+                            <button type="button" class="btn btn-lg btn-outline-success" data-toggle="modal" data-target="#model"
+                                    data-whatever="RNN-model 2;0.387;0.924;0.864;0.725;73.47;50000;10000;10;10;0;0;Adam;350;0;0.001;
+                                    None;plot.png;model.png">détails</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                </main>
+                <footer class="py-4 bg-light mt-auto">
+                    <div class="container-fluid">
+                        <div class="d-flex align-items-center justify-content-between small">
+                            <div class="text-muted">Copyright &copy; Learn2draw 2020</div>
+                            <div>
+                                <a href="#">Privacy Policy</a>
+                                &middot;
+                                <a href="#">Terms &amp; Conditions</a>
+                            </div>
+                        </div>
+                    </div>
+                </footer>
+            </div>
+        </div>
+        <!-- Modals -->
+        <div id="modals">
+            <div class="modal fade" id="model" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="name">vuvu</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                    <div class="media">
+                      <div class="media-body">
+                          <div class="container">
+                              <div class="row">
+                                <div class="col-md-6">
+                                  <div class="card-important test">
+                                    <i class="fas fa-chart-line" style="font-size:25px"></i>
+                                    <span class="count-numbers" id="loss">35</span>
+                                    <span class="count-name"><b>loss</b></span>
+                                  </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                  <div class="card-important validation">
+                                    <i class="fas fa-chart-line" style="font-size:25px"></i>
+                                    <span class="count-numbers" id="val-loss">6875</span>
+                                    <span class="count-name"><b>val_loss</b></span>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="row">
+                                <div class="col-md-6">
+                                  <div class="card-important test">
+                                    <i class="fas fa-chart-pie" style="font-size:25px"></i>
+                                    <span class="count-numbers" id="accuracy">35</span>
+                                    <span class="count-name"><b>accuracy</b></span>
+                                  </div>
+                                </div>
+                                <div class="col-md-6">
+                                  <div class="card-important validation">
+                                    <i class="fas fa-chart-pie" style="font-size:25px"></i>
+                                    <span class="count-numbers" id="val-accuracy">6875</span>
+                                    <span class="count-name"><b>val_accuracy</b></span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          <div class="container" style="margin-top:10px;">
+                              <div class="row justify-content-between" style="margin-bottom:5px">
+                                  <button type="button" class="btn btn-info" data-toggle="popover" id="time"
+                                          data-content="Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod">Time</button>
+                                  <button type="button" class="btn btn-info" data-toggle="popover" id="dataset"
+                                          data-content="Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod">dataset</button>
+                                  <button type="button" class="btn btn-info" data-toggle="popover" id="epochs"
+                                          data-content="Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod">epochs</button>
+                                  <button type="button" class="btn btn-info" data-toggle="popover" id="l1-l2"
+                                          data-content="Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod">L1/L2</button>
+                              </div>
+                              <div class="row justify-content-between" style="margin-bottom:5px">
+                                  <button type="button" class="btn btn-info" data-toggle="popover" title="title" id="optimizer"
+                                          data-content="Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod">Optimizer</button>
+                                  <button type="button" class="btn btn-info" data-toggle="popover" title="title" id="batch-size"
+                                          data-content="Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod">batch-size</button>
+                                  <button type="button" class="btn btn-info" data-toggle="popover" title="title" id="dropout"
+                                          data-content="Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod">dropout</button>
+                              </div>
+                              <div class="row justify-content-between" style="margin-bottom:5px">
+                                  <button type="button" class="btn btn-info" data-toggle="popover" title="title" id="learning-rate"
+                                          data-content="Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod">Learning-Rate</button>
+                                  <button type="button" class="btn btn-info" data-toggle="popover" title="title" id="data-augmentation"
+                                          data-content="Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod">data-augmentation</button>
+                              </div>
+                              <div class="row justify-content-center" style="margin-bottom:5px">
+                                  <a type="button" class="btn btn-success btn-block" id="model-link"
+                                     download><i class="fas fa-cloud-download-alt"></i> Download Model</a>
+                              </div>
+                          </div>
+                      </div>
+                      <img class="d-block img-fluid ml-auto" id="plot-image" style="width:450px;margin-top:25px">
+                    </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">fermer</button>
+                    <button type="button" class="btn btn-lg btn-outline-danger" data-toggle="modal" data-target="#confirm"><i class="fa fa-trash" aria-hidden="true"></i></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="modal fade" id="creation-model" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Création de model (+ entrainement, attendre quelques minutes avant de l'utiliser)</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <form id="form_model" style="margin-top:10px" method="POST", action="/adding_model/">
+                    <div class="modal-body">
+  
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                              <label for="inputName">Name
+                                  <i class="fas fa-question-circle" data-toggle="tooltip" title="Name of the model"></i>
+                              </label>
+                              <input type="text" class="form-control" id="inputName" value="model_1">
+                            </div>
+                            <div class="form-group col-md-2">
+                              <label for="inputEpochs">Epochs
+                                  <i class="fas fa-question-circle" data-toggle="tooltip" title="Name of the model"></i>
+                              </label>
+                              <input type="number" class="form-control" id="inputEpochs" value="100">
+                            </div>
+                            <div class="form-group col-md-2">
+                              <label for="inputEpochs">Batch Size
+                                  <i class="fas fa-question-circle" data-toggle="tooltip" title="Name of the model"></i>
+                              </label>
+                              <input type="number" class="form-control" id="inputBatchSize" value="128">
+                            </div>
+                            <div class="form-group col-md-2">
+                              <label for="inputOptimizer">Optimizer
+                                  <i class="fas fa-question-circle" data-toggle="tooltip" title="Name of the model"></i>
+                              </label>
+                              <select id="inputOptimizer" class="form-control" required>
+                                <option value="" disabled>Choose...</option>
+                                <option value="adam">Adam</option>
+                                <option value="sgd">SGD</option>
+                                <option value="adadelta" selected="selected">Adadelta</option>
+                              </select>
+                            </div>
+                            <div class="form-group col-md-2">
+                              <label for="inputName">Learning Rate
+                                  <i class="fas fa-question-circle" data-toggle="tooltip" title="Name of the model"></i>
+                              </label>
+                              <input type="number" class="form-control" id="inputLearningRate" step="0.0001" value="0.001">
+                            </div>
+                        <!--</div i>-->
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group col-md-2">
+                              <label for="inputEpochs">Momentum
+                                  <i class="fas fa-question-circle" data-toggle="tooltip" title="Name of the model"></i>
+                              </label>
+                              <input type="number" class="form-control" id="inputMomentum" step="0.01" value="0">
+                            </div>
+                            <div class="form-group col-md-2">
+                              <label for="inputEpochs">L1
+                                  <i class="fas fa-question-circle" data-toggle="tooltip" title="Name of the model"></i>
+                              </label>
+                              <input type="number" class="form-control" id="inputL1" step="0.0001" value="0">
+                            </div>
+                            <div class="form-group col-md-2">
+                              <label for="inputL2">L2
+                                  <i class="fas fa-question-circle" data-toggle="tooltip" title="Name of the model"></i>
+                              </label>
+                              <input type="number" class="form-control" id="inputL2" step="0.0001" value="0">
+                            </div>
+                            <div class="form-group col-md-2">
+                              <label for="inputDropout">Dropout
+                                  <i class="fas fa-question-circle" data-toggle="tooltip" title="Name of the model"></i>
+                              </label>
+                              <input type="number" class="form-control" id="inputDropout" step="0.01" value="0.25">
+                            </div>
+                            <div class="form-group col-md-4">
+                              <label for="inputDataAugmentation">Data Augmentation
+                                  <i class="fas fa-question-circle" data-toggle="tooltip" title="Name of the model"></i>
+                              </label>
+                              <select id="inputDataAugmentation" class="form-control" required>
+                                <option value="None" selected>None</option>
+                                <option value="light">Petite data augmentation</option>
+                                <option value="medium">Data augmentation moyenne</option>
+                                <option value="large">Grosse data augmentation</option>
+                              </select>
+                            </div>
+                        </div>
+                        <div id="cnn">
+                            <div class="form-row justify-content-between">
+                                <div class="form-group col-md-2">
+                                  <label for="inputBlockNb">Blocks
+                                      <i class="fas fa-question-circle" data-toggle="tooltip" title="Name of the model"></i>
+                                  </label>
+                                  <input type="number" class="form-control" id="inputBlockNb" value="3">
+                                </div>
+                                <div class="form-group col-md-2">
+                                  <label for="inputBlockSize">Taille
+                                      <i class="fas fa-question-circle" data-toggle="tooltip" title="Name of the model"></i>
+                                  </label>
+                                  <input type="number" class="form-control" id="inputBlockSize" value="2">
+                                </div>
+                                <div class="form-group col-md-2">
+                                  <label for="inputFiltersPerLayers">Filtres
+                                      <i class="fas fa-question-circle" data-toggle="tooltip" title="Name of the model"></i>
+                                  </label>
+                                  <input type="number" class="form-control" id="inputFiltersPerLayers" value="32">
+                                </div>
+                                <div class="form-group col-md-2">
+                                  <label for="inputFiltersDouble">Duplication
+                                      <i class="fas fa-question-circle" data-toggle="tooltip" title="Name of the model"></i>
+                                  </label>
+                                  <input type="number" class="form-control" id="inputFiltersDouble" value="2">
+                                </div>
+                                <div class="form-group col-md-3">
+                                  <label for="inputMaxAvg">Type Pool
+                                      <i class="fas fa-question-circle" data-toggle="tooltip" title="Name of the model"></i>
+                                  </label>
+                                  <select id="inputMaxAvg" class="form-control" required>
+                                    <option disabled>Choose ...</option>
+                                    <option value="max" selected>Max Pooling</option>
+                                    <option value="avg">Average Pooling</option>
+                                  </select>
+                                </div>
+                            </div>
+                            <div class="form-row justify-content-between">
+                                <div class="form-group col-md-3">
+                                  <label for="inputPoolFrequency">Fréquence Pool
+                                      <i class="fas fa-question-circle" data-toggle="tooltip" title="Name of the model"></i>
+                                  </label>
+                                  <input type="number" class="form-control" id="inputPoolFrequency" value="2">
+                                </div>
+                                <div class="form-group col-md-3">
+                                  <label for="inputFirstKernel">Premier kernel
+                                      <i class="fas fa-question-circle" data-toggle="tooltip" title="Name of the model"></i>
+                                  </label>
+                                   <select id="inputFirstKernel" class="form-control" required>
+                                    <option disabled>Choose ...</option>
+                                    <option value="3x3" selected>(3,3)</option>
+                                    <option value="7x7">(7,7)</option>
+                                  </select>
+                                </div>
+                                <div class="form-group col-md-3">
+                                  <label for="inputKernels">Kernels
+                                      <i class="fas fa-question-circle" data-toggle="tooltip" title="Name of the model"></i>
+                                  </label>
+                                   <select id="inputKernels" class="form-control" required>
+                                    <option disabled>Choose ...</option>
+                                    <option value="3x3" selected>(3,3)</option>
+                                    <option value="7x7">(7,7)</option>
+                                  </select>
+                                </div>
+                                <div class="form-group col-md-3">
+                                  <label for="inputPadding">Padding
+                                      <i class="fas fa-question-circle" data-toggle="tooltip" title="Name of the model"></i>
+                                  </label>
+                                   <select id="inputPadding" class="form-control" required>
+                                    <option value="same">same</option>
+                                    <option value="valid" selected>valid</option>
+                                  </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                      <button type="submit" class="btn btn-outline-success">Créer</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+            <div class="modal fade" id="confirm" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">Voulez-vous vraiment supprimer ce model?</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-outline-danger" onclick="window.location.href ='/admin-models/';">Supprimer</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+
+
+
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+        <script src="{{ url_for('static', filename='assets/js/backend/scripts.js') }}"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+        <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js" crossorigin="anonymous"></script>
+        <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js" crossorigin="anonymous"></script>
+        <script src="{{ url_for('static', filename='assets/js/backend/datatables-demo.js') }}"></script>
+
+        <script type="text/javascript">
+            $('#creation-model').on('show.bs.modal', function (event) {
+                $('#form-model').hide()
+            });
+
+            $('#model').on('show.bs.modal', function (event) {
+              var button = $(event.relatedTarget) // Button that triggered the modal
+              var content = button.data('whatever').split(";") // Extract info from data-* attributes
+              var modal = $(this)
+
+              console.log(content)
+
+              modal.find('#name').text(content[0])
+              modal.find('#loss').text(content[1])
+              modal.find('#val-loss').text(content[2])
+              modal.find('#accuracy').text(content[3])
+              modal.find('#val-accuracy').text(content[4])
+
+              modal.find('#time').attr("data-original-title","time taken : " + content[5] + "s")
+              modal.find('#dataset').attr("data-original-title","dataset size : \n" + content[6] + "(test) / "
+                                            + content[7] + "(validation)\n for " + content[8] + " classes")
+              modal.find('#epochs').attr("data-original-title","epochs : " + content[9])
+              modal.find('#l1-l2').attr("data-original-title","l1 : " + content[10] + " / l2 : " + content[11])
+              modal.find('#optimizer').attr("data-original-title","Optimizer : " + content[12])
+              modal.find('#batch-size').attr("data-original-title","Batch size : " + content[13])
+              modal.find('#dropout').attr("data-original-title","Dropout : " + content[14])
+              modal.find('#learning-rate').attr("data-original-title","Learning Rate : " + content[15])
+              modal.find('#data-augmentation').attr("data-original-title","Data augmentation : " + content[16])
+
+
+              modal.find('#plot-image').attr("src", "/static/assets/images/test/" + content[17])
+              modal.find('#model-link').attr("href", "/static/assets/images/test/" + content[18])
+            })
+
+            $(function () {
+                $('[data-toggle="popover"]').popover()
+            })
+
+            window.setTimeout(function () {
+                $(".alert-danger").fadeTo(500, 0).slideUp(500, function () {
+                    $(this).remove();
+                });
+                }, 3000);
+        </script>
+    </body>
+</html>

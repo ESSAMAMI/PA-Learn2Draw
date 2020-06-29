@@ -6,24 +6,69 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Learn2draw {% block title %}{% endblock %}</title>
+    <!-- Bootstrap core CSS -->
+    <!--<link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">-->
+    <link href="{{ url_for('static', filename='assets/css/test/bootstrap.min.css')}}" rel="stylesheet">
+    <!-- Custom fonts for this template -->
+    <!--<link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">-->
+    <link href="{{ url_for('static', filename='assets/css/test/all.min.css')}}" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700' rel='stylesheet' type='text/css'>
+
+    <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css"> 
+    {% if play %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/sketchpad/custom.css')}}"> 
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/sketchpad/skeleton.css')}}">
+    {% endif %}
+
+    <!-- Custom styles for this template -->
+    <!--<link href="css/agency.min.css" rel="stylesheet">-->
+    <link href="{{ url_for('static', filename='assets/css/test/agency.css')}}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='assets/css/test/test.css')}}" rel="stylesheet">
+
     <link rel="stylesheet" href="{{ url_for('static', filename='assets/vendors/iconfonts/mdi/css/materialdesignicons.css')}}">
     <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/shared/style.css')}}">
     <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/demo_1/style.css')}}">
     <link rel="shortcut icon" href="{{ url_for('static', filename='asssets/images/favicon.ico')}}" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/js/all.min.js" crossorigin="anonymous"></script>
 </head>
 {% endblock %}
 {% block body %}
-<body class="header-fixed">
-    <nav class="t-header">
-        <div class="t-header-brand-wrapper ">
-          <a href="#">
-            <!-- <img class="logo" src="{{ url_for('static', filename='assets/images/logo.svg')}}" alt="">
-            <img class="logo-mini" src="{{ url_for('static', filename='assets/images/logo_mini.svg')}}" alt=""> -->
-          </a>
+{% if play %} 
+  <body id="page-top">
+{% else %}  
+  <body id="page-top" class="page-background">  
+{% endif %}
+      <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav" style="padding:0px;margin-bottom:10px" >
+          <div class="container">
+            <a class="navbar-brand js-scroll-trigger" id="home_link" href="/">Learn 2 draw</a>
+            <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+              Menu
+              <i class="fas fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+              <ul class="navbar-nav text-uppercase ml-auto">
+                <li class="nav-item">
+                  <a class="nav-link js-scroll-trigger" id="learn_link" href="/explain"><b>Apprenez à jouer!</b></a>
+                </li>
+                <li class="nav-item" id="li-submit_connect">
+                  <a class="nav-link js-scroll-trigger" href="/connection"><b>Inscription/Connexion</b></a>
+                </li>
+                <li class="nav-item" id="li-note">
+                  <a class="nav-link js-scroll-trigger" id="score_link" href="/score"><b>Notez!</b></a>
+                </li>
+                <li class="nav-item" id="li-profil">
+                  <a class="nav-link js-scroll-trigger" id="profil_link" href="/user-profil"><b>Profil</b></a>
+                </li>
+              </ul>
+            </div>
         </div>
+      </nav>
 
-        <div class="t-header-content-wrapper">
-          <div class="t-header-content">
+        <!--<div class="t-header-content-wrapper">
+          <div class="t-header-content">-->
             {% block scope %}
             {% endblock %}
           <!-- content viewport ends -->
@@ -43,15 +88,60 @@
             </div>
           </footer>
           <!-- partial -->
-        </div>
-        <!-- page content ends -->
-    </div>
+        <!--</div>
+        <!- page content ends ->
+    </div>-->
     <script src="{{ url_for('static', filename='assets/vendors/js/core.js')}}"></script>
     <script src="{{ url_for('static', filename='assets/vendors/apexcharts/apexcharts.min.js')}}"></script>
     <script src="{{ url_for('static', filename='assets/vendors/chartjs/Chart.min.js')}}"></script>
     <script src="{{ url_for('static', filename='assets/js/charts/chartjs.addon.js')}}"></script>
     <script src="{{ url_for('static', filename='assets/js/template.js')}}"></script>
     <script src="{{ url_for('static', filename='assets/js/dashboard.js')}}"></script>
+
+    <!-- Bootstrap core JavaScript -->
+    <!--<script src="vendor/jquery/jquery.min.js"></body>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>-->
+    <script src="{{ url_for('static', filename='assets/js/test/jquery.min.js')}}"></script>
+    <script src="{{ url_for('static', filename='assets/js/test/bootstrap.bundle.min.js')}}"></script>
+
+    <!-- Plugin JavaScript -->
+    <!--<script src="vendor/jquery-easing/jquery.easing.min.js"></script>-->
+    <script src="{{ url_for('static', filename='assets/js/test/jquery.easing.min.js')}}"></script>
+
+    <!-- Contact form JavaScript -->
+    <!--<script src="js/jqBootstrapValidation.js"></script>
+    <script src="js/contact_me.js"></script>-->
+    <script src="{{ url_for('static', filename='assets/js/test/jqBootstrapValidation.js')}}"></script>
+    <script src="{{ url_for('static', filename='assets/js/test/contact_me.js')}}"></script>
+
+    <!-- Custom scripts for this template -->
+    <!--<script src="js/agency.min.js"></script>-->
+    <script src="{{ url_for('static', filename='assets/js/test/agency.min.js')}}"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+
+    <script type="text/javascript">
+        $( document ).ready(function() {
+
+            var split = location.search.replace('?', '').split('&').map(function(val){
+              return val.split('=');
+            });
+
+
+            if (split[0][1] != undefined && split[0][0].includes("token")){
+              $('#li-submit_connect').hide();
+
+              $('#home_link').attr("href","/?token=" + split[0][1]);
+              $('#learn_link').attr("href","/explain/?token=" + split[0][1]);
+              $('#score_link').attr("href","/score/?token=" + split[0][1]);
+              $('#profil_link').attr("href","/user-profil/?token=" + split[0][1]);
+            }else{
+               $('#li-profil').hide();
+               $('#li-note').hide();
+            }
+         });
+
+    </script>
+
 </body>
 {% endblock %}
 </html>

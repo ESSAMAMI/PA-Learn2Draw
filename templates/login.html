@@ -1,6 +1,7 @@
 {% extends 'common/dom.html' %}
-{% block body %}
-    {% block scop %}
+{% block scope %}
+    <div class="t-header-content-wrapper">
+    <div class="t-header-content">
     <div class="authentication-theme auth-style_1">
       <div class="row">
 
@@ -53,7 +54,13 @@
 
                     {% if error_identical_pwd %}
                         <div class="alert alert-danger" role="alert">
-                            Passwords are not match 🤯... Try agin !
+                            Passwords are not match 🤯... Try again !
+                        </div>
+                    {% endif %}
+
+                    {% if error_user_already_created %}
+                        <div class="alert alert-danger" role="alert">
+                            Username / Email already used 🤯... Try something else !
                         </div>
                     {% endif %}
 
@@ -108,7 +115,7 @@
             });
             }, 3000);
         </script>
-        {% if error_identical_pwd %}
+        {% if error_identical_pwd or error_user_already_created %}
             <script type="text/javascript">
                 $(document).ready(function () {
                     $('#sign-up').click();
@@ -116,5 +123,6 @@
             </script>
         {% endif %}
     </div>
-    {% endblock %}
+    </div>
+    </div>
 {% endblock %}
