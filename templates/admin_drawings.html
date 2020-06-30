@@ -7,13 +7,13 @@
         <meta name="description" content="" />
         <meta name="author" content="" />
         <title>Drawings - SB Admin</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='/assets/css/backend/styles.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/backend/styles.css') }}">
         <link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet" crossorigin="anonymous" />
         <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/js/all.min.js" crossorigin="anonymous"></script>
     </head>
     <body class="sb-nav-fixed">
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-            <a class="navbar-brand" href="http://192.168.99.1:9893/admin-home">Learn 2 draw ADMIN</a><button class="btn btn-link btn-sm order-1 order-lg-0" id="sidebarToggle" href="#"><i class="fas fa-bars"></i></button
+            <a class="navbar-brand" href="http://192.168.1.31:9893/admin-home">Learn 2 draw ADMIN</a><button class="btn btn-link btn-sm order-1 order-lg-0" id="sidebarToggle" href="#"><i class="fas fa-bars"></i></button
             ><!-- Navbar Search-->
             <div class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0">
             </div>
@@ -24,7 +24,7 @@
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
                         <a class="dropdown-item" href="#">Settings</a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="http://192.168.99.1:9893/connection">Logout</a>
+                        <a class="dropdown-item" href="/connection">Logout</a>
                     </div>
                 </li>
             </ul>
@@ -35,7 +35,7 @@
                     <div class="sb-sidenav-menu">
                         <div class="nav">
                             <div class="sb-sidenav-menu-heading">Home</div>
-                            <a class="nav-link" href="http://192.168.99.1:9893/admin-home"
+                            <a class="nav-link" href="/admin-home"
                                 ><div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                                 Dashboard Home</a
                             >
@@ -79,15 +79,17 @@
                                 <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div
                             ></a>
                             <div class="collapse" id="collapseTables" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
-                                <nav class="sb-sidenav-menu-nested nav"><a class="nav-link" href="http://192.168.99.1:9893/admin-home/tables/users">Users</a><a class="nav-link" href="http://192.168.99.1:9893/admin-home/tables/drawings">Drawings</a><a class="nav-link" href="http://192.168.99.1:9893/admin-home/tables/categories">Categories</a><a class="nav-link" href="http://192.168.99.1:9893/admin-home/tables/notations">Notations</a></nav>
+                                <nav class="sb-sidenav-menu-nested nav"><a class="nav-link" href="/admin-home/tables/users">Users</a><a class="nav-link" href="/admin-home/tables/drawings">Drawings</a><a class="nav-link" href="/admin-home/tables/categories">Categories</a><a class="nav-link" href="/admin-home/tables/notations">Notations</a></nav>
                             </div>
                             <div class="sb-sidenav-menu-heading">Train models</div>
-                            <a class="nav-link" href="http://192.168.99.1:9893/admin-models">  
+                            <a class="nav-link" href="/admin-models">
                                 <div class="sb-nav-link-icon">
                                     <i class="fas fa-brain"></i>
                                 </div>
                                 Models
                             </a>
+
+                                <!--<div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>-->
                             <!--<div class="collapse" id="collapseModels" aria-labelledby="headingOne" data-parent="#sidenavAccordion">
                                 <nav class="sb-sidenav-menu-nested nav"><a class="nav-link" href="layout-static.html">CNN</a><a class="nav-link" href="layout-sidenav-light.html">LSTM</a><a class="nav-link" href="layout-sidenav-light.html">OTHERS</a>
                                 </nav>
@@ -107,458 +109,187 @@
                         <ol class="breadcrumb mb-4">
                             <li class="breadcrumb-item active">Table where all our drawings are stored</li>
                         </ol>
+                        <form id="form_create_dataset_test" method="POST" action="/create_dataset_test/">
+                            <button type="submit" class="btn btn-warning">Test creating new dataset from doodles</button>
+                        </form>
+                        <br>
+                        {% if query_result %}
+                                <div class="alert alert-danger" role="alert">
+                                    🤯 {{ query_result }} !
+                                </div>
+                        {% endif %}
                         <div class="card mb-4">
                             <div class="card-header">
-                                <i class="fas fa-table mr-1"></i>
-                                Our drawings
-                            </div>
+                                    <i class="fas fa-table mr-1"></i>
+                                    Our drawings
+                                    <a class="float-right text-success" href="" data-toggle="modal" data-target="#addModal" style="font-size: 18px;">
+                                        <i class="fas fa-plus"></i> Add 
+                                    </a>
+                                    <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel1"><b>Add drawing</b></h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <form id="form-sign-up" method="POST" action="/adding_drawing/">
+                                                    <div class="modal-body">
+                                                        <!-- Form Sign UP -->
+                                                        <div class="form-group input-rounded">
+                                                            <label for="user_id_input"><b>User_id</b></label>
+                                                            <input name="user_id_input" type="number" class="form-control" placeholder="User_id *" required/>
+                                                            <div class="required"></div>
+                                                        </div>
+                                                        <div class="form-group input-rounded">
+                                                            <label for="category_id_input"><b>Category_id</b></label>
+                                                            <input name="category_id_input" type="number" class="form-control" placeholder="Category_id *" required/>
+                                                            <div class="required"></div>
+                                                        </div>
+                                                        <div class="form-group input-rounded">
+                                                            <label for="category_predicted_id_input"><b>Category_predicted_id</b></label>
+                                                            <input name="category_predicted_id_input" type="number" class="form-control" placeholder="Category_predicted_id *" required/>
+                                                            <div class="required"></div>
+                                                        </div>
+                                                        <div class="form-group input-rounded">
+                                                            <label for="score_input"><b>Score</b></label>
+                                                            <input name="score_input" type="number" class="form-control" placeholder="Score *" required/>
+                                                            <div class="required"></div>
+                                                        </div>
+                                                        <div class="form-group input-rounded">
+                                                            <label for="score_by_votes_input"><b>Score by votes</b></label>
+                                                            <input name="score_by_votes_input" type="number" class="form-control" placeholder="Score by votes*" required/>
+                                                            <div class="required"></div>
+                                                        </div>
+                                                        <div class="form-group input-rounded">
+                                                            <label for="time_input"><b>Time</b></label>
+                                                            <input name="time_input" type="number" class="form-control" placeholder="Time *" required/>
+                                                            <div class="required"></div>
+                                                        </div>
+                                                        <p>(*) Required fields</p>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                        <button type="submit" class="btn btn-primary"> Add </button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Edit drawing</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <form id="form-edit" method="POST">
+                                                <div class="modal-body">
+                                                        <!-- Form Sign UP -->
+                                                        <div class="form-group input-rounded">
+                                                            <label for="user_id_input"><b>User_id</b></label>
+                                                            <input id="user_id_input" name="user_id_input" type="number" class="form-control" placeholder="User_id *" required/>
+                                                            <div class="required"></div>
+                                                        </div>
+                                                        <div class="form-group input-rounded">
+                                                            <label for="category_id_input"><b>Category_id</b></label>
+                                                            <input id="category_id_input" name="category_predicted_id_input" type="number" class="form-control" placeholder="Category_id *" required/>
+                                                            <div class="required"></div>
+                                                        </div>
+                                                        <div class="form-group input-rounded">
+                                                            <label for="category_predicted_id_input"><b>Category_predicted_id</b></label>
+                                                            <input id="category_predicted_id_input" name="category_predicted_id_input" type="number" class="form-control" placeholder="Category_predicted_id *" required/>
+                                                            <div class="required"></div>
+                                                        </div>
+                                                        <div class="form-group input-rounded">
+                                                            <label for="status_input"><b>Status</b></label>
+                                                            <input id="status_input" name="status_input" type="number" class="form-control" placeholder="Status *" required/>
+                                                            <div class="required"></div>
+                                                        </div>
+                                                        <div class="form-group input-rounded">
+                                                            <label for="score_input"><b>Score</b></label>
+                                                            <input id="score_input" name="score_input" type="number" class="form-control" placeholder="Score *" required/>
+                                                            <div class="required"></div>
+                                                        </div>
+                                                        <div class="form-group input-rounded">
+                                                            <label for="time_input"><b>Time</b></label>
+                                                            <input id="time_input" name="time_input" type="number" class="form-control" placeholder="Time *" required/>
+                                                            <div class="required"></div>
+                                                        </div>
+                                                    </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" name="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                    <button type="submit" name="button" class="btn btn-primary" value="Edit"> Edit </button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelDelete" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabelDelete">Delete drawing</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <form id="form-delete" method="POST">
+                                                <!--
+                                                <div class="modal-body">
+                                                    <div class="form-group input-rounded">
+                                                        <input id="username_input" name="username_input" type="text" class="form-control" placeholder="Username *" required/>
+                                                        <div class="required"></div>
+                                                    </div>
+                                                    <div class="form-group input-rounded">
+                                                        <input id="email_input" name="email_input" type="email" class="form-control" placeholder="Email *" required/>
+                                                        <div class="required"></div>
+                                                    </div>
+                                                    <div class="form-group input-rounded">
+                                                        <input id="score_input" name="score_input" type="number" class="form-control" placeholder="Score *" required/>
+                                                        <div class="required"></div>
+                                                    </div>
+                                                </div>
+                                                -->
+                                                <div class='modal-body'>
+                                                    Are you sure that you want to delete this record ?
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" name="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                    <button type="submit" name="button" class="btn btn-danger" value="Edit"> Delete </button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
                             <div class="card-body">
                                  <div class="table-responsive">
                                     <table id="drawings-table" class="table table-striped table-bordered">
                                       <thead>
                                         <tr>
-                                          <th> Id</th>
-                                          <th> Username</th>
-                                          <th> Category</th>
+                                          <th> User_id<h>
+                                          <th> Category_id</th>
+                                          <th> Category_predicted_id</th>
                                           <th> Status</th>
                                           <th> Score </th>
+                                          <th> Score by votes</th>
                                           <th> Time </th>
                                           <th> Edit </th>
                                           <th> Delete </th>
                                         </tr>
                                       </thead>
-                                      <tbody>
-                                        <tr>
-                                          <td>1</td>
-                                          <td>Tiger Nixon</td>
-                                          <td>Car</td>
-                                          <td>E</td>
-                                          <td>99</td>
-                                          <td>40</td>
-                                          <td>
-                                            <a class="text-primary" href="" data-toggle="modal" data-target="#editModal" data-whatever="1;E">
-                                              <i class="fas fa-pencil-alt text-primary"></i> Edit 
-                                            </a>
+                                      <tbody id="table_content">
+                                        
 
-                                            <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                                <div class="modal-dialog" role="document">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title" id="exampleModalLabel2">Edit drawing</h5>
-                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                <span aria-hidden="true">&times;</span>
-                                                            </button>
-                                                        </div>
-                                                        <form id="form-edit" action="#">
-                                                            <div class="modal-body">
-                                                                <div class="form-group input-rounded">
-                                                                    <input id="status_input" type="text" class="form-control" placeholder="Status *" required/>
-                                                                    <div class="required"></div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                                <button type="submit" class="btn btn-primary"> Edit </button>
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                          </td>
-                                          <td>
-                                            <!--<a class="text-danger" href="#">
-                                              <i class="fa fa-trash text-danger"></i> Delete 
-                                            </a>-->
-                                            <!-- Link trigger modal -->
-                                            <a class="text-danger" href="" data-toggle="modal" data-target="#exampleModal3">
-                                                <i class="fas fa-trash text-danger"></i> Delete 
-                                            </a>
-
-                                            <!-- Modal -->
-                                            <div class="modal fade" id="exampleModal3" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                                <div class="modal-dialog" role="document">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title" id="exampleModalLabel3">Deletion</h5>
-                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                <span aria-hidden="true">&times;</span>
-                                                            </button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            Are you sure that you want to delete this record ?
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                            <a class="btn btn-danger" href="">Yes</a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            
-                                          </td>
-                                        </tr>
-
-                                        <tr>
-                                            <td>2</td>
-                                            <td>Garrett Winters</td>
-                                            <td>Apple</td>
-                                            <td>E</td>
-                                            <td>90</td>
-                                            <td>20</td>
-                                            <td>
-                                              <a class="text-primary" href="#">
-                                                <i class="fas fa-pencil-alt text-primary"></i> Edit 
-                                              </a>
-                                            </td>
-                                            <td>
-                                              <a class="text-danger" href="#">
-                                                <i class="fa fa-trash text-danger"></i> Delete 
-                                              </a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>3</td>
-                                            <td>Ashton Cox</td>
-                                            <td>Dog</td>
-                                            <td>O</td>
-                                            <td>95</td>
-                                            <td>45</td>
-                                            <td>
-                                              <a class="text-primary" href="#">
-                                                <i class="fas fa-pencil-alt text-primary"></i> Edit 
-                                              </a>
-                                            </td>
-                                            <td>
-                                              <a class="text-danger" href="#">
-                                                <i class="fa fa-trash text-danger"></i> Delete 
-                                              </a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>4</td>
-                                            <td>Cedric Kelly</td>
-                                            <td>Table</td>
-                                            <td>E</td>
-                                            <td>56</td>
-                                            <td>10</td>
-                                            <td>
-                                              <a class="text-primary" href="#">
-                                                <i class="fas fa-pencil-alt text-primary"></i> Edit 
-                                              </a>
-                                            </td>
-                                            <td>
-                                              <a class="text-danger" href="#">
-                                                <i class="fa fa-trash text-danger"></i> Delete 
-                                              </a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>5</td>
-                                            <td>Airi Satou</td>
-                                            <td>Fish</td>
-                                            <td>O</td>
-                                            <td>79</td>
-                                            <td>20</td>
-                                            <td>
-                                              <a class="text-primary" href="#">
-                                                <i class="fas fa-pencil-alt text-primary"></i> Edit 
-                                              </a>
-                                            </td>
-                                            <td>
-                                              <a class="text-danger" href="#">
-                                                <i class="fa fa-trash text-danger"></i> Delete 
-                                              </a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>6</td>
-                                            <td>Brielle Williamson</td>
-                                            <td>Boat</td>
-                                            <td>O</td>
-                                            <td>70</td>
-                                            <td>30</td>
-                                            <td>
-                                              <a class="text-primary" href="#">
-                                                <i class="fas fa-pencil-alt text-primary"></i> Edit 
-                                              </a>
-                                            </td>
-                                            <td>
-                                              <a class="text-danger" href="#">
-                                                <i class="fa fa-trash text-danger"></i> Delete 
-                                              </a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>7</td>
-                                            <td>Herrod Chandler</td>
-                                            <td>Banana</td>
-                                            <td>E</td>
-                                            <td>98</td>
-                                            <td>20</td>
-                                            <td>
-                                              <a class="text-primary" href="#">
-                                                <i class="fas fa-pencil-alt text-primary"></i> Edit 
-                                              </a>
-                                            </td>
-                                            <td>
-                                              <a class="text-danger" href="#">
-                                                <i class="fa fa-trash text-danger"></i> Delete 
-                                              </a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>8</td>
-                                            <td>Rhona Davidson</td>
-                                            <td>Car</td>
-                                            <td>O</td>
-                                            <td>92</td>
-                                            <td>20</td>
-                                            <td>
-                                              <a class="text-primary" href="#">
-                                                <i class="fas fa-pencil-alt text-primary"></i> Edit 
-                                              </a>
-                                            </td>
-                                            <td>
-                                              <a class="text-danger" href="#">
-                                                <i class="fa fa-trash text-danger"></i> Delete 
-                                              </a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>9</td>
-                                            <td>Colleen Hurst</td>
-                                            <td>Car</td>
-                                            <td>E</td>
-                                            <td>30</td>
-                                            <td>10</td>
-                                            <td>
-                                              <a class="text-primary" href="#">
-                                                <i class="fas fa-pencil-alt text-primary"></i> Edit 
-                                              </a>
-                                            </td>
-                                            <td>
-                                              <a class="text-danger" href="#">
-                                                <i class="fa fa-trash text-danger"></i> Delete 
-                                              </a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>10</td>
-                                            <td>Sonya Frost</td>
-                                            <td>Apple</td>
-                                            <td>E</td>
-                                            <td>68</td>
-                                            <td>10</td>
-                                            <td>
-                                              <a class="text-primary" href="#">
-                                                <i class="fas fa-pencil-alt text-primary"></i> Edit 
-                                              </a>
-                                            </td>
-                                            <td>
-                                              <a class="text-danger" href="#">
-                                                <i class="fa fa-trash text-danger"></i> Delete 
-                                              </a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>11</td>
-                                            <td>Jena Gaines</td>
-                                            <td>Boat</td>
-                                            <td>E</td>
-                                            <td>80</td>
-                                            <td>40</td>
-                                            <td>
-                                              <a class="text-primary" href="#">
-                                                <i class="fas fa-pencil-alt text-primary"></i> Edit 
-                                              </a>
-                                            </td>
-                                            <td>
-                                              <a class="text-danger" href="#">
-                                                <i class="fa fa-trash text-danger"></i> Delete 
-                                              </a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>12</td>
-                                            <td>Quinn Flynn</td>
-                                            <td>Banana</td>
-                                            <td>O</td>
-                                            <td>80</td>
-                                            <td>10</td>
-                                            <td>
-                                              <a class="text-primary" href="#">
-                                                <i class="fas fa-pencil-alt text-primary"></i> Edit 
-                                              </a>
-                                            </td>
-                                            <td>
-                                              <a class="text-danger" href="#">
-                                                <i class="fa fa-trash text-danger"></i> Delete 
-                                              </a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>13</td>
-                                            <td>Charde Marshall</td>
-                                            <td>Car</td>
-                                            <td>O</td>
-                                            <td>70</td>
-                                            <td>10</td>
-                                            <td>
-                                              <a class="text-primary" href="#">
-                                                <i class="fas fa-pencil-alt text-primary"></i> Edit 
-                                              </a>
-                                            </td>
-                                            <td>
-                                              <a class="text-danger" href="#">
-                                                <i class="fa fa-trash text-danger"></i> Delete 
-                                              </a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>14</td>
-                                            <td>Haley Kennedy</td>
-                                            <td>Monkey</td>
-                                            <td>E</td>
-                                            <td>40</td>
-                                            <td>20</td>
-                                            <td>
-                                              <a class="text-primary" href="#">
-                                                <i class="fas fa-pencil-alt text-primary"></i> Edit 
-                                              </a>
-                                            </td>
-                                            <td>
-                                              <a class="text-danger" href="#">
-                                                <i class="fa fa-trash text-danger"></i> Delete 
-                                              </a>
-                                            </td>
-                                        </tr>
+                                
                                       </tbody>
                                     </table>
                                   </div>
-                                <!--
-                                <div class="table-responsive">
-                                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                        <thead>
-                                            <tr>
-                                                <th>Username</th>
-                                                <th>Email</th>
-                                                <th>Password</th>
-                                                <th>Admin</th>
-                                                <th>Score</th>
-                                            </tr>
-                                        </thead>
-                                        <tfoot>
-                                            <tr>
-                                                <th>Username</th>
-                                                <th>Email</th>
-                                                <th>Password</th>
-                                                <th>Admin</th>
-                                                <th>Score</th>
-                                            </tr>
-                                        </tfoot>
-                                        <tbody>
-                                            <tr>
-                                                <td>Tiger Nixon</td>
-                                                <td>samplemail1@gmail.com</td>
-                                                <td>******</td>
-                                                <td>0</td>
-                                                <td>200</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Garrett Winters</td>
-                                                <td>samplemail2@gmail.com</td>
-                                                <td>******</td>
-                                                <td>0</td>
-                                                <td>180</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Ashton Cox</td>
-                                                <td>samplemail3@gmail.com</td>
-                                                <td>******</td>
-                                                <td>0</td>
-                                                <td>170</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Cedric Kelly</td>
-                                                <td>samplemail4@gmail.com</td>
-                                                <td>******</td>
-                                                <td>0</td>
-                                                <td>145</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Airi Satou</td>
-                                                <td>samplemail5@gmail.com</td>
-                                                <td>******</td>
-                                                <td>0</td>
-                                                <td>142</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Brielle Williamson</td>
-                                                <td>samplemail6@gmail.com</td>
-                                                <td>******</td>
-                                                <td>0</td>
-                                                <td>130</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Herrod Chandler</td>
-                                                <td>samplemail7@gmail.com</td>
-                                                <td>******</td>
-                                                <td>0</td>
-                                                <td>128</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Rhona Davidson</td>
-                                                <td>samplemail8@gmail.com</td>
-                                                <td>******</td>
-                                                <td>0</td>
-                                                <td>120</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Colleen Hurst</td>
-                                                <td>samplemail9@gmail.com</td>
-                                                <td>******</td>
-                                                <td>0</td>
-                                                <td>100</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Sonya Frost</td>
-                                                <td>samplemail10@gmail.com</td>
-                                                <td>******</td>
-                                                <td>0</td>
-                                                <td>95</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Jena Gaines</td>
-                                                <td>samplemail11@gmail.com</td>
-                                                <td>******</td>
-                                                <td>0</td>
-                                                <td>50</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Quinn Flynn</td>
-                                                <td>samplemail12@gmail.com</td>
-                                                <td>******</td>
-                                                <td>0</td>
-                                                <td>20</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Charde Marshall</td>
-                                                <td>samplemail13@gmail.com</td>
-                                                <td>******</td>
-                                                <td>0</td>
-                                                <td>10</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Haley Kennedy</td>
-                                                <td>samplemail14@gmail.com</td>
-                                                <td>******</td>
-                                                <td>0</td>
-                                                <td>2</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                -->
                             </div>
                         </div>
                     </div>
@@ -579,26 +310,169 @@
         </div>
         <script src="https://code.jquery.com/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-        <script src="{{ url_for('static', filename='/assets/js/backend/scripts.js') }}"></script>
+        <script src="{{ url_for('static', filename='assets/js/backend/scripts.js') }}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
-        <script src="{{ url_for('static', filename='/assets/js/backend/chart-area-demo.js') }}"></script>
-        <script src="{{ url_for('static', filename='/assets/js/backend/chart-bar-demo.js') }}"></script>
+        <script src="{{ url_for('static', filename='assets/js/backend/chart-area-demo.js') }}"></script>
+        <script src="{{ url_for('static', filename='assets/js/backend/chart-bar-demo.js') }}"></script>
         <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js" crossorigin="anonymous"></script>
         <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js" crossorigin="anonymous"></script>
-        <script src="{{ url_for('static', filename='/assets/js/backend/datatables-demo.js') }}"></script>
+        <script src="{{ url_for('static', filename='assets/js/backend/datatables-demo.js') }}"></script>
 
         <!-- CUSTOM SCRIPT FOR MODAL EDIT-->
         <script type="text/javascript">
             console.log("BONSOIR")
-            $('#editModal').on('show.bs.modal', function (event) {
-              var button = $(event.relatedTarget) // Button that triggered the modal
-              var recipient = button.data('whatever') // Extract info from data-* attributes
-              var recipient_splitted = recipient.split(";");
-              // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-              // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-              $('#exampleModalLabel2').text('Edit drawing n°' + recipient_splitted[0])
-              $('#status_input').val(recipient_splitted[1])
-            })
+            
+            window.onload = function create() {
+                console.log("Loaded");
+                var list = {{ drawings_infos | tojson }};
+                console.log("dico : ");
+                console.log(list);
+                console.log(list[0].split(';'));
+
+                //get container element
+                var container = document.getElementById("table_content");
+                //print each user in the table
+                for (i=0; i < list.length; i++){
+                    var content = list[i].split(';');
+
+                    var tr = document.createElement('tr');
+                    var td_user_id = document.createElement('td');
+                    var td_category_id = document.createElement('td');
+                    var td_category_predicted_id = document.createElement('td');
+                    var td_status = document.createElement('td');
+                    var td_score = document.createElement('td');
+                    var td_score_by_votes = document.createElement('td');
+                    var td_time = document.createElement('td');
+                    var td_edit = document.createElement('td');
+                    var td_delete = document.createElement('td');
+                    
+                    td_user_id.appendChild(document.createTextNode(content[1]));
+                    td_category_id.appendChild(document.createTextNode(content[2]));
+                    td_category_predicted_id.appendChild(document.createTextNode(content[3]));
+                    td_status.appendChild(document.createTextNode(content[4]));
+                    td_score.appendChild(document.createTextNode(content[5]));
+                    td_score_by_votes.appendChild(document.createTextNode(content[6]));
+                    td_time.appendChild(document.createTextNode(content[7]));
+
+
+                    td_edit.innerHTML = "<td><a id='button_edit' class='text-primary' href='' data-toggle='modal' data-target='#editModal' data-whatever='"+list[i]+"' onclick=create_modal(this) ><i class='fas fa-pencil-alt text-primary'></i> Edit </a></td>";
+                               
+
+                    console.log("modal part");    
+                    
+                    td_delete.innerHTML = "<td><a id='button_delete' class='text-danger' href='' data-toggle='modal' data-target='#deleteModal' data-whatever='"+list[i]+"' onclick=create_delete_modal(this)><i class='fas fa-trash text-danger'></i> Delete </a></td>";
+
+                    /*
+                    td_delete.innerHTML = "<td><a id='button_delete' class='text-danger' href='' data-toggle='modal' data-target='#exampleModal"+i.toString()+"'><i class='fas fa-trash text-danger'></i> Delete </a><div class='modal fade' id='exampleModal"+i.toString()+"' tabindex='-1' role='dialog' aria-labelledby='exampleModalLabel' aria-hidden='true'><div class='modal-dialog' role='document'><div class='modal-content'><div class='modal-header'><h5 class='modal-title' id='exampleModalLabel3'>Deletion</h5><button type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div><div class='modal-body'>Are you sure that you want to delete this record ?</div><div class='modal-footer'><button type='button' class='btn btn-secondary' data-dismiss='modal'>Close</button><a class='btn btn-danger' href=''>Yes</a></div></div></div></div></td>";
+                    */
+
+
+                    
+
+                    tr.appendChild(td_user_id);
+                    tr.appendChild(td_category_id);
+                    tr.appendChild(td_category_predicted_id);
+                    tr.appendChild(td_status);
+                    tr.appendChild(td_score);
+                    tr.appendChild(td_score_by_votes);
+                    tr.appendChild(td_time);
+                    tr.appendChild(td_edit);
+                    tr.appendChild(td_delete);
+                    container.appendChild(tr);
+
+
+                    /*<tr>
+                                            <td>Colleen Hurst</td>
+                                            <td>samplemail9@gmail.com</td>
+                                            
+                                            <td>100</td>
+                                            <td>
+                                              <a class="text-primary" href="#">
+                                                <i class="fas fa-pencil-alt text-primary"></i> Edit 
+                                              </a>
+                                            </td>
+                                            <td>
+                                              <a class="text-danger" href="#">
+                                                <i class="fa fa-trash text-danger"></i> Delete 
+                                              </a>
+                                            </td>
+                                        </tr>*/
+                }
+
+
+            }
+
+            function create_modal(btn){
+                console.log("CREATE MODAL FUNCTION");
+                /*var split = location.search.replace('?', '').split('&').map(function(val){
+                  return val.split('=');
+                });
+                var token = split[0][1];
+                
+                console.log("token = "+token);
+                */
+
+                console.log("current data-whatever : ", btn.getAttribute("data-whatever"));
+
+                var data = btn.getAttribute("data-whatever");
+                var content = data.split(';');
+
+                document.getElementById("exampleModalLabel").innerHTML = "<b>Edit drawing from user " + content[1]+"</b>";
+                document.getElementById("user_id_input").value = content[1];
+                document.getElementById("category_id_input").value = content[2];
+                document.getElementById("category_predicted_id_input").value = content[3];
+                document.getElementById("status_input").value = content[4];
+                document.getElementById("score_input").value = content[5];
+                document.getElementById("score_by_votes_input").value = content[6];
+                document.getElementById("time_input").value = content[7];
+                //document.getElementById("form_edit").action = "/admin-home/tables/users/?token=" + token + "&infos=" + data;
+                document.getElementById("form-edit").action = "/updating_drawing/?infos=" + data;
+                
+
+            }
+
+            function create_delete_modal(btn){
+                console.log("CREATE DELETE MODAL FUNCTION");
+                /*var split = location.search.replace('?', '').split('&').map(function(val){
+                  return val.split('=');
+                });
+                var token = split[0][1];
+                
+                console.log("token = "+token);
+                */
+
+                console.log("current data-whatever : ", btn.getAttribute("data-whatever"));
+
+                var data = btn.getAttribute("data-whatever");
+                var content = data.split(';');
+                
+                document.getElementById("exampleModalLabelDelete").innerHTML = "<b>Delete drawing from user " + content[1]+"</b>";
+                /*
+                document.getElementById("username_input").value = content[0];
+                document.getElementById("email_input").value = content[1];
+                document.getElementById("score_input").value = content[2];
+                */
+                //document.getElementById("form_edit").action = "/admin-home/tables/users/?token=" + token + "&infos=" + data;
+                document.getElementById("form-delete").action = "/delete_drawing/?infos=" + data;
+
+            }
+
+            window.setTimeout(function () {
+            $(".alert-danger").fadeTo(500, 0).slideUp(500, function () {
+                $(this).remove();
+            });
+            }, 3000);
+
+        /*$('#editModal').on('show.bs.modal', function (event) {
+          var button = $(event.relatedTarget) // Button that triggered the modal
+          var recipient = button.data('whatever') // Extract info from data-* attributes
+          var recipient_splitted = recipient.split(";");
+          // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+          // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+          $('#exampleModalLabel2').text('Edit drawing n°' + recipient_splitted[0])
+          $('#status_input').val(recipient_splitted[1])
+
+        })*/
         </script>
     </body>
 </html>

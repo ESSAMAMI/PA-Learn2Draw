@@ -1,0 +1,215 @@
+{% extends 'common/dom_landing.html' %}
+{% block scope %}
+    <section id="container-start">
+        <div class="container">
+          <div class="card" style="width: auto;">
+              <div class="card-body">
+                    <div style="display: none" id="alert-danger" class="alert alert-danger" role="alert">
+                      Tous les champs doivent être rensignés !
+                    </div>
+                  <div class="form-group">
+                    <label for="inputTime">Temps</label>
+                    <input type="number" class="form-control u-full-width" id="inputTime" name="inputTime" placeholder="Entrer le temps en sconde">
+                    <small id="emailHelp" class="form-text text-muted">Le temps que vous saisissez correspond au temps que vous allez mettre pour réaliser le dessin.</small>
+                  </div>
+                  <div class="form-group">
+                    <label for="inputCategory">Catégorie</label>
+                    <!--<input type="text" class="form-control" id="inputCategory" placeholder="Entrer la catégorie">-->
+                    <select id="categorie" class="u-full-width form-text text-muted" name="categorie">
+                        <option disabled selected value="">Catégorie</option>
+                        <!--<option value="Baseball">Baseball</option>-->
+                    </select>
+                  </div>
+                  <button type="button" id="start" class="btn btn-primary">Commencer !</button>
+              </div>
+          </div>
+        </div>
+        {% if current_prediction %}
+          <div class="container">
+            <div class="card" style="width: auto;">
+                <div class="card-body">
+                  {% if good_prediction %}
+                    <h5>Mauvaise prédiction, nous n'avons pas trouvé ==> {{ good_prediction }} 🤯</h5>
+                    <p>Nous pensions que vous aviez representé la catégorie <b>{{ current_prediction_label }} à {{ current_prediction }} %</b></p>
+                  {% else %}
+                    <h5>Bonne prédiction !</h5>
+                    <h5>Nous pensons que vous avez representé la catégorie <b>{{ current_prediction_label }}</b></h5>
+                    <p>Si vous aviez un compte, vous auriez gagné {{ current_prediction }} points.</p>
+                  {% endif %} 
+                  <p>En vous inscrivant vous pourrez proposer vos propres catégories et faire noter vos dessins par la communauté si vous n'êtes pas d'accord avec le résultat fourni par le jeu !</p> 
+                  <p>Un tas d'autres fonctionnalités vous attendent, rejoignez nous vite 😀</p>
+                </div>
+            </div>
+
+          </div>
+    {% endif %}
+    </section>
+    <section class="page-section" id="container-draw">
+      <div class="container">
+          <div class="row">
+              <div class="col-md-6">
+                <button class="u-full-width" id="undo" disabled>Temps</button>
+              </div>
+              <div class="col-md-6">
+                  <button class="u-full-width" id="redo" disabled>Catégorie</button>
+              </div>
+          </div>
+          <div class="row">
+              <div class="col-md-6">
+                <button type="button" class="u-full-width" id="clear">Effacer</button>
+              </div>
+              <div class="col-md-6">
+                  <button class="u-full-width" id="#">Valider</button>
+              </div>
+          </div>
+          <div class="row">
+            <form action="/play/get_drawing/" method="POST">
+                <div class="col-md-12">
+                  <div id="sketchpad"></div>
+                    <input id="inputDrawing" type="hidden" name="drawing">
+                    <input id="inputCategory" type="hidden" name="category_drawing">
+                    <input id="model_name" type="hidden" name="model_name">
+                    <input id="input_time" type="hidden" name="input_time">
+                    <input id="submitFormDrawing" type="submit" style="display: none">
+                </div>
+            </form>
+          </div>
+          <input type="button" id="btnSave" style="display:none;">
+      </div>
+    </section>
+      <!-- Scripts
+      –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+      <script src="{{ url_for('static', filename='assets/js/sketchpad/responsive-sketchpad.js')}}"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+
+      <script type="text/javascript">
+        window.onload = function create() {
+            console.log("Loaded");
+            var list = {{ categories | tojson }};
+            console.log("dico : ");
+            console.log(list);
+            console.log(list[0].split(','));
+
+            list = list.split(',')
+            console.log(list[1])
+
+            var container = document.getElementById("categorie");
+
+             //print each category
+            for (i=0; i < list.length-1; i++){
+                var content = list[i];
+                console.log("content for " + i + " " + content);
+
+                var option = document.createElement("option");
+                // create text node to add to option element (opt)
+                option.innerHTML = content;
+
+                // set value property of opt
+                option.value = content; 
+
+                // add opt to end of select box (sel)
+                container.appendChild(option); 
+            }
+
+            // set model name in hidden input to send it to the prediction function
+            var model_name = document.getElementById("model_name");
+            model_name.value = list[list.length-1]
+
+
+        };
+
+        var el = document.getElementById('sketchpad');
+        var pad = new Sketchpad(el);
+        pad.setCanvasSize(960,400);
+        // setLineColor
+        function setLineColor(e) {
+            var color = e.target.value;
+            if (!color.startsWith('#')) {
+                color = '#' + color;
+            }
+            pad.setLineColor(color);
+        }
+        function clear() {
+            pad.clear();
+        }
+        document.getElementById('clear').onclick = clear;
+
+        // resize
+        window.onresize = function (e) {
+          pad.resize(el.offsetWidth);
+        }
+      </script>
+    <script src="https://files.codepedia.info/files/uploads/iScripts/html2canvas.js"></script>
+    <script type="text/javascript">
+
+          $('#btnSave').click(function(){
+            html2canvas($('#sketchpad'),
+            {
+              onrendered: function (canvas) {
+                var a = document.createElement('a');
+                // toDataURL defaults to png, so we need to request a jpeg, then convert for file download.
+                a.href = canvas.toDataURL("image/jpg").replace("image/jpg", "image/octet-stream");
+
+                a.download = 'drawing.png';
+                $("#inputDrawing").val(a.href);
+                var e = document.getElementById("categorie");
+                var category = e.options[e.selectedIndex].value;
+                var time = document.getElementById("inputTime");
+                var time_val = time.value
+                $("#inputCategory").val(category);
+                $("#input_time").val(time_val);
+                console.log("time_val "+time_val);
+                $("#submitFormDrawing").click();
+              }
+            });
+          });
+
+    </script>
+      <script type="text/javascript">
+
+          $(document).ready(function () {
+              $('#container-draw').hide();
+          })
+          $("#start").on('click', function () {
+              var e = document.getElementById("categorie");
+              var category = e.options[e.selectedIndex].value;
+              if($("#inputTime").val() === "" || category === ""){
+                  $('#alert-danger').css('display','block');
+              }else {
+
+                  $('#container-draw').show();
+                  $("#container-start").hide();
+                  $("#container-draw").fadeIn();
+
+                  var timeleft = document.getElementById("inputTime").value;
+                  //var category = document.getElementById("inputCategory").value;
+                  // var e = document.getElementById("categorie");
+                  // var category = e.options[e.selectedIndex].value;
+
+                  var downloadTimer = setInterval(function () {
+                      document.getElementById("redo").innerHTML = "Dessiner : "+category;
+                      if (timeleft <= 0) {
+                          clearInterval(downloadTimer);
+                          document.getElementById("undo").innerHTML = "C'est fini";
+                          document.getElementById("btnSave").click();
+                          $("#container-draw").hide();
+
+                      } else {
+                          document.getElementById("undo").innerHTML = "<b>" + timeleft + ":00<b>";
+                      }
+                      timeleft -= 1;
+                  }, 1000);
+              }
+          })
+      </script>
+      <!--{% if token %}
+          <script type="text/javascript">
+            $('#li-submit_connect').hide();
+          </script>
+        {% else %}
+          <script type="text/javascript">
+            $('#li-profil').hide();
+            $('#li-note').hide();
+          </script>
+        {% endif %}-->
+{% endblock %}
