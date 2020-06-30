@@ -835,6 +835,27 @@ def get_drawing(token=None):
 
     return redirect(url_for('url_not_found'))
 
+@app.route('/create_dataset_test/', methods=['POST', 'GET'])
+def create_dataset_test():
+    try:
+        print("Welcome in create dataset test")
+        
+        # first request, get categories and images ids that we need to transform 
+        # (status = 3 ) in dataset, for example only get all turtle images with status 3
+        # + transform them into correct data (numpy tensors) + merge them + save npy file
+        query_result =  request_bdd.create_npy_dataset()
+        
+        if query_result == "True" or query_result == "False":
+            # Nothing if 0 problems
+            return redirect(url_for('drawings'), code=307)
+        else:
+            return redirect(url_for('drawings'), code=307)
+    except Exception as e:
+        print("ECHEC")
+        print("exception : ", str(e))
+        current_date = utils.get_ccurent_date(format="fr")
+        return redirect(url_for('drawings', query_result=str(e)), code=307)
+
 # Handle errors section
 @app.errorhandler(404)
 @app.route('/url_not_found/', methods=['GET'])

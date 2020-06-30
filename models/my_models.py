@@ -52,6 +52,7 @@ def create_and_train_cnn_model(new_inputName, new_inputEpochs, new_inputBatchSiz
 			elt = elt.split(";")
 			bdd_categories.append(elt[0]+".npy")
 
+
 		#print("categories_infos : ",categories_infos)
 		#print("bdd catego : ", bdd_categories)
 
@@ -65,7 +66,8 @@ def create_and_train_cnn_model(new_inputName, new_inputEpochs, new_inputBatchSiz
 
 		print("shared_categories_filenames :",shared_categories_filenames)
 		# usefull variables for models
-		num_images = 100000 ### was 100000, reduce this number if memory issues.
+		#num_images = 400
+		num_images = 10000#0 ### was 100000, reduce this number if memory issues.
 		num_files = len(shared_categories_filenames) # *** we have x files ***
 		images_per_category = num_images//num_files
 		seed = np.random.randint(1, 10e7) #maybe delete seed later ?
@@ -81,12 +83,13 @@ def create_and_train_cnn_model(new_inputName, new_inputEpochs, new_inputBatchSiz
 		    print("file path : ", file_path)
 		    x = np.load(file_path)
 		    print("x shape = ", x.shape)
-		    print("x 0 shape = ", x[1000].shape)
+		    print("x 0 shape = ", x[42].shape)
 		    x = x.astype('float32') ##normalize images
 		    x /= 255.0
 		    y = [i] * len(x) # create numeric label for this image
 		    
 		    x = x[:images_per_category] # get the sample of images 
+		    print("x final for ", file_path, " = ", x.shape)
 		    y = y[:images_per_category] # get the sample of labels 
 		    
 		    if i == 0:
@@ -265,7 +268,7 @@ def create_and_train_mlp_model(new_inputName, new_inputEpochs, new_inputBatchSiz
 		print("shared_categories_filenames :",shared_categories_filenames)
 
 		# usefull variables for models
-		num_images = 100000 ### was 100000, reduce this number if memory issues.
+		num_images = 10000#0 ### was 100000, reduce this number if memory issues.
 		num_files = len(shared_categories_filenames) # *** we have x files ***
 		images_per_category = num_images//num_files
 		seed = np.random.randint(1, 10e7) #maybe delete seed later ?
@@ -281,7 +284,7 @@ def create_and_train_mlp_model(new_inputName, new_inputEpochs, new_inputBatchSiz
 		    print("file path : ", file_path)
 		    x = np.load(file_path)
 		    print("x shape = ", x.shape)
-		    print("x 0 shape = ", x[1000].shape)
+		    print("x 0 shape = ", x[42].shape)
 		    x = x.astype('float32') ##normalize images
 		    x /= 255.0
 		    y = [i] * len(x) # create numeric label for this image
@@ -470,9 +473,11 @@ def get_predict_sample_cnn_baseball_broom_dolphin(image_name: str, category: str
 	new_img = cv2.cvtColor(image, cv2.COLOR_BGRA2BGR)
 
 	cv2.imwrite(image_name, new_img)
+	print("new formatted image = ", image_name)
 
 	img = Image.open(image_name).convert('L')
 	im = np.array(img)
+	print("size of formatted image numpy = ", im.shape)
 	#im = np.array(Image.open(image_name).convert('P'))
 	# print(type(im))
 	# print("shape : ", im.shape)

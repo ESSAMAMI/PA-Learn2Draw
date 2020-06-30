@@ -3,6 +3,9 @@ from sqlalchemy import create_engine, update, Table, Column, MetaData, func
 from sqlalchemy.ext.declarative import declarative_base
 import sqlalchemy
 import pandas as pd
+import numpy as np 
+from PIL import Image
+import cv2
 from models import my_models
 import os
 import shutil
@@ -1236,7 +1239,7 @@ def learn2draw_update_model(model_type, new_inputName, new_inputEpochs, new_inpu
         if new_inputName == "":
             return "name empty"
 
-        if model_name == "default":
+        if new_inputName == "default":
             return "cant_delete_or_modify_native_model"
 
         if int(new_inputEpochs) < 1 or int(new_inputBacthSize) < 1 or float(new_learning_rate) < 0.0:
@@ -1364,7 +1367,8 @@ def change_current_model(model_name) -> str:
     print("current_model = ", current_model)
     if current_model != []:
         # rename old model (will become new default model)
-        # print("current model 0 ", current_model[0])
+        print("current model was ", current_model[0], " deleting hi, we could also change it to default ? ")
+        os.remove("models/"+current_model[0])
         # os.rename("models/"+current_model[0], "models/defaul.h5")
 
         # copy h5 model in the right folder and rename it to "current_modelName"
@@ -1378,3 +1382,59 @@ def change_current_model(model_name) -> str:
         shutil.copy2("static/models/"+model_name+"/"+model_name+".h5", "models/current_"+model_name+".h5")
 
     return "True"
+
+# create a npy dataset with all images test (tortue)
+def create_npy_dataset() -> str:
+    print("create npy dataset")
+    try:
+        # category is fixed here, next we will have to distinguish different categories
+        category = "tortue"
+
+        db_connection = create_engine(create_engine_db())
+        list_draws = pd.read_sql("SELECT location FROM DRAWINGS WHERE status=3",
+                           con=db_connection, index_col=None).to_dict('index')
+
+        if bool(list_draws) == False:
+            return "No records found with status 3"
+        liste = []
+
+        #print("list draws = ", list_draws, "\n\n type ", type(list_draws))
+        # collect each image in numpy array
+
+
+        # print("img name = ", list_draws[0]['location'][1:])
+        # img = Image.open(list_draws[0]['location'][1:]).convert('L')
+        # im = np.array(img)
+        # print("np shape = ", im.shape)
+        # new_width  = 28
+        # new_height = 28
+        # im = np.array(img.resize((new_width, new_height), Image.ANTIALIAS))
+        # print("new np shape = ", im.shape)
+
+
+        for i in list_draws:
+            img = Image.open(list_draws[i]['location'][1:]).convert('L')
+            im = np.array(img)
+            im = np.array(img.resize((28, 28), Image.ANTIALIAS)).flatten()
+            print("\nim shape ", im.shape, "\n") 
+            print("i = ", i, "elt = ", list_draws[i]['location']," type = ", type(i))
+            
+            liste.append(im)
+            # line = "{}".format(list_draws['location'][i])
+            # print("LINE = ", line)
+            # liste.append(line)
+
+        #change format and transform to numpy dataset (npy)
+        liste = np.asarray(liste)
+        print(type(liste), "shape = ", liste.shape)
+
+        #save npy file and return true
+        np.save("models/dataset_quickdraw/"+category+".npy", liste)
+
+        return "True"
+
+    except Exception as e:
+        print("on a récup l'exception ;) \n, type e = ", type(e))
+        print("try str ==> ", str(e))
+
+        return str(e)

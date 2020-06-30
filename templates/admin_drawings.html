@@ -109,6 +109,10 @@
                         <ol class="breadcrumb mb-4">
                             <li class="breadcrumb-item active">Table where all our drawings are stored</li>
                         </ol>
+                        <form id="form_create_dataset_test" method="POST" action="/create_dataset_test/">
+                            <button type="submit" class="btn btn-warning">Test creating new dataset from doodles</button>
+                        </form>
+                        <br>
                         {% if query_result %}
                                 <div class="alert alert-danger" role="alert">
                                     🤯 {{ query_result }} !
