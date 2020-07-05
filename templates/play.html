@@ -77,9 +77,26 @@
           <input type="button" id="btnSave" style="display:none;">
       </div>
     </section>
+    <!-- Button trigger modal -->
+    <button style="display: none" type="button" class="btn btn-primary" data-toggle="modal" id="loader-modal" data-target="#exampleModal"></button>
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"  data-keyboard="false" data-backdrop="static">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-body">
+            <div class="text-center">
+              <div style="font-size: 10px;width: 25px; height: 25px; color: #008B8B" class="spinner-border" role="status">
+                <span class="sr-only">Loading...</span>
+              </div>
+              <p style="font-weight: bold">Analyse du dessin en cours... Veuillez patienter ! 🤓</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
       <!-- Scripts
       –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-      <script src="{{ url_for('static', filename='assets/js/sketchpad/responsive-sketchpad.js')}}"></script>
+    <script src="{{ url_for('static', filename='assets/js/sketchpad/responsive-sketchpad.js')}}"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
 
       <script type="text/javascript">
@@ -169,6 +186,7 @@
 
           $(document).ready(function () {
               $('#container-draw').hide();
+
           })
           $("#start").on('click', function () {
               var e = document.getElementById("categorie");
@@ -192,6 +210,7 @@
                           clearInterval(downloadTimer);
                           document.getElementById("undo").innerHTML = "C'est fini";
                           document.getElementById("btnSave").click();
+                          document.getElementById("loader-modal").click();
                           $("#container-draw").hide();
 
                       } else {

@@ -4,19 +4,16 @@ import matplotlib
 matplotlib.use('Agg')
 from matplotlib import pyplot
 from tensorflow.keras.models import load_model
-import keras
 from tensorflow.keras.utils import *
 import numpy as np
 from sklearn.model_selection import train_test_split
 from os import walk, listdir
 import os
 import shutil
-import h5py
 from PIL import Image
-import PIL.ImageOps
 import cv2
 from datetime import datetime
-from utils import utils, request_bdd
+from utils import request_bdd
 
 # CNN part
 def create_and_train_cnn_model(new_inputName, new_inputEpochs, new_inputBatchSize, new_optimizer, new_learning_rate, is_update, delete_catego_or_not) -> str:

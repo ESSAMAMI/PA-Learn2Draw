@@ -7,7 +7,6 @@ import shutil
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(24)
-
 # basic access routes
 @app.route('/', methods=['GET', 'POST'])
 def home(token=None):
@@ -53,8 +52,11 @@ def connection(token):
                 session['email'] = str(user.email[0])
                 session['pwd'] = str(user.pwd[0])
                 session['score'] = str(user.score[0])
-                return redirect(url_for('home', token=token), code=307)
-                #return redirect(url_for('user_profil', token=token), code=307)
+
+                current_year = utils.get_ccurent_date(format="ang", full=False)
+                top_5 = request_bdd.select_top_5()
+                top_5.head()
+                return render_template("user_app/home_user_app.html", token=token, current_year=current_year, top_5=top_5)
 
         return render_template('common/permission.html')
 
@@ -69,12 +71,12 @@ def user_profil():
     try:
         if request.method == 'POST':
             current_year = utils.get_ccurent_date(format="ang", full=False)
-            return render_template("home.html", current_year=current_year)
+            return render_template("user_app/home_user_app.html", current_year=current_year)
 
         elif request.method == 'GET':
             # handle permission later if possible
-            return render_template("profile.html", current_year=current_year)
-            #return render_template("common/permission.html")
+            #return render_template("home.html", current_year=current_year)
+            return render_template("common/permission.html")
 
         else:
             e = "something went wrong"
@@ -83,6 +85,19 @@ def user_profil():
     except Exception as e:
         current_date = utils.get_ccurent_date(format="fr")
         return render_template("home.html", error=e)
+
+@app.route('/sign-out', methods=['POST', 'GET'])
+def sign_out():
+
+    try:
+        if request.method == "POST":
+            session.clear()
+            return render_template("login.html")
+        else:
+            return render_template("common/permission.html")
+    except Exception as e:
+        return render_template("login.html")
+
 
 @app.route('/sign-up', methods=['POST', 'GET'])
 def sign_up():
@@ -134,7 +149,8 @@ def play():
     print("good prediction = ", good_prediction)
     
     # get all predictable categories, first get current model name, then categories
-    current_model = [f for f in os.listdir("models/") if f.endswith('.h5') and "current" in f and "default" not in f]
+    cwd = os.getcwd()
+    current_model = [f for f in os.listdir(cwd+"/models/") if f.endswith('.h5') and "current" in f and "default" not in f]
     print("current_model = ", current_model)
     if current_model == []:
         current_model = "default.h5"
@@ -660,7 +676,7 @@ def create_model():
         # create basic model, 1st try = create the whole model and insert in database
         # In the future I think we should use Celery to run this task in background
         query_result = request_bdd.learn2draw_create_model(model_type, new_inputName, new_inputEpochs, new_inputBatchSize, new_optimizer, new_learning_rate, "no")
-        
+
         print("GOOD ROUTE")
         if "True" in query_result or query_result == "False":
             # Nothing if 0 problems

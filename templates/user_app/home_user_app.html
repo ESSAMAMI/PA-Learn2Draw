@@ -1,0 +1,122 @@
+{% extends 'user_app/com_app_user/dom_app_user.html' %}
+{% block scope %}
+    <div class="page-body">
+    <div class="sidebar">
+    <div class="user-profile">
+    <div class="display-avatar animated-avatar">
+        <img class="profile-img img-lg rounded-circle" src="{{ url_for('static', filename='assets/images/profile/male/image_1.png')}}" alt="avatar">
+    </div>
+    <div class="info-wrapper">
+        <p class="user-name">{{ session['username'] }}</p>
+        <h6 class="display-income">Points gagnés {{ session['score'] }} pts</h6>
+    </div>
+    </div>
+    <ul class="navigation-menu">
+    <li class="nav-category-divider">Dashboard</li>
+    <li>
+        <a href="#">
+        <span class="link-title">Globale</span>
+        <i class="mdi mdi-rocket link-icon"></i>
+        </a>
+    </li>
+    <li>
+        <a href="#">
+        <span class="link-title">Profile</span>
+        <i class="mdi mdi-account-card-details link-icon"></i>
+        </a>
+    </li>
+    <li>
+        <a href="#">
+            <span class="link-title">Notez</span>
+            <i class="mdi mdi-drawing link-icon"></i>
+        </a>
+    </li>
+    <li>
+        <a href="#">
+            <span class="link-title">Jouer</span>
+            <i class="mdi mdi-gamepad-variant link-icon"></i>
+        </a>
+    </li>
+    <li>
+        <a href="#">
+            <span class="link-title">Un problème ? Signalez le</span>
+            <i class="mdi mdi-image-filter-center-focus link-icon"></i>
+        </a>
+    </li>
+    <li class="nav-category-divider">DOCS</li>
+    <li>
+        <a href="{{ url_for('static', filename='docs/docs.html')}}">
+        <span class="link-title">Apprendre à jouer</span>
+        <i class="mdi mdi-asterisk link-icon"></i>
+        </a>
+    </li>
+    </ul>
+    </div>
+    <!-- partial -->
+    <div class="page-content-wrapper">
+    <div class="page-content-wrapper-inner">
+    <div class="content-viewport">
+        <div class="row">
+        <div class="col-12 py-5">
+            <h4>Hello, {{ session['username'] }}</h4>
+            <p class="text-gray">Revue globale</p>
+        </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4 col-md-6 equel-grid">
+                <div class="grid">
+                    <div class="grid-body">
+                        <p class="card-title">Nombre de notation attribué</p>
+                    <div id="radial-chart"></div>
+                        <h5 class="text-center">Sur une semaine glissant</h5>
+                        <p class="text-center text-muted">Notez des dessins pour gagner plus de points</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8 equel-grid">
+                <div class="grid">
+                  <div class="grid-body py-3">
+                    <p class="card-title ml-n1">TOP 5 des joeurs</p>
+                  </div>
+                  <div class="table-responsive">
+                    <table class="table table-hover table-sm">
+                      <thead>
+                        <tr class="solid-header">
+                          <th colspan="2" class="pl-4">Pseudo</th>
+                          <th>Classement</th>
+                          <th>Nombre de dessins</th>
+                          <th>Nombre de points</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                      {% for i in range(top_5|length) %}
+                        <tr>
+                          <td class="pr-0 pl-4">
+                            <img class="profile-img img-sm" src="{{ url_for('static', filename='assets/images/profile/male/image_1.png')}}" alt="toto image">
+                          </td>
+                          <td class="pl-md-0">
+                            <small class="text-black font-weight-medium d-block">{{ top_5['username'][0]}}</small>
+                            <span class="text-gray">
+                              <span class="status-indicator rounded-indicator small bg-primary"></span> En ligne </span>
+                          </td>
+                           <td style="text-align: center">
+                            <small style="text-align: center">{% set classement = i + 1 %}{{ classement }}</small>
+                          </td>
+                          <td style="text-align: center">
+                            <small>{{ top_5['nb_dessins'][i]}}</small>
+                          </td>
+                          <td style="text-align: center"> {{ top_5['score_model'][i]|int}} <b>pts</b></td>
+                        </tr>
+                      {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                  <a class="border-top px-3 py-2 d-block text-gray" href="#">
+                    <small class="font-weight-medium"><i class="mdi mdi-information-outline mr-2"></i>En savoir plus</small>
+                  </a>
+                </div>
+              </div>
+        </div>
+    </div>
+    </div>
+{% endblock %}

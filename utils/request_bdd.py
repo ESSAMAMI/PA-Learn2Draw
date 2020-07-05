@@ -13,7 +13,9 @@ from datetime import datetime
 
 def create_engine_db() -> str:
     config = ConfigParser()
-    config.read("C:\\Users\\arnau\\git_projects\\projets_annuels\\PA4A\\PA-Learn2Draw\\utils\\config.ini")
+    cwd = os.getcwd()
+
+    config.read(cwd+"/utils/config.ini")
     #config.read("D:/Skoula/utils/config.ini")
 
     get_connection = 'mysql+pymysql://'\
@@ -31,6 +33,14 @@ def learn2draw_connect(login:str, pwd:str) -> pd.DataFrame:
                      con=db_connection, index_col=None)
 
     return user
+
+def select_top_5() -> pd.DataFrame:
+
+    db_connection = create_engine(create_engine_db())
+    top_5 = pd.read_sql("SELECT u.username, u.id, SUM(d.score) as score_model, SUM(d.score_by_votes) as score_vote, COUNT(d.USERS_id) as nb_dessins FROM drawings d INNER JOIN users u ON u.id = d.USERS_id GROUP BY d.USERS_id",
+                       con=db_connection, index_col=None)
+
+    return top_5
 
 def learn2draw_sign_up_verif(username:str, email:str, pwd:str) -> bool:
 
