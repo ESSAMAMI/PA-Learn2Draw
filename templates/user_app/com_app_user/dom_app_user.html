@@ -38,6 +38,63 @@
         </div>
       </div>
     </nav>
+    <div class="page-body">
+        <div class="sidebar">
+            <div class="user-profile">
+                <div class="display-avatar animated-avatar">
+                    <img class="profile-img img-lg rounded-circle" src="{{ url_for('static', filename='assets/images/profile/male/image_1.png')}}" alt="avatar">
+                </div>
+                <div class="info-wrapper">
+                    <p class="user-name">{{ session['username'] }}</p>
+                    <h6 class="display-income">Points gagnés {{ session['score'] }} pts</h6>
+                </div>
+            </div>
+            <ul class="navigation-menu">
+                <li class="nav-category-divider">Dashboard</li>
+                <li>
+                    <a id="global-id" href="#">
+                    <span class="link-title">Globale</span>
+                    <i class="mdi mdi-rocket link-icon"></i>
+                    </a>
+                    <form id="global-form" action="/global/token/{{ token }}" method="POST"></form>
+
+                </li>
+                <li>
+                    <a id="profile-id" href="#">
+                    <span class="link-title">Profile</span>
+                    <i class="mdi mdi-account-card-details link-icon"></i>
+                    </a>
+                    <form id="profile-form" action="/profile/token/{{ token }}" method="POST"></form>
+                </li>
+                <li>
+                    <a id="notation-id" href="#">
+                        <span class="link-title">Notez</span>
+                        <i class="mdi mdi-drawing link-icon"></i>
+                    </a>
+                    <form id="notation-form" action="/notation/token/{{ token }}" method="POST"></form>
+                </li>
+                <li>
+                    <a id="game-id" href="#">
+                        <span class="link-title">Jouer</span>
+                        <i class="mdi mdi-gamepad-variant link-icon"></i>
+                        <form id="game-form" action="/game/token/{{ token }}" method="POST"></form>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <span class="link-title">Un problème ? Signalez le</span>
+                        <i class="mdi mdi-image-filter-center-focus link-icon"></i>
+                    </a>
+                </li>
+                <li class="nav-category-divider">DOCS</li>
+                <li>
+                    <a href="{{ url_for('static', filename='docs/docs.html')}}">
+                    <span class="link-title">Apprendre à jouer</span>
+                    <i class="mdi mdi-asterisk link-icon"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
     {% block scope %}
     {% endblock %}
        <footer class="footer">
@@ -49,7 +106,7 @@
             </ul>
           </div>
           <div class="col-sm-6 text-center text-sm-left mt-3 mt-sm-0">
-            <small class="text-muted d-block">Copyright © {{ current_year }} <a href="#" target="_blank">Learn2draw</a>. All rights reserved</small>
+            <small class="text-muted d-block">Tous droits réservés © {{ current_year }} <a href="#" target="_blank">Learn2draw</a>.</small>
             <small class="text-gray mt-2">NAE <i class="mdi mdi-heart text-danger"></i></small>
           </div>
         </div>
@@ -64,6 +121,20 @@
     <!-- build:js -->
     <script src="{{ url_for('static', filename='assets/js/template.js')}}"></script>
     <script src="{{ url_for('static', filename='assets/js/dashboard.js')}}"></script>
+    <script type="text/javascript">
+        $("#global-id").click(function (e) {
+            $("#global-form").submit();
+        });
+        $("#profile-id").click(function (e) {
+            $("#profile-form").submit();
+        });
+        $("#notation-id").click(function (e) {
+            $("#notation-form").submit();
+        });
+        $("#game-id").click(function (e) {
+            $("#game-form").submit();
+        });
+    </script>
     <!-- endbuild -->
   </body>
 </html>

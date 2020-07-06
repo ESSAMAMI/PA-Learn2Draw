@@ -200,9 +200,6 @@
                   $("#container-draw").fadeIn();
 
                   var timeleft = document.getElementById("inputTime").value;
-                  //var category = document.getElementById("inputCategory").value;
-                  // var e = document.getElementById("categorie");
-                  // var category = e.options[e.selectedIndex].value;
 
                   var downloadTimer = setInterval(function () {
                       document.getElementById("redo").innerHTML = "Dessiner : "+category;
@@ -221,14 +218,5 @@
               }
           })
       </script>
-      <!--{% if token %}
-          <script type="text/javascript">
-            $('#li-submit_connect').hide();
-          </script>
-        {% else %}
-          <script type="text/javascript">
-            $('#li-profil').hide();
-            $('#li-note').hide();
-          </script>
-        {% endif %}-->
+
 {% endblock %}

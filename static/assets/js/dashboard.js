@@ -164,12 +164,13 @@ $(function () {
         })
     }
     if ($("#radial-chart").length) {
+        var value_progress = $("#progress-notation").val();
         a = {
             chart: {
                 height: 230,
                 type: "radialBar"
             },
-            series: [67],
+            series: [value_progress],
             colors: ["#696ffb"],
             plotOptions: {
                 radialBar: {
@@ -214,7 +215,7 @@ $(function () {
             stroke: {
                 lineCap: "round"
             },
-            labels: ["Progress"]
+            labels: ["Notation"]
         };
         (r = new ApexCharts(document.querySelector("#radial-chart"), a)).render()
     }

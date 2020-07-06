@@ -42,6 +42,14 @@ def select_top_5() -> pd.DataFrame:
 
     return top_5
 
+def count_notation_bu_user(id_user) -> pd.DataFrame:
+
+    db_connection = create_engine(create_engine_db())
+    count = pd.read_sql("SELECT count(USERS_id) as count_notation FROM notations WHERE USERS_id = %s GROUP BY USERS_id" % (id_user),
+                       con=db_connection, index_col=None)
+
+    return count
+
 def learn2draw_sign_up_verif(username:str, email:str, pwd:str) -> bool:
 
     try:

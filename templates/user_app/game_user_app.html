@@ -1,0 +1,103 @@
+{% extends 'user_app/com_app_user/dom_app_user.html' %}
+{% block scope %}
+      <div class="page-content-wrapper">
+        <div class="page-content-wrapper-inner">
+          <div class="viewport-header">
+            <nav aria-label="breadcrumb">
+              <ol class="breadcrumb has-arrow">
+                <li class="breadcrumb-item">
+                  <a href="#">Compte</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page" style="color: #20B2AA">Game</li>
+              </ol>
+            </nav>
+          </div>
+          <div class="content-viewport">
+            <div class="row">
+              <div class="col-lg-12 equel-grid">
+                <div class="grid">
+                  <p class="grid-header">Vous dessinez et moi je devine</p>
+                  <div class="grid-body">
+                      <div class="item-wrapper">
+                          <div id="clear" class="btn btn-primary has-icon"><i class="mdi mdi-format-clear"></i></div>
+                          <div id="undo" class="btn btn-primary has-icon"><i class="mdi mdi mdi-undo"></i></div>
+                          <div id="redo" class="btn btn-primary has-icon"><i class="mdi mdi mdi-redo"></i></div>
+                          <div class="btn-group mb-1 mb-md-0" data-toggle="buttons">
+                              <div class="col-md-12"></div>
+                              <div class="col-md-12">
+                                  <label class="btn btn-outline-success active">
+                                    <input type="checkbox" checked disabled>
+                                    <i class="mdi mdi-drawing"></i> <p id="label-draw"></p>
+                                  </label>
+                                  <label id="btn-time" class="btn btn-outline-success  active">
+                                    <input type="checkbox" checked disabled>
+                                    <i class="mdi mdi-timer"></i> <p id="time-draw"></p>
+                                  </label>
+                              </div>
+                          </div>
+                          <div style="border: solid #DFF7EE;border-style: dotted;margin-top: 10px;" id="sketchpad"></div>
+                      </div>
+                      <audio id="countdown-audio" style="display: none">
+                          <source src="{{ url_for('static', filename='assets/sound/countdown.mp3') }}" type="audio/mpeg">
+                      </audio>
+                      <button id="playCountdownSound" onclick="playAudio()" style="display: none"></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      <script src="{{ url_for('static', filename='assets/js/sketchpad/responsive-sketchpad.js')}}"></script>
+      <script>
+           // var timeleft = document.getElementById("inputTime").value;
+           var x = document.getElementById("countdown-audio");
+           function playAudio() {
+               x.play();
+           }
+            var timeleft = 10;
+           var downloadTimer = setInterval(function () {
+              document.getElementById("label-draw").innerHTML = "Dessiner : chien";
+              if (timeleft <= 0) {
+                  clearInterval(downloadTimer);
+                  document.getElementById("time-draw").innerHTML = "STOPPP !!!";
+                  // document.getElementById("btnSave").click();
+                  // document.getElementById("loader-modal").click();
+                  // $("#container-draw").hide();
+
+              } else {
+                  document.getElementById("time-draw").innerHTML = "<b>" + timeleft + ":00<b>";
+              }
+              timeleft -= 1;
+
+              if(timeleft <= 2){
+                  document.getElementById("btn-time").className = "btn btn-outline-danger active";
+              }
+              if(timeleft === 3){
+                  document.getElementById("playCountdownSound").click();
+              }
+           }, 1000);
+        var el = document.getElementById('sketchpad');
+        var pad = new Sketchpad(el);
+        pad.setCanvasSize(960,400);
+        // clear
+        function clear() {
+            pad.clear();
+        }
+        // undo
+        function undo() {
+            pad.undo();
+        }
+        document.getElementById('undo').onclick = undo;
+
+        // redo
+        function redo() {
+            pad.redo();
+        }
+        document.getElementById('redo').onclick = redo;
+        document.getElementById('clear').onclick = clear;
+        // resize
+        window.onresize = function (e) {
+          pad.resize(el.offsetWidth);
+        }
+      </script>
+{% endblock %}

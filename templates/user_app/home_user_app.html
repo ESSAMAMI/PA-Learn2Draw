@@ -1,57 +1,6 @@
 {% extends 'user_app/com_app_user/dom_app_user.html' %}
 {% block scope %}
-    <div class="page-body">
-    <div class="sidebar">
-    <div class="user-profile">
-    <div class="display-avatar animated-avatar">
-        <img class="profile-img img-lg rounded-circle" src="{{ url_for('static', filename='assets/images/profile/male/image_1.png')}}" alt="avatar">
-    </div>
-    <div class="info-wrapper">
-        <p class="user-name">{{ session['username'] }}</p>
-        <h6 class="display-income">Points gagnés {{ session['score'] }} pts</h6>
-    </div>
-    </div>
-    <ul class="navigation-menu">
-    <li class="nav-category-divider">Dashboard</li>
-    <li>
-        <a href="#">
-        <span class="link-title">Globale</span>
-        <i class="mdi mdi-rocket link-icon"></i>
-        </a>
-    </li>
-    <li>
-        <a href="#">
-        <span class="link-title">Profile</span>
-        <i class="mdi mdi-account-card-details link-icon"></i>
-        </a>
-    </li>
-    <li>
-        <a href="#">
-            <span class="link-title">Notez</span>
-            <i class="mdi mdi-drawing link-icon"></i>
-        </a>
-    </li>
-    <li>
-        <a href="#">
-            <span class="link-title">Jouer</span>
-            <i class="mdi mdi-gamepad-variant link-icon"></i>
-        </a>
-    </li>
-    <li>
-        <a href="#">
-            <span class="link-title">Un problème ? Signalez le</span>
-            <i class="mdi mdi-image-filter-center-focus link-icon"></i>
-        </a>
-    </li>
-    <li class="nav-category-divider">DOCS</li>
-    <li>
-        <a href="{{ url_for('static', filename='docs/docs.html')}}">
-        <span class="link-title">Apprendre à jouer</span>
-        <i class="mdi mdi-asterisk link-icon"></i>
-        </a>
-    </li>
-    </ul>
-    </div>
+
     <!-- partial -->
     <div class="page-content-wrapper">
     <div class="page-content-wrapper-inner">
@@ -67,9 +16,10 @@
                 <div class="grid">
                     <div class="grid-body">
                         <p class="card-title">Nombre de notation attribué</p>
-                    <div id="radial-chart"></div>
-                        <h5 class="text-center">Sur une semaine glissant</h5>
-                        <p class="text-center text-muted">Notez des dessins pour gagner plus de points</p>
+                        <input style="display: none" type="hidden" id="progress-notation" name="progress-notation" value="{% if session['count_notation'] != None %}{{ session['count_notation'] }} {% else %} {{ 0 }} {% endif %}">
+                        <div id="radial-chart"></div>
+                        <h5 class="text-center">Prochain Trophé (Gold)</h5>
+                        <p class="text-center text-muted">Notez des dessins pour gagner plus de points à convertir en trophé</p>
                     </div>
                 </div>
             </div>

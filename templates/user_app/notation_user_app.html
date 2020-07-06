@@ -1,0 +1,43 @@
+{% extends 'user_app/com_app_user/dom_app_user.html' %}
+{% block scope %}
+      <div class="page-content-wrapper">
+        <div class="page-content-wrapper-inner">
+          <div class="viewport-header">
+            <nav aria-label="breadcrumb">
+              <ol class="breadcrumb has-arrow">
+                <li class="breadcrumb-item">
+                  <a href="#">Compte</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page" style="color: #20B2AA">Notation</li>
+              </ol>
+            </nav>
+          </div>
+          <div class="content-viewport">
+            <div class="row">
+              {% for draw in drawings_to_notate %}
+              <div class="col-md-3 col-sm-6 col-6 equel-grid">
+                <div class="grid">
+                  <div class="grid-body text-gray">
+                    <div class="d-flex justify-content-between">
+                      <p>
+                          <b>Catégorie : </b>
+                          {% set parts = draw.split('_') %}
+                          {% set name = parts[0].split('/') %}
+                          {{ name[name|length - 1] }}
+                      </p>
+                    </div>
+                    <img class="profile-img img-lg" style="margin-top:10px; margin-bottom:10px; width: 100%; height: 100%" src="{{ url_for('static', filename=draw)}}">
+                    <button style="width: 20px;height: 30px" class="btn btn-outline-primary btn-rounded">
+                      <i class="text-info mdi mdi-check"></i>
+                    </button>
+                    <button style="width: 20px;height: 30px; float: right" class="btn btn-like btn-outline-danger btn-rounded">
+                      <i class="mdi mdi-window-close"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+{% endblock %}

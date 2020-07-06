@@ -3,6 +3,7 @@ import socket
 from utils import utils, request_bdd
 from models import my_models
 import os
+from random import shuffle
 import shutil
 
 app = Flask(__name__)
@@ -52,11 +53,17 @@ def connection(token):
                 session['email'] = str(user.email[0])
                 session['pwd'] = str(user.pwd[0])
                 session['score'] = str(user.score[0])
+                session['id'] = str(user.id[0])
+                count_notation = request_bdd.count_notation_bu_user(user.id[0])
+                session['count_notation'] = None
+                if not count_notation['count_notation'].empty:
+                    session['count_notation'] = str(count_notation['count_notation'][0])
 
                 current_year = utils.get_ccurent_date(format="ang", full=False)
                 top_5 = request_bdd.select_top_5()
-                top_5.head()
-                return render_template("user_app/home_user_app.html", token=token, current_year=current_year, top_5=top_5)
+                random_stat = ['En ligne', 'Hors ligne']
+
+                return render_template("user_app/home_user_app.html", token=token, random_stat=random_stat, current_year=current_year, top_5=top_5, count_notation=count_notation)
 
         return render_template('common/permission.html')
 
@@ -65,6 +72,75 @@ def connection(token):
         current_date = utils.get_ccurent_date(format="fr")
         return render_template("login.html", error=e, token=token)
 
+@app.route('/profile/token/<token>', methods=['GET', 'POST'])
+def profile_page(token):
+    try:
+
+        current_year = utils.get_ccurent_date(format="ang", full=False)
+        return render_template("user_app/profile_user_app.html", token=token, current_year=current_year)
+
+    except Exception as e:
+        current_date = utils.get_ccurent_date(format="fr")
+        return render_template('common/permission.html', e=e)
+
+@app.route('/notation/token/<token>', methods=['GET', 'POST'])
+def notation_page(token):
+    try:
+        all_drawings = []
+        list_folder = os.listdir('static/doodle/')
+        for folder in list_folder:
+            list_opend_folder = os.listdir('static/doodle/'+folder)
+            for drawing in list_opend_folder:
+                all_drawings.append('doodle/' + folder + '/' + drawing)
+
+        shuffle(all_drawings)
+        drawings_to_notate = all_drawings[0:12]
+        current_year = utils.get_ccurent_date(format="ang", full=False)
+        return render_template("user_app/notation_user_app.html", token=token, current_year=current_year, drawings_to_notate = drawings_to_notate)
+
+    except Exception as e:
+        current_date = utils.get_ccurent_date(format="fr")
+        return render_template('common/permission.html', e=e)
+
+@app.route('/global/token/<token>', methods=['GET', 'POST'])
+def global_page(token):
+    try:
+
+        count_notation = request_bdd.count_notation_bu_user(session['id'])
+        session['count_notation'] = None
+        if not count_notation['count_notation'].empty:
+            session['count_notation'] = str(count_notation['count_notation'][0])
+
+        current_year = utils.get_ccurent_date(format="ang", full=False)
+        top_5 = request_bdd.select_top_5()
+        random_stat = ['En ligne', 'Hors ligne']
+
+        current_year = utils.get_ccurent_date(format="ang", full=False)
+        return render_template("user_app/home_user_app.html", token=token, random_stat=random_stat, current_year=current_year, top_5=top_5, count_notation=count_notation)
+
+    except Exception as e:
+        current_date = utils.get_ccurent_date(format="fr")
+        return render_template('common/permission.html', e=e)
+
+@app.route('/game/token/<token>', methods=['GET', 'POST'])
+def game_page(token):
+    try:
+
+        count_notation = request_bdd.count_notation_bu_user(session['id'])
+        session['count_notation'] = None
+        if not count_notation['count_notation'].empty:
+            session['count_notation'] = str(count_notation['count_notation'][0])
+
+        current_year = utils.get_ccurent_date(format="ang", full=False)
+        top_5 = request_bdd.select_top_5()
+        random_stat = ['En ligne', 'Hors ligne']
+
+        current_year = utils.get_ccurent_date(format="ang", full=False)
+        return render_template("user_app/game_user_app.html", token=token, random_stat=random_stat, current_year=current_year, top_5=top_5, count_notation=count_notation)
+
+    except Exception as e:
+        current_date = utils.get_ccurent_date(format="fr")
+        return render_template('common/permission.html', e=e)
 
 @app.route('/user-profil/', methods=['POST', 'GET'])
 def user_profil():
