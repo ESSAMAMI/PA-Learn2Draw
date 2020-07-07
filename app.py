@@ -927,6 +927,26 @@ def get_drawing(token=None):
 
     return redirect(url_for('url_not_found'))
 
+@app.route('/play/get_drawing_session/<token>', methods=['POST', 'GET'])
+def get_drawing_session(token):
+
+    if request.method == 'POST':
+        user_time = request.form['input_time']
+        image_base_64 = request.form['drawing']
+        category = request.form['category_drawing']
+        model_name = request.form["model_name"]
+
+        print("\n\ntime input : ", user_time, "\n")
+        print("model_name = ", model_name)
+        print("category = ", category)
+
+        check_is = utils.decode_uploaded_file(image_base_64, category)
+        print("check is ", check_is)
+
+        return redirect(url_for('game_page', token=token))
+
+
+
 @app.route('/create_dataset_test/', methods=['POST', 'GET'])
 def create_dataset_test():
     try:
@@ -942,6 +962,7 @@ def create_dataset_test():
             return redirect(url_for('drawings'), code=307)
         else:
             return redirect(url_for('drawings'), code=307)
+
     except Exception as e:
         print("ECHEC")
         print("exception : ", str(e))
