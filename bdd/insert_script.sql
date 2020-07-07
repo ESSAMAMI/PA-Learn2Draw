@@ -2,6 +2,14 @@ INSERT INTO categories VALUES(1, "tortue");
 INSERT INTO categories VALUES(2, "baseball");
 INSERT INTO categories VALUES(3, "broom");
 INSERT INTO categories VALUES(4, "dolphin");
+INSERT INTO categories VALUES(5, "ant");
+INSERT INTO categories VALUES(6, "boomerang");
+INSERT INTO categories VALUES(7, "car");
+INSERT INTO categories VALUES(8, "foot");
+INSERT INTO categories VALUES(9, "golf_club");
+INSERT INTO categories VALUES(10, "mushroom");
+INSERT INTO categories VALUES(11, "pants");
+INSERT INTO categories VALUES(12, "rain");
 
 INSERT INTO users VALUES(1,"arnaudsimon091@gmail.comaa","arnaudsimon091@gmail.com","aqwzsx",0,0);
 INSERT INTO users VALUES(2,"user1","user1@gmail.com","aqwzsx",0,0);
