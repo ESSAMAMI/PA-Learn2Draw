@@ -27,17 +27,42 @@
                       </p>
                     </div>
                     <img class="profile-img img-lg" style="margin-top:10px; margin-bottom:10px; width: 100%; height: 100%" src="{{ url_for('static', filename=draw)}}">
-                    <button style="width: 20px;height: 30px" class="btn btn-outline-primary btn-rounded">
+                    <a href="" id="{{ draw~";yes" }}" style="width: 20px;height: 30px" class="btn btn-outline-primary btn-rounded notation_drawing">
                       <i class="text-info mdi mdi-check"></i>
-                    </button>
-                    <button style="width: 20px;height: 30px; float: right" class="btn btn-like btn-outline-danger btn-rounded">
+                    </a>
+                    <a href="" id="{{ draw~";no" }}" style="width: 20px;height: 30px; float: right" class="btn btn-like btn-outline-danger btn-rounded notation_drawing">
                       <i class="mdi mdi-window-close"></i>
-                    </button>
+                    </a>
                   </div>
                 </div>
               </div>
+              <form id="form-notation" method="post" action="/notation/set_note/{{ token }}">
+                <input type="hidden" id="input-idUser" name="idUser" value="{{ session['id'] }}">
+                <input type="hidden" id="input-drawing" name="drawing">
+                <input type="hidden" id="input-notation" name="notation">
+              </form>
               {% endfor %}
             </div>
           </div>
         </div>
+        <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $(".notation_drawing").click(function () {
+                    var notation_drawing = $(this).attr("id");
+                    var elements = notation_drawing.replace("#", "");
+                    elements = elements.split(";");
+                    $("#input-drawing").val(elements[0]);
+                    $("#input-notation").val(elements[1]);
+                    $.ajax({
+                        type:"POST",
+                        url:"/notation/set_note/{{ token }}",
+                        data:$("#form-notation").serialize(),
+                        success: function(data){
+                            console.log("HELLOOOOO...")
+                        }
+                    });
+                })
+            })
+        </script>
 {% endblock %}

@@ -253,6 +253,10 @@ def play():
             return render_template("play.html", token=None, play=play, current_prediction=current_prediction[1], current_prediction_label=current_prediction[0], good_prediction=good_prediction, categories=categories+","+current_model)
     token = None
     play = True
+    categories = None
+    if categories == None:
+        return render_template("common/permission.html", token=None, error_code=220, error_handled = "No categories selected for current model...")
+
     return render_template("play.html", token=None, play=play, categories=categories+","+current_model)
 
 
@@ -968,6 +972,22 @@ def create_dataset_test():
         print("exception : ", str(e))
         current_date = utils.get_ccurent_date(format="fr")
         return redirect(url_for('drawings', query_result=str(e)), code=307)
+
+@app.route('/notation/set_note/<token>', methods=['POST'])
+def notation_app_user(token):
+
+    if request.method == "POST":
+
+
+        idUSer = request.form['idUser']
+        drawing = request.form['drawing']
+        notation = request.form['notation']
+        print(idUSer, drawing, notation,"=================================")
+        return redirect(url_for('game_page', token=token))
+
+    else:
+
+        return render_template("common/error.html")
 
 # Handle errors section
 @app.errorhandler(404)

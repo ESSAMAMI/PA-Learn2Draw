@@ -21,10 +21,16 @@
   <body>
     <div class="error_page error_2">
       <div class="container inner-wrapper">
-        <h1 class="display-1 error-heading">403</h1>
-        <h2 class="error-code">Permission Denied</h2>
-        <p class="error-message">You do not have the right to access this page, contact the administrator</p>
-        <a href="#" class="btn btn-primary">Back to Home</a>
+          {% if error_code %}
+              <h2 class="display-1 error-heading">{{ error_code }}</h2>
+              <h2 class="error-code">An error occurred</h2>
+              <p class="error-message">{{ error_handled }}</p>
+          {% else %}
+              <h1 class="display-1 error-heading">403</h1>
+              <h2 class="error-code">Permission Denied</h2>
+              <p class="error-message">You do not have the right to access this page, contact the administrator</p>
+          {% endif %}
+        <a href="/" class="btn btn-primary">Back to Home</a>
       </div>
     </div>
     <!--page body ends -->
