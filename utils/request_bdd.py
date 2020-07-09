@@ -10,6 +10,7 @@ from models import my_models
 import os
 import shutil
 from datetime import datetime
+import pymysql
 
 def create_engine_db() -> str:
     config = ConfigParser()
@@ -42,13 +43,34 @@ def select_top_5() -> pd.DataFrame:
 
     return top_5
 
-def count_notation_bu_user(id_user) -> pd.DataFrame:
+def count_notation_by_user(id_user) -> pd.DataFrame:
 
     db_connection = create_engine(create_engine_db())
     count = pd.read_sql("SELECT count(USERS_id) as count_notation FROM notations WHERE USERS_id = %s GROUP BY USERS_id" % (id_user),
                        con=db_connection, index_col=None)
 
     return count
+
+def update_notation_by_user(id_user, notation) -> bool:
+
+    query = "UPDATE users SET count_notation = %s WHERE id = %s" % (notation, id_user)
+
+    connection = pymysql.connect(host='localhost',
+                             user='root',
+                             password='',
+                             db='learn2draw_db',
+                             charset='utf8mb4',
+                             cursorclass=pymysql.cursors.DictCursor)
+
+
+    cursor = connection.cursor()
+    cursor.execute(query)
+    connection.commit()
+    cursor.close()
+    connection.close()
+
+    return True
+
 
 def learn2draw_sign_up_verif(username:str, email:str, pwd:str) -> bool:
 
@@ -1456,3 +1478,11 @@ def create_npy_dataset() -> str:
         print("try str ==> ", str(e))
 
         return str(e)
+
+
+def get_all_badge() -> pd.DataFrame:
+
+    db_connection = create_engine(create_engine_db())
+    badges = pd.read_sql("SELECT * FROM TROPHEE", con=db_connection, index_col=None)
+
+    return badges

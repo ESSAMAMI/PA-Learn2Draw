@@ -16,17 +16,21 @@
                 <div class="grid">
                     <div class="grid-body">
                         <p class="card-title">Nombre de notation attribué</p>
-                        <input style="display: none" type="hidden" id="progress-notation" name="progress-notation" value="{% if session['count_notation'] != None %}{{ session['count_notation'] }} {% else %} {{ 0 }} {% endif %}">
+                        <input style="display: none" type="hidden" id="progress-notation" name="progress-notation" value="{% if session['count_notation']|int < 50 %}{{session['count_notation']|int*2}}{% else %}{{session['count_notation']}}{% endif %}">
+                        <input style="display: none" type="hidden" id="progress-notation-min" value="{{ session['min'] }}">
+                        <input style="display: none" type="hidden" id="progress-notation-max" value="{{ session['max'] }}">
                         <div id="radial-chart"></div>
-                        <h5 class="text-center">Prochain Trophé (Gold)</h5>
-                        <p class="text-center text-muted">Notez des dessins pour gagner plus de points à convertir en trophé</p>
+                        {% set badge = session['next_badge'].split(';') %}
+                        {% set picto = badge[badge|length - 1] %}
+                        <h5 class="text-center">Prochain Badge <img class="img-sm profile-img img-circle" src="{{ url_for('static', filename=picto) }}"></h5>
+                        <p class="text-center text-muted">Notez des dessins pour gagner plus de badge 🥳</p>
                     </div>
                 </div>
             </div>
             <div class="col-md-8 equel-grid">
                 <div class="grid">
                   <div class="grid-body py-3">
-                    <p class="card-title ml-n1">TOP 5 des joeurs</p>
+                    <p class="card-title ml-n1">TOP 5 des joueurs</p>
                   </div>
                   <div class="table-responsive">
                     <table class="table table-hover table-sm">
@@ -45,13 +49,23 @@
                             <img class="profile-img img-sm" src="{{ url_for('static', filename='assets/images/profile/male/image_1.png')}}" alt="toto image">
                           </td>
                           <td class="pl-md-0">
-                            <small class="text-black font-weight-medium d-block">{{ top_5['username'][0]}}</small>
+                            <small class="text-black font-weight-medium d-block">
+                                {% if session['id']|int == top_5['id'][i]|int %}
+                                    {{ "Vous" }}
+                                {% else %}
+                                    {{ top_5['username'][i]}}
+                                {% endif %}
+                            </small>
                             <span class="text-gray">
                               <span class="status-indicator rounded-indicator small bg-primary"></span> En ligne </span>
                           </td>
                            <td style="text-align: center">
-                            <small style="text-align: center">{% set classement = i + 1 %}{{ classement }}</small>
-                          </td>
+                               {% if i == 0 %}
+                                    <small style="text-align: center"><label class="badge badge-success">{% set classement = i + 1 %}{{ classement }}</label></small>
+                               {% else %}
+                                   <small style="text-align: center"><label class="badge badge-warning">{% set classement = i + 1 %}{{ classement }}</label></small>
+                               {% endif %}
+                           </td>
                           <td style="text-align: center">
                             <small>{{ top_5['nb_dessins'][i]}}</small>
                           </td>
@@ -61,7 +75,7 @@
                       </tbody>
                     </table>
                   </div>
-                  <a class="border-top px-3 py-2 d-block text-gray" href="#">
+                  <a data-toggle="modal" data-target="#exampleModalCenter" class="border-top px-3 py-2 d-block text-gray" href="#">
                     <small class="font-weight-medium"><i class="mdi mdi-information-outline mr-2"></i>En savoir plus</small>
                   </a>
                 </div>
@@ -69,4 +83,104 @@
         </div>
     </div>
     </div>
+    <div class="modal fade bd-example-modal-lg" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+
+              <h3 class="modal-title" id="exampleModalLongTitle"><i style="color: #4CCEAC" class="mdi mdi-filter"></i> <span style="font-size: 13px">Filtrer par</span></h3>
+              <div style="margin-top: 10px"  class="col-md-5 showcase_content_area">
+                  <select id="filter" class="custom-select">
+                    <option value="Empty" selected disabled>Aucun filtrer sélectionné</option>
+                    <option value="Nombre de dessins">Nombre de dessins</option>
+                    <option value="Nombre de points">Nombre de points</option>
+                  </select>
+              </div>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-lg-1"></div>
+              <div class="col-lg-10">
+                <div class="grid">
+                  <p class="grid-header" id="filtre-active">Choisir un filtre</p>
+                  <div class="item-wrapper">
+                    <div class="table-responsive">
+                      <table class="table">
+                        <thead>
+                          <tr>
+                            <th>Profile</th>
+                            <th>VatNo.</th>
+                            <th>Created</th>
+                            <th>Status</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>Jacob</td>
+                            <td>53275531</td>
+                            <td>12 May 2017</td>
+                            <td>
+                              <label class="badge badge-danger">Pending</label>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>Messsy</td>
+                            <td>53275532</td>
+                            <td>15 May 2017</td>
+                            <td>
+                              <label class="badge badge-warning">In progress</label>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>John</td>
+                            <td>53275533</td>
+                            <td>14 May 2017</td>
+                            <td>
+                              <label class="badge badge-info">Fixed</label>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>Peter</td>
+                            <td>53275534</td>
+                            <td>16 May 2017</td>
+                            <td>
+                              <label class="badge badge-success">Completed</label>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>Dave</td>
+                            <td>53275535</td>
+                            <td>20 May 2017</td>
+                            <td>
+                              <label class="badge badge-warning">In progress</label>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('select').on('change', function() {
+              document.getElementById("filtre-active").innerHTML = "Filter appliqué par <b>"+this.value+"</b>";
+            });
+        })
+
+    </script>
 {% endblock %}

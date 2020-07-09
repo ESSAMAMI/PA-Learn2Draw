@@ -37,11 +37,9 @@ def connection(token):
     try:
 
         if request.method == 'POST':
-
             username = request.form['username']
             pwd = request.form['pwd']
             user = request_bdd.learn2draw_connect(username, pwd)
-            
             # redirect to admin is username == admin, temprary method
             if username == "admin":
                 return redirect(url_for('admin_home', token=token), code=307)
@@ -49,25 +47,48 @@ def connection(token):
                 error_connection = True
                 return render_template('login.html', error_connection=error_connection, token=token)
             else:
+
                 session['username'] = str(user.username[0])
                 session['email'] = str(user.email[0])
                 session['pwd'] = str(user.pwd[0])
                 session['score'] = str(user.score[0])
                 session['id'] = str(user.id[0])
-                count_notation = request_bdd.count_notation_bu_user(user.id[0])
-                session['count_notation'] = None
-                if not count_notation['count_notation'].empty:
-                    session['count_notation'] = str(count_notation['count_notation'][0])
+                session['count_notation'] = str(user.count_notation[0])
+
+                # Update notation
+                count_nt_by_user = request_bdd.count_notation_by_user(session['id'])
+                stat = request_bdd.update_notation_by_user(user.id[0], count_nt_by_user['count_notation'][0])
+                badges = request_bdd.get_all_badge()
+                position = 0
+                if int(session['count_notation']) > 50:
+                    for i in range(len(badges)):
+                        range_ = list(badges.iloc[i])[1].split('-')
+                        if int(range_[0]) <= int(session['count_notation']) <= int(range_[1]):
+                            position = i+1
+                            if position == 3:
+                                position = 2
+                            break
+                    session['next_badge'] = ";".join(str(item) for item in list(badges.iloc[position]))
+                else:
+                    session['next_badge'] = ";".join(str(item) for item in list(badges.iloc[0]))
 
                 current_year = utils.get_ccurent_date(format="ang", full=False)
                 top_5 = request_bdd.select_top_5()
                 random_stat = ['En ligne', 'Hors ligne']
 
-                return render_template("user_app/home_user_app.html", token=token, random_stat=random_stat, current_year=current_year, top_5=top_5, count_notation=count_notation)
+                if position == 0:
+                    session['min'] = 0
+                    session['max'] = 50
+                else:
+                    session['min'] = str(list(badges.iloc[position-1])[1]).split('-')[0]
+                    session['max'] = str(list(badges.iloc[position-1])[1]).split('-')[0]
+                session['position'] = str(position)
+                return render_template("user_app/home_user_app.html", token=token, random_stat=random_stat, current_year=current_year, top_5=top_5, count_notation=session['count_notation'])
 
         return render_template('common/permission.html')
 
     except Exception as e:
+
         print(e, "====================================================")
         current_date = utils.get_ccurent_date(format="fr")
         return render_template("login.html", error=e, token=token)
@@ -76,8 +97,25 @@ def connection(token):
 def profile_page(token):
     try:
 
+        badges = request_bdd.get_all_badge()
+        position = None
+        if int(session['count_notation']) > 50:
+            for i in range(len(badges)):
+                range_ = list(badges.iloc[i])[1].split('-')
+                if int(range_[0]) <= int(session['count_notation']) <= int(range_[1]):
+                    position = i + 1
+                    if position == 3:
+                        position = 2
+                    print(i)
+                    break
+            session['next_badge'] = ";".join(str(item) for item in list(badges.iloc[position]))
+        else:
+            session['next_badge'] = ";".join(str(item) for item in list(badges.iloc[0]))
+
         current_year = utils.get_ccurent_date(format="ang", full=False)
-        return render_template("user_app/profile_user_app.html", token=token, current_year=current_year)
+        top_5 = request_bdd.select_top_5()
+        random_stat = ['En ligne', 'Hors ligne']
+        return render_template("user_app/profile_user_app.html", token=token, current_year=current_year, badges=badges)
 
     except Exception as e:
         current_date = utils.get_ccurent_date(format="fr")
@@ -106,17 +144,27 @@ def notation_page(token):
 def global_page(token):
     try:
 
-        count_notation = request_bdd.count_notation_bu_user(session['id'])
-        session['count_notation'] = None
-        if not count_notation['count_notation'].empty:
-            session['count_notation'] = str(count_notation['count_notation'][0])
+        # Update notation
+        badges = request_bdd.get_all_badge()
+        position = None
+        if int(session['count_notation']) > 50:
+            for i in range(len(badges)):
+                range_ = list(badges.iloc[i])[1].split('-')
+                if int(range_[0]) <= int(session['count_notation']) <= int(range_[1]):
+                    position = i + 1
+                    if position == 3:
+                        position = 2
+                    print(i)
+                    break
+            session['next_badge'] = ";".join(str(item) for item in list(badges.iloc[position]))
+        else:
+            session['next_badge'] = ";".join(str(item) for item in list(badges.iloc[0]))
 
         current_year = utils.get_ccurent_date(format="ang", full=False)
         top_5 = request_bdd.select_top_5()
         random_stat = ['En ligne', 'Hors ligne']
 
-        current_year = utils.get_ccurent_date(format="ang", full=False)
-        return render_template("user_app/home_user_app.html", token=token, random_stat=random_stat, current_year=current_year, top_5=top_5, count_notation=count_notation)
+        return render_template("user_app/home_user_app.html", token=token, random_stat=random_stat, current_year=current_year, top_5=top_5, count_notation=session['count_notation'])
 
     except Exception as e:
         current_date = utils.get_ccurent_date(format="fr")
@@ -126,17 +174,28 @@ def global_page(token):
 def game_page(token):
     try:
 
-        count_notation = request_bdd.count_notation_bu_user(session['id'])
-        session['count_notation'] = None
-        if not count_notation['count_notation'].empty:
-            session['count_notation'] = str(count_notation['count_notation'][0])
+        badges = request_bdd.get_all_badge()
+        position = None
+        if int(session['count_notation']) > 50:
+            for i in range(len(badges)):
+                range_ = list(badges.iloc[i])[1].split('-')
+                if int(range_[0]) <= session['count_notation'] <= int(range_[1]):
+                    position = i + 1
+                    if position == 3:
+                        position = 2
+                    print(i)
+                    break
+            session['next_badge'] = ";".join(str(item) for item in list(badges.iloc[position]))
+        else:
+            session['next_badge'] = ";".join(str(item) for item in list(badges.iloc[0]))
 
+        session['position'] = position
         current_year = utils.get_ccurent_date(format="ang", full=False)
         top_5 = request_bdd.select_top_5()
         random_stat = ['En ligne', 'Hors ligne']
 
-        current_year = utils.get_ccurent_date(format="ang", full=False)
-        return render_template("user_app/game_user_app.html", token=token, random_stat=random_stat, current_year=current_year, top_5=top_5, count_notation=count_notation)
+        return render_template("user_app/game_user_app.html", token=token, random_stat=random_stat,
+                               current_year=current_year, top_5=top_5, count_notation=session['count_notation'], badges = badges)
 
     except Exception as e:
         current_date = utils.get_ccurent_date(format="fr")
@@ -956,7 +1015,7 @@ def create_dataset_test():
     try:
         print("Welcome in create dataset test")
         
-        # first request, get categories and images ids that we need to transform 
+        # first request, get categories and images ids that we need to transform
         # (status = 3 ) in dataset, for example only get all turtle images with status 3
         # + transform them into correct data (numpy tensors) + merge them + save npy file
         query_result =  request_bdd.create_npy_dataset()
@@ -978,10 +1037,11 @@ def notation_app_user(token):
 
     if request.method == "POST":
 
-
         idUSer = request.form['idUser']
         drawing = request.form['drawing']
         notation = request.form['notation']
+
+        # Still to link to bdd
         print(idUSer, drawing, notation,"=================================")
         return redirect(url_for('game_page', token=token))
 

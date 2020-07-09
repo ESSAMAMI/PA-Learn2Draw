@@ -165,13 +165,15 @@ $(function () {
     }
     if ($("#radial-chart").length) {
         var value_progress = $("#progress-notation").val();
+        var min_ = $("#progress-notation-min").val();
+        var max_ = $("#progress-notation-max").val();
         a = {
             chart: {
                 height: 230,
                 type: "radialBar"
             },
             series: [value_progress],
-            colors: ["#696ffb"],
+            colors: ["#4cceac"],
             plotOptions: {
                 radialBar: {
                     hollow: {
@@ -191,7 +193,7 @@ $(function () {
                     dataLabels: {
                         name: {
                             offsetY: -10,
-                            color: "#adb5bd",
+                            color: "#9aac9e",
                             fontSize: "13px"
                         },
                         value: {
@@ -208,14 +210,15 @@ $(function () {
                 gradient: {
                     shade: "dark",
                     type: "vertical",
-                    gradientToColors: ["#87D4F9"],
-                    stops: [0, 100]
+                    gradientToColors: ["#085242"],
+                    // min, max
+                    stops: [min_, max_]
                 }
             },
             stroke: {
                 lineCap: "round"
             },
-            labels: ["Notation"]
+            labels: ["Progression"]
         };
         (r = new ApexCharts(document.querySelector("#radial-chart"), a)).render()
     }

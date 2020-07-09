@@ -74,6 +74,33 @@
                 </div>
               </div>
             </div>
+            <div class="col-12 py-5">
+                <h6>Mes badges</h6>
+                <p class="text-gray">Le nombre de badge dépend de nombre d'image notée !</p>
+            </div>
+            <div class="row">
+              {% for i in range(session['position']|int) %}
+              <div class="col-md-4 col-sm-3 col-3 equel-grid">
+                <div class="grid">
+                  <div class="grid-body text-gray">
+                      <div class="d-flex justify-content-between">
+                          <p><b>+ {{ badges['range'][i].split('-')[0]}} images notées</b></p>
+                          <p><a href="#" class="badge badge-success" data-toggle="tooltip" data-placement="top" title="{{ badges['forme'][i] }}"><i class="mdi mdi-snapchat"></i></a></p>
+                      </div>
+                    <div class="wrapper w-10 mt-2">
+                      <img style="display: block; margin-left: auto; margin-right: auto; margin-top: 20px;" class="img-lg img-circle" src="{{ url_for('static', filename=badges['icon'][i]) }}">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
           </div>
         </div>
+      <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+      <script>
+        $(document).ready(function(){
+          $('[data-toggle="tooltip"]').tooltip();
+        });
+      </script>
 {% endblock %}
