@@ -13,7 +13,7 @@
             </nav>
           </div>
           <div class="content-viewport">
-            <div class="row">
+            <div class="row" id="content">
               {% for draw in drawings_to_notate %}
               <div class="col-md-3 col-sm-6 col-6 equel-grid">
                 <div class="grid">
@@ -27,12 +27,12 @@
                       </p>
                     </div>
                     <img class="profile-img img-lg" style="margin-top:10px; margin-bottom:10px; width: 100%; height: 100%" src="{{ url_for('static', filename=draw)}}">
-                    <a href="" id="{{ draw~";yes" }}" style="width: 20px;height: 30px" class="btn btn-outline-primary btn-rounded notation_drawing">
+                    <button type="submit" href="" id="{{ draw~";yes" }}" style="width: 20px;height: 30px" class="btn btn-outline-primary btn-rounded notation_drawing">
                       <i class="text-info mdi mdi-check"></i>
-                    </a>
-                    <a href="" id="{{ draw~";no" }}" style="width: 20px;height: 30px; float: right" class="btn btn-like btn-outline-danger btn-rounded notation_drawing">
+                    </button>
+                    <button type="submit" href="" id="{{ draw~";no" }}" style="width: 20px;height: 30px; float: right" class="btn btn-like btn-outline-danger btn-rounded notation_drawing">
                       <i class="mdi mdi-window-close"></i>
-                    </a>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -49,9 +49,12 @@
         <script type="text/javascript">
             $(document).ready(function () {
                 $(".notation_drawing").click(function () {
+                    console.log("notation drawing ok, action must be triggered");
+                    var notation_drawing_button = $(this);
                     var notation_drawing = $(this).attr("id");
                     var elements = notation_drawing.replace("#", "");
                     elements = elements.split(";");
+                    console.log("notation drawing = " + notation_drawing + " elements = ", elements[0]);
                     $("#input-drawing").val(elements[0]);
                     $("#input-notation").val(elements[1]);
                     $.ajax({
@@ -59,7 +62,26 @@
                         url:"/notation/set_note/{{ token }}",
                         data:$("#form-notation").serialize(),
                         success: function(data){
-                            console.log("HELLOOOOO...")
+                            console.log("HELLOOOOO...");
+                            console.log("data : " + data);
+                            // now we need hide / destroy the voted image if data == ok
+                            console.log(elements[0]);
+                            if (data == "ok"){
+                              
+                              console.log("voted, image can be deleted from user view, PROBLEM ONLY WORKING FOR ONE VOTE");
+                              /*
+                              //$(this).hide()
+                              parent = notation_drawing_button.parent().parent();
+                              console.log("parent = ", parent, " removing it");
+                              parent.remove();
+                              console.log("now refresh page")
+                              $("#content").load(location.href + " #content");
+                              */
+                              console.log("instead, use document.rlocation.reload(true) to reload without using the cache")
+                              document.location.reload(true);
+
+
+                            }
                         }
                     });
                 })

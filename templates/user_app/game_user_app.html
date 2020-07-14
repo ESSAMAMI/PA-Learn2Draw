@@ -48,6 +48,9 @@
                               <input type="button" id="btnSave" style="display:none;">
                           </form>
                       </div>
+                      <form action="/play/submit_drawing_session/{{ token }}" method="POST">
+                        <input type="submit" id="btnSave2" style="display:none;">
+                      </form>
                       <audio id="countdown-audio" style="display: none">
                           <source src="{{ url_for('static', filename='assets/sound/countdown.mp3') }}" type="audio/mpeg">
                       </audio>
@@ -90,6 +93,45 @@
                     <input type="text" class="form-control" id="input-categorie" placeholder="Le nom de la catégorie">
                   </div>
                   <button id="start" type="button" class="btn btn-primary">C'est parti</button>
+                  <button type="button" class="btn btn-danger" style="margin-left: 272px;" data-dismiss="modal">Close</button>
+                  {% if current_prediction %}
+                        <div class="container">
+                          <div class="card" style="width: auto;">
+                              <div class="card-body">
+                                {% if good_prediction %}
+                                  <h6>Mauvaise prédiction, nous n'avons pas trouvé ==> {{ good_prediction }} 🤯</h6>
+                                  <br>
+                                  <p>Nous pensions que vous aviez representé la catégorie <b>{{ current_prediction_label }} à {{ current_prediction }} %</b></p>
+                                {% else %}
+                                  <h6>Bonne prédiction !</h6>
+                                  <h6>Nous pensons que vous avez representé la catégorie <b>{{ current_prediction_label }}</b></h6>
+                                  <br>
+                                  <p>Vous avez gagné {{ current_prediction }} points !</p>
+                                {% endif %} 
+                              </div>
+                          </div>
+
+                        </div>
+                        <p>Voulez vous soumettre votre dessin aux autre utilisateurs ? (points bonus garantis !) </p>
+                        <button id="submit_drawing" type="button" class="btn btn-warning">Soumettre</button>
+                  {% endif %}
+                  {% if dataset_exist %}
+                    <p><i>Nous ne savons pas encore reconnaître cette catégorie, nous serions très heureux si vous pouviez soumettre votre dessin à la communauté ! Il pourra ainsi être incorporé au jeu (et vous donner beaucoup de points !)</i></p>
+                  {% endif %}
+                  {% if submitted %}
+                    {% if 'nothing' not in submitted %}
+                      {% if 'submission_done' in submitted %}
+                        <div class="alert alert-success" role="alert">
+                            {{ submitted }} !
+                        </div>
+                      {% else %}
+                        <div class="alert alert-danger" role="alert">
+                           🤯 {{ submitted }} !
+                        </div>
+                      {% endif %}
+                    {% endif %}
+                  {% endif %}
+
               </div>
             </div>
           </div>
@@ -163,6 +205,9 @@
                       });
                   }
               })
+              $("#submit_drawing").on('click', function () {
+                document.getElementById("btnSave2").click();
+              })
           })
       </script>
 
@@ -189,6 +234,18 @@
               }
             });
           });
+
+          window.setTimeout(function () {
+                $(".alert-danger").fadeTo(500, 0).slideUp(500, function () {
+                    $(this).remove();
+                });
+                }, 3000);
+
+          window.setTimeout(function () {
+                $(".alert-success").fadeTo(500, 0).slideUp(500, function () {
+                    $(this).remove();
+                });
+                }, 3000);
 
         </script>
 {% endblock %}

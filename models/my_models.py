@@ -42,13 +42,14 @@ def create_and_train_cnn_model(new_inputName, new_inputEpochs, new_inputBatchSiz
 		     pass # filenames accumulate in list 'filenames'
 		print(filenames)
 
-		# get catego from bdd
+		# get catego from bdd ==> possible improvment, take only if dataset_available == 1
 		categories_infos = request_bdd.learn2draw_list_all_categories()
 		bdd_categories = []
 		for elt in categories_infos:
 			elt = elt.split(";")
 			bdd_categories.append(elt[0]+".npy")
 
+		print("current bdd cateogries handled = ", bdd_categories)
 
 		#print("categories_infos : ",categories_infos)
 		#print("bdd catego : ", bdd_categories)
@@ -107,7 +108,7 @@ def create_and_train_cnn_model(new_inputName, new_inputEpochs, new_inputBatchSiz
 		x_train = x_train.reshape(x_train.shape[0], img_rows, img_cols, 1) 
 		x_test = x_test.reshape(x_test.shape[0], img_rows, img_cols, 1) 
 		input_shape = (img_rows, img_cols, 1)
-		print("input_shape : ", x_train.shape)
+		print("input_shape : ", x_train.shape, "and ", x_test.shape)
 
 		# one hot encode for convnet
 		y_train = tf.keras.utils.to_categorical(y_train, num_files) 
@@ -306,6 +307,7 @@ def create_and_train_mlp_model(new_inputName, new_inputEpochs, new_inputBatchSiz
 		# reshape and init input shape
 		x_train = x_train.reshape(x_train.shape[0], img_rows, img_cols, 1) 
 		x_test = x_test.reshape(x_test.shape[0], img_rows, img_cols, 1) 
+		print("mlp method")
 		input_shape = (img_rows, img_cols, 1)
 		print("input_shape : ", x_train.shape)
 
@@ -423,11 +425,13 @@ def create_and_train_mlp_model(new_inputName, new_inputEpochs, new_inputBatchSiz
 
 def get_predict_sample_cnn_baseball_broom_dolphin(image_name: str, category: str, model_name: str) -> str:
 	# fix manually labels for the begining, need to provide that info depending on the model
-	print("\n\nHEHO JAI LE DROIT DE VIVRE UN PEU\n\n")
+	print("\n\nPREDICTION TIME\n\n")
 	print("image_name = ", image_name)
+	print("model name = ", model_name)
 
 	# get catego handled by the current model
 	# get all predictable categories, first get current model name, then categories
+	print("get all handled categories for current model")
 	categories = request_bdd.learn2draw_get_categories_handled_for_one_model(model_name)
 	print("categories handled : ", categories)
 	# predict using catego handled by the model !
@@ -439,7 +443,10 @@ def get_predict_sample_cnn_baseball_broom_dolphin(image_name: str, category: str
 	# labels = categories_infos
 
 	labels = list(categories.split(",")) #["baseball", "broom", "dolphin"]
-	print("labels ", labels)
+	print("labels handeled", labels)
+
+	index_cat = labels.index("chat")
+
 	# OLD LOAD METHOD
 	# model = load_model('./models/QDrawModel_baseball_broom_dolphin.h5')
 	# print("load model ok")
@@ -502,6 +509,8 @@ def get_predict_sample_cnn_baseball_broom_dolphin(image_name: str, category: str
 	# change predict final, kill cases with "invalid" indexes
 
 	# change values to be sure that the sum of everything = 1 (percentage)
-	print("toutes les predict : ", predict_final)
+	print("cat percent : ", float(str(predict_final[0][index_cat]).replace(',', '.')))
+
+	print("\ntoutes les predict : ", predict_final)
 	print(str(labels[np.argmax(predict_final)]) + ";" + str(predict_final[0][np.argmax(predict_final)]))
 	return str(labels[np.argmax(predict_final)]) + ";" + str(predict_final[0][np.argmax(predict_final)])

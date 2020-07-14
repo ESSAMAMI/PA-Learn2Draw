@@ -56,8 +56,8 @@ def connection(token):
                 session['count_notation'] = str(user.count_notation[0])
 
                 # Update notation
-                count_nt_by_user = request_bdd.count_notation_by_user(session['id'])
-                stat = request_bdd.update_notation_by_user(user.id[0], count_nt_by_user['count_notation'][0])
+                #count_nt_by_user = request_bdd.count_notation_by_user(session['id'])
+                #stat = request_bdd.update_notation_by_user(user.id[0], count_nt_by_user['count_notation'][0])
                 badges = request_bdd.get_all_badge()
                 position = 0
                 if int(session['count_notation']) > 50:
@@ -96,7 +96,7 @@ def connection(token):
 @app.route('/profile/token/<token>', methods=['GET', 'POST'])
 def profile_page(token):
     try:
-
+        #print("query result = ", query_result)
         badges = request_bdd.get_all_badge()
         position = None
         if int(session['count_notation']) > 50:
@@ -124,6 +124,7 @@ def profile_page(token):
 @app.route('/notation/token/<token>', methods=['GET', 'POST'])
 def notation_page(token):
     try:
+        # first tests
         all_drawings = []
         list_folder = os.listdir('static/doodle/')
         for folder in list_folder:
@@ -131,8 +132,16 @@ def notation_page(token):
             for drawing in list_opend_folder:
                 all_drawings.append('doodle/' + folder + '/' + drawing)
 
+
+        # get drawings in database
+        all_drawings = request_bdd.learn2draw_list_draw_to_score(session['username'])
         shuffle(all_drawings)
+        print("len of drawings ==> ", len(all_drawings))
         drawings_to_notate = all_drawings[0:12]
+        #print("list drawings for arnaud ? ", list_drawings)
+
+        print("current_drawings == ", drawings_to_notate)
+
         current_year = utils.get_ccurent_date(format="ang", full=False)
         return render_template("user_app/notation_user_app.html", token=token, current_year=current_year, drawings_to_notate = drawings_to_notate)
 
@@ -173,6 +182,17 @@ def global_page(token):
 @app.route('/game/token/<token>', methods=['GET', 'POST'])
 def game_page(token):
     try:
+        current_prediction = request.args.get('current_prediction')
+        print("current prediction = ", current_prediction)
+
+        good_prediction = request.args.get('good_prediction')
+        print("good prediction = ", good_prediction)
+
+        dataset_exist = request.args.get('dataset_exist')
+        print("dataset_exist = ", dataset_exist)
+
+        submitted = request.args.get('submitted')
+        print("submitted = ", submitted)
 
         badges = request_bdd.get_all_badge()
         position = None
@@ -194,8 +214,41 @@ def game_page(token):
         top_5 = request_bdd.select_top_5()
         random_stat = ['En ligne', 'Hors ligne']
 
+        if submitted:
+            print("submitted ok , val = ", submitted, " type = ", type(submitted))
+        else:
+            print("not submitted, default message")
+            submitted = "nothing"
+
+        if current_prediction:
+            current_prediction = current_prediction.split(";")
+            current_prediction[1] = str(int(round(float(current_prediction[1]),2)*100))
+            print("current predict length ", len(current_prediction))
+            if  good_prediction == None :
+                print("GOOD PRED")
+                print("good predction, time to add points")
+                add_points = request_bdd.add_points_to_user(session["username"], int(current_prediction[1]))
+                session["score"] = add_points
+                return render_template("user_app/game_user_app.html", token=token, random_stat=random_stat,
+                               current_year=current_year, top_5=top_5, count_notation=session['count_notation'], badges = badges,
+                               current_prediction=current_prediction[1], current_prediction_label=current_prediction[0], submitted=submitted)
+            else :
+                print("\nSend information ==> OK, if good predict points will be added, pre =", current_prediction[0], " good =", good_prediction, "\n")
+                # if good_prediction == current_prediction[0]:
+                #     print("good predction, time to add points")
+                #     add_points = request_bdd.add_points_to_user(session["username"], current_prediction[1])
+
+
+                return render_template("user_app/game_user_app.html", token=token, random_stat=random_stat,
+                               current_year=current_year, top_5=top_5, count_notation=session['count_notation'], badges = badges,
+                               current_prediction=current_prediction[1], current_prediction_label=current_prediction[0], good_prediction=good_prediction, dataset_exist=dataset_exist, submitted=submitted)
+        
         return render_template("user_app/game_user_app.html", token=token, random_stat=random_stat,
-                               current_year=current_year, top_5=top_5, count_notation=session['count_notation'], badges = badges)
+                               current_year=current_year, top_5=top_5, count_notation=session['count_notation'], badges = badges, submitted=submitted)
+
+
+        # return render_template("user_app/game_user_app.html", token=token, random_stat=random_stat,
+        #                        current_year=current_year, top_5=top_5, count_notation=session['count_notation'], badges = badges)
 
     except Exception as e:
         current_date = utils.get_ccurent_date(format="fr")
@@ -227,11 +280,19 @@ def sign_out():
     try:
         if request.method == "POST":
             session.clear()
-            return render_template("login.html")
+            return redirect(url_for('connection_page'), code=307)
+            #return render_template("login.html")
         else:
-            return render_template("common/permission.html")
+            # should 403 but for now stay with session clear (not risky isn't it ?)
+            session.clear()
+            print("GET METHOD SUPPORTED FOR NOW")
+            return redirect(url_for('connection_page'), code=307)
+            #return render_template("login.html")
+            #return render_template("common/permission.html")
     except Exception as e:
-        return render_template("login.html")
+        print("exception in sign_out")
+        print("except == ", str(e))
+        return redirect(url_for('connection_page'), code=307)
 
 
 @app.route('/sign-up', methods=['POST', 'GET'])
@@ -246,7 +307,7 @@ def sign_up():
             cnf_pwd = str(request.form['cnf_pwd'])
 
             # check if the username / email is already used
-            verif = request_bdd.learn2draw_sign_up_verif(username, email, pwd)
+            verif = request_bdd.learn2draw_sign_up_verif(username, email, pwd, "2")
             if verif == False:
                 error_user_already_created = True
                 return render_template('login.html', error_user_already_created=error_user_already_created)
@@ -312,7 +373,7 @@ def play():
             return render_template("play.html", token=None, play=play, current_prediction=current_prediction[1], current_prediction_label=current_prediction[0], good_prediction=good_prediction, categories=categories+","+current_model)
     token = None
     play = True
-    categories = None
+    #categories = None
     if categories == None:
         return render_template("common/permission.html", token=None, error_code=220, error_handled = "No categories selected for current model...")
 
@@ -374,6 +435,7 @@ def users():
         current_year = utils.get_ccurent_date(format="ang", full=False)
         #query_result = ""
         print("query_result :", query_result)
+        print("users infos : ", users_infos)
         return render_template("admin_users.html", current_year=current_year, users_infos=users_infos, query_result=query_result)
 
     except Exception as e:
@@ -455,15 +517,16 @@ def create_user():
 
         query_result = request_bdd.learn2draw_create_user(new_username, new_email, new_password, new_confirm_password)
         
-        print("GOOD ROUTE")
+        print("GOOD ROUTE, ",query_result)
         if query_result == "True" or query_result == "False":
-            # Nothing if 0 problems
-            return redirect(render_template('users'), code=307)
+            # Nothing if 0 problems, url for better because can hide params
+            return redirect(url_for('users'), code=307)
         else:
-            return redirect(render_template('users', query_result=query_result), code=307)
+            return redirect(url_for('users', query_result=query_result), code=307)
 
     except Exception as e:
         print("ECHEC")
+        print("Except : ", str(e))
         current_date = utils.get_ccurent_date(format="fr")
         return render_template("admin_users.html", error=e)
 
@@ -476,12 +539,16 @@ def crud_users():
         new_username = request.form['username_input']
         new_email = request.form['email_input']
         new_score = request.form['score_input']
+        new_count_notation = request.form['count_notation_input']
+
         print("infos : ", infos)
         print("\nbtn : ", btn)
         print("\nusername : ", new_username)
         print("\nemail : ", new_email)
         print("\nscore : ", new_score)
-        query_result = request_bdd.learn2draw_update_user(infos, new_username, new_email, new_score)
+        print("\ncount notation : ", new_count_notation)
+
+        query_result = request_bdd.learn2draw_update_user(infos, new_username, new_email, new_score, new_count_notation)
 
         print("GOOD ROUTE")
         if query_result == "True" or query_result == "False":
@@ -582,7 +649,7 @@ def crud_drawing():
         print("\nscore : ", new_score)
         print("\ntime : ", new_time)
 
-        query_result = request_bdd.learn2draw_update_drawing(infos, new_user_id, new_category_id, new_category_predicted_id, new_location, new_status, new_score, new_time)
+        query_result = request_bdd.learn2draw_update_drawing(infos, new_user_id, new_category_id, new_category_predicted_id, new_location, new_status, new_score, 0, new_time)
 
         print("GOOD ROUTE")
         if query_result == "True" or query_result == "False":
@@ -964,10 +1031,14 @@ def get_drawing(token=None):
         prediction = my_models.get_predict_sample_cnn_baseball_broom_dolphin(check_is, category, model_name.replace(".h5", ""))
 
         current_prediction = str(prediction)
-        print("current prediction in app.py : ", current_prediction)
-
+        print("\ncudrrent prediction in app.py : ", current_prediction)
         # get category id of category selected by user and category predicted
         id_category = request_bdd.get_category_id(category)
+        #print("\n\ntest id catego\n\n")
+        # if id_category == False:
+        #     print("need to create new category")
+        # else:
+        #     print("what is id category ?", id_category, " type ", type(id_category))
         id_category_predicted = request_bdd.get_category_id(current_prediction.split(";")[0])
 
         print("id catego = ", id_category, " id catego predicted = ", id_category_predicted)
@@ -994,20 +1065,110 @@ def get_drawing(token=None):
 def get_drawing_session(token):
 
     if request.method == 'POST':
-        user_time = request.form['input_time']
-        image_base_64 = request.form['drawing']
-        category = request.form['category_drawing']
-        model_name = request.form["model_name"]
+        try:
+            user_time = request.form['input_time']
+            image_base_64 = request.form['drawing']
+            category = request.form['category_drawing']
+            #model_name = request.form["model_name"]
 
-        print("\n\ntime input : ", user_time, "\n")
-        print("model_name = ", model_name)
-        print("category = ", category)
+            #find current model
+            model_name = [f for f in os.listdir("models/") if f.endswith('.h5') and "current" in f]
+            print("current_model = ", model_name)
+            if model_name == []:
+                model_name = "default.h5"
+            else:
+                model_name = model_name[0].replace("current_", "")
 
-        check_is = utils.decode_uploaded_file(image_base_64, category)
-        print("check is ", check_is)
+            print("model used = ", model_name)
 
-        return redirect(url_for('game_page', token=token))
 
+            print("\n\ntime input : ", user_time, "\n")
+            print("model_name = ", model_name)
+            print("category = ", category)
+
+            check_is = utils.decode_uploaded_file(image_base_64, category)
+            print("check is ", check_is)
+            check_is_for_bdd_insert = "\\"+check_is.replace("/", "\\")
+            print("check_is_for_bdd_insert ", check_is_for_bdd_insert)
+
+            prediction = my_models.get_predict_sample_cnn_baseball_broom_dolphin(check_is, category, model_name.replace(".h5", ""))
+
+            current_prediction = str(prediction)
+            print("\ncurrent prediction in app.py : ", current_prediction,"\n")
+
+
+            # get category id of category selected by user and category predicted
+            id_category = request_bdd.get_category_id(category)
+
+            if id_category == "False":
+                print("need to create new category, name entered by user = ", category)
+                new_category = request_bdd.learn2draw_create_category(category)
+                id_category = request_bdd.get_category_id(category)
+
+            id_category_predicted = request_bdd.get_category_id(current_prediction.split(";")[0])
+
+            print("id catego = ", id_category, " id catego predicted = ", id_category_predicted)
+
+            # save drawing into database, for the test it's always user 2 
+            create_drawing = request_bdd.learn2draw_create_drawing(str(session["id"]), id_category, id_category_predicted, check_is_for_bdd_insert, "0", str(round(float(current_prediction.split(";")[1])*100)), "0", user_time)
+            print("create drawing ? ==> ", create_drawing)
+            # add little message to add info on the veracity of the prediction
+            if current_prediction.split(";")[0] == category:
+                #current_prediction += ";yes"
+                return redirect(url_for('game_page', token=token, current_prediction=current_prediction, code=307))
+            else:
+                # the prediction is bad, maybe it's because there isn't a dataset for the category
+                # entered, if it's the case send the information
+                dataset_exist = request_bdd.dataset_exist_for_category(category)
+                if dataset_exist == "0":
+                    good_prediction = category
+                    print("current predict = ", current_prediction, "and dataset doesn't exist")
+                    return redirect(url_for('game_page', token=token, current_prediction=current_prediction, good_prediction=good_prediction, dataset_exist= dataset_exist, code=307))
+                else:
+                    good_prediction = category
+                    print("current predict = ", current_prediction)
+                    return redirect(url_for('game_page', token=token, current_prediction=current_prediction, good_prediction=good_prediction, code=307))
+
+            #return redirect(url_for('game_page', token=token))
+        except Exception as e:
+            print("ECHEC")
+            print("exception : ", str(e))
+            current_date = utils.get_ccurent_date(format="fr")
+            return redirect(url_for('game_page', token=token), code=307)
+
+
+# route to submit last drawing made to user notation system
+@app.route('/play/submit_drawing_session/<token>', methods=['POST', 'GET'])
+def submit_drawing_session(token):
+    if request.method == 'POST':
+        try:
+            print("\nwelcome to submit drawing func")
+
+            # get last drawing made, if it has already status == 1, send back error message
+            last_drawing = request_bdd.get_last_drawing_made(session["id"])
+            print("last drawing in app.py = ", last_drawing)
+            last_drawing = last_drawing.split(";")
+            # status == 1 ? return with error, already submitted
+            if last_drawing[4] == "1":
+                print("already submitted ;(")
+                return redirect(url_for('game_page', token=token, submitted="already_submitted", code=307))
+
+            # update status of drawing (staus == 1) and send a thankfull message
+            query_result = request_bdd.learn2draw_update_drawing(last_drawing[0], session["id"], last_drawing[1], last_drawing[2], \
+             last_drawing[3], 1, last_drawing[5], 0, last_drawing[7])
+
+            if query_result == "True" or query_result == "False":
+                return redirect(url_for('game_page', token=token, submitted="submission_done", code=307))
+            else:
+                return redirect(url_for('game_page', token=token, submitted=query_result, code=307))
+
+            return redirect(url_for('game_page', token=token, code=307))
+
+        except Exception as e:
+            print("ECHEC")
+            print("exception : ", str(e))
+            current_date = utils.get_ccurent_date(format="fr")
+            return redirect(url_for('game_page', token=token), code=307)
 
 
 @app.route('/create_dataset_test/', methods=['POST', 'GET'])
@@ -1018,8 +1179,11 @@ def create_dataset_test():
         # first request, get categories and images ids that we need to transform
         # (status = 3 ) in dataset, for example only get all turtle images with status 3
         # + transform them into correct data (numpy tensors) + merge them + save npy file
-        query_result =  request_bdd.create_npy_dataset()
         
+        #query_result =  request_bdd.create_npy_dataset("tortue")
+        print("not needed anymore, tested by notation pages")
+        query_result = "True"
+
         if query_result == "True" or query_result == "False":
             # Nothing if 0 problems
             return redirect(url_for('drawings'), code=307)
@@ -1034,20 +1198,190 @@ def create_dataset_test():
 
 @app.route('/notation/set_note/<token>', methods=['POST'])
 def notation_app_user(token):
-
+    print("welcome in set note (app.py)")
     if request.method == "POST":
+        try:
+            idUSer = request.form['idUser']
+            drawing = request.form['drawing']
+            notation = request.form['notation']
 
-        idUSer = request.form['idUser']
-        drawing = request.form['drawing']
-        notation = request.form['notation']
 
-        # Still to link to bdd
-        print(idUSer, drawing, notation,"=================================")
-        return redirect(url_for('game_page', token=token))
+            # Still to link to bdd
+            print(idUSer, drawing, notation,"=================================")
+
+             #token = request.args['token']
+            # infos = request.args['infos']
+            # btn = request.form['button']
+            
+            #modif location to make it usefull
+            drawing = drawing.replace("/", "\\\\")
+            drawing = drawing.replace("doodle\\\\", "\\\\static\\\\doodle\\\\")
+
+            print("get info for drawing ", drawing)
+            # get infos of drawing
+            drawing_infos = request_bdd.get_drawing_voted(drawing)
+            print("drawings info in app.py : ", drawing_infos)
+
+            drawing_infos = drawing_infos.split(";")
+            new_score = notation
+            new_user_id = idUSer
+            new_drawing_id = drawing_infos[0]
+            new_drawing_user_id = drawing_infos[1]
+            new_drawing_category_id = drawing_infos[2] 
+            
+            # new_score = request.form['score_input']
+            # print("infos : ", infos)
+            # print("\nbtn : ", btn)
+            print("\nscore : ", new_score)
+            print("\nuser_id : ", new_user_id)
+            print("\ndrawing_id : ", new_drawing_id)
+            print("\nnew_drawing_user_id : ", new_drawing_user_id)
+            print("\new_drawing_category_id : ", new_drawing_category_id)
+
+            query_result = request_bdd.learn2draw_create_notation(new_score, new_user_id, new_drawing_id, new_drawing_user_id, new_drawing_category_id)
+            
+            # a notation has been made so update count_notatiion attribute of the user
+            one_notation_point = request_bdd.add_one_notation_point_to_user(session["id"])
+            session["count_notation"] = str(int(session["count_notation"]) + 1)
+
+            # check number of votes (if 100 status can change, score changed for image and for users
+            # who made the right choice
+            check_votes = request_bdd.one_hundred_votes_update(new_drawing_id, new_drawing_user_id, session["id"])
+            if check_votes.split(";")[0] != "no_update":
+                if int(check_votes.split(";")[0]) != 0:
+                    print("update session score")
+                    session["score"] = str(int(session["score"]) + int(check_votes.split(";")[0]))
+
+            # check if there is 1000 images or more in status = 3 for the category
+            # if it's the case, set their status to 4, and trigger the custom dataset creation function on all status=4 of category
+            
+            # only test this condition if the current image were add to "good images"
+            if int(check_votes.split(";")[1]) == 3:
+                check_1000_images = request_bdd.check_thousand_good_images(new_drawing_category_id)
+                print("check 1000 img res in app.py : ", check_1000_images)
+
+
+            print("GOOD ROUTE")
+            if query_result == "True" or query_result == "False":
+                # Nothing if 0 problems
+                return "ok"
+            else:
+                return "error;" + query_result
+
+        except Exception as e:
+            print("ECHEC in notation app user")
+            print("error : ", str(e))
+            return "error;"+str(e)
+        #return redirect(url_for('game_page', token=token))
+        # return redirect(url_for('profile_page', token=token))
+        # return redirect(url_for('notation_page', token=token))
 
     else:
 
         return render_template("common/error.html")
+
+# profile changes by user section
+@app.route('/update_user_password/', methods=['GET', 'POST'])
+def update_user_password():
+    try:
+        token = request.args['token']
+        print("token = ", token)
+        username = request.args['username']
+        btn = request.form['button']
+        new_password = request.form['new_password_input']
+        new_password_verif = request.form['new_password_verif_input']
+        old_password = request.form['old_password_input']
+
+        print("username : ", username)
+        print("\nbtn : ", btn)
+        print("\nnew password : ", new_password)
+        print("\nold password : ", old_password)
+
+        # return error if passwords aren't the same
+        if new_password_verif != new_password:
+            query_result = "passwords_are_not_the_same"
+            print("BAD ROUTE")
+        else:
+            query_result = request_bdd.change_user_password(username, old_password, new_password)
+            print("GOOD ROUTE")
+
+        if query_result == "True" or query_result == "False":
+            # Nothing if 0 problems
+            session['pwd'] = new_password
+            return redirect(url_for('profile_page', token=token), code=307)
+        else:
+            print("error return")
+            return redirect(url_for('profile_page', token=token, query_result=query_result), code=307)#query_result=query_result, code=307)
+
+    except Exception as e:
+        print("ECHEC")
+        print(str(e))
+        current_date = utils.get_ccurent_date(format="fr")
+        return redirect(url_for('profile_page', token=token), code=307)#, query_result=str(e), code=307)
+        #return render_template("admin_users.html", error=e)
+
+@app.route('/update_user_infos/', methods=['GET', 'POST'])
+def update_user_infos():
+    try:
+        print("Update USER INFOS")
+        token = request.args['token']
+        print("token = ", token)
+        username = request.args['username']
+        btn = request.form['button']
+        print("MY ULES")
+        new_username = request.form['username_input']
+        new_email = request.form['email_input']
+        pwd="empty"
+
+        print("username : ", username)
+        print("\nbtn : ", btn)
+        print("\nnew username : ", new_username)
+        print("\nnew email : ", new_email)
+
+        if new_email == "" and new_username == "":
+            return "empty_form"
+        elif new_email == "":
+            print("new email strategy")
+            new_email = session['email']
+            print("new_email = ", session["email"])
+            # check if username / email arent already taken
+            verif = request_bdd.learn2draw_sign_up_verif(new_username, new_email, pwd, "email")
+            print("VERIF IN EMAIL STRAT = ", verif)
+        elif new_username == "":
+            print("not here")
+            new_username = session["username"]
+            # check if username / email arent already taken
+            verif = request_bdd.learn2draw_sign_up_verif(new_username, new_email, pwd, "username")
+        else:
+            print("not here")
+            # check if username / email arent already taken
+            verif = request_bdd.learn2draw_sign_up_verif(new_username, new_email, pwd, "2")
+
+        # error if username/ email already taken
+        if verif == False:
+            query_result = "email_or_username_already_taken"
+            print("BAD ROUTE")
+        else:
+            print("new_email before update = ", new_email)
+            query_result = request_bdd.change_user_infos(username, new_username, new_email)
+            print("GOOD ROUTE")
+
+        if query_result == "True" or query_result == "False":
+            # Nothing if 0 problems
+            session['username'] = new_username
+            session['email'] = new_email
+            return redirect(url_for('profile_page', token=token), code=307)
+        else:
+            print("error return")
+            return redirect(url_for('profile_page', token=token, query_result=query_result), code=307)#query_result=query_result, code=307)
+
+    except Exception as e:
+        print("ECHEC in app.py")
+        print(str(e))
+        current_date = utils.get_ccurent_date(format="fr")
+        return redirect(url_for('profile_page', token=token), code=307)#, query_result=str(e), code=307)
+        #return render_template("admin_users.html", error=e)
+
 
 # Handle errors section
 @app.errorhandler(404)

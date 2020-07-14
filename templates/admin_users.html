@@ -193,6 +193,11 @@
                                                         <input id="score_input" name="score_input" type="number" class="form-control" placeholder="Score *" required/>
                                                         <div class="required"></div>
                                                     </div>
+                                                    <div class="form-group input-rounded">
+                                                        <label for="count_notation_input"><b>Count notation</b></label>
+                                                        <input id="count_notation_input" name="count_notation_input" type="number" class="form-control" placeholder="count notation *" required/>
+                                                        <div class="required"></div>
+                                                    </div>
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" name="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -246,13 +251,14 @@
                                         <table id="users-table" class="table table-striped table-bordered">
                                           <thead>
                                             <tr>
-                                              <th width="25%"> Username </th>
-                                              <th width="30%"> Email </th>
+                                              <th width="20%"> Username </th>
+                                              <th width="20%"> Email </th>
                                               <!--
                                               <th width="15%"> Password </th>
                                               <th width="10%"> Admin </th>
                                               -->
                                               <th width="15%"> Score </th>
+                                              <th width="15%"> Count notation </th>
                                               <th width="15%"> Edit </th>
                                               <th width="15%"> Delete </th>
                                             </tr>
@@ -310,12 +316,14 @@
                         var td_username = document.createElement('td');
                         var td_email = document.createElement('td');
                         var td_score = document.createElement('td');
+                        var td_count_notation = document.createElement('td');
                         var td_edit = document.createElement('td');
                         var td_delete = document.createElement('td');
                         
                         td_username.appendChild(document.createTextNode(content[0]));
                         td_email.appendChild(document.createTextNode(content[1]));
                         td_score.appendChild(document.createTextNode(content[2]));
+                        td_count_notation.appendChild(document.createTextNode(content[3]));
 
 
                         td_edit.innerHTML = "<td><a id='button_edit' class='text-primary' href='' data-toggle='modal' data-target='#editModal' data-whatever='"+list[i]+"' onclick=create_modal(this) ><i class='fas fa-pencil-alt text-primary'></i> Edit </a></td>";
@@ -335,6 +343,7 @@
                         tr.appendChild(td_username);
                         tr.appendChild(td_email);
                         tr.appendChild(td_score);
+                        tr.appendChild(td_count_notation);
                         tr.appendChild(td_edit);
                         tr.appendChild(td_delete);
                         container.appendChild(tr);
@@ -380,6 +389,7 @@
                     document.getElementById("username_input").value = content[0];
                     document.getElementById("email_input").value = content[1];
                     document.getElementById("score_input").value = content[2];
+                    document.getElementById("count_notation_input").value = content[3];
                     //document.getElementById("form_edit").action = "/admin-home/tables/users/?token=" + token + "&infos=" + data;
                     document.getElementById("form-edit").action = "/updating_username/?infos=" + data;
                     

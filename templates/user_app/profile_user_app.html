@@ -12,6 +12,9 @@
               </ol>
             </nav>
           </div>
+          <div id="div_error_message_password" class="alert alert-danger" role="alert" hidden>
+            <p id="error_message_password"></p>
+          </div>
           <div class="content-viewport">
             <div class="row">
               <div class="col-lg-6">
@@ -19,55 +22,57 @@
                   <p class="grid-header">Profile</p>
                   <div class="grid-body">
                     <div class="item-wrapper">
-                      <div class="row mb-8">
-                        <div class="col-md-8 mx-auto">
-                          <div class="form-group row showcase_row_area">
-                            <div class="col-md-3 showcase_text_area">
-                              <label for="inputType1">Pseudo</label>
+                      <form id="form-edit-infos" method="POST">
+                        <div class="row mb-8">
+                          <div class="col-md-8 mx-auto">
+                            <div class="form-group row showcase_row_area">
+                              <div class="col-md-3 showcase_text_area">
+                                <label for="inputType1">Pseudo</label>
+                              </div>
+                              <div class="col-md-9 showcase_content_area">
+                                <input type="text" class="form-control" id="username_input" name="username_input" placeholder="{{ session['username']}}">
+                              </div>
                             </div>
-                            <div class="col-md-9 showcase_content_area">
-                              <input type="text" class="form-control" id="inputType1" placeholder="{{ session['username']}}">
+                            <div class="form-group row showcase_row_area">
+                              <div class="col-md-3 showcase_text_area">
+                                <label for="inputType12">Email</label>
+                              </div>
+                              <div class="col-md-9 showcase_content_area">
+                                <input type="email" class="form-control" id="email_input" name="email_input" placeholder="{{ session['email']}}">
+                              </div>
                             </div>
+                            <div class="form-group row showcase_row_area">
+                              <div class="col-md-3 showcase_text_area">
+                                <label for="inputType5">Score</label>
+                              </div>
+                              <div class="col-md-9 showcase_content_area">
+                                <input type="text" class="form-control" id="inputType5" value="{{ session['score'] }}" disabled>
+                              </div>
+                            </div>
+                            <button type="submit" class="btn btn-sm btn-primary" onclick=push_update_infos(this) data-whatever="{{ session['username']}}" name="button">Valider</button>
                           </div>
-                          <div class="form-group row showcase_row_area">
-                            <div class="col-md-3 showcase_text_area">
-                              <label for="inputType12">Email</label>
-                            </div>
-                            <div class="col-md-9 showcase_content_area">
-                              <input type="email" class="form-control" id="inputType2" placeholder="{{ session['email']}}">
-                            </div>
-                          </div>
-                          <div class="form-group row showcase_row_area">
-                            <div class="col-md-3 showcase_text_area">
-                              <label for="inputType5">Score</label>
-                            </div>
-                            <div class="col-md-9 showcase_content_area">
-                              <input type="text" class="form-control" id="inputType5" value="{{ session['score'] }}" disabled>
-                            </div>
-                          </div>
-                          <button type="submit" class="btn btn-sm btn-primary">Valider</button>
                         </div>
-                      </div>
+                      </form>
                     </div>
                   </div>
                 </div>
               </div>
               <div class="col-lg-6 equel-grid">
                 <div class="grid">
-                  <p class="grid-header">Mot de passe</p>
+                  <p class="grid-header">Mot de passe</p>                  
                   <div class="grid-body">
                     <div class="item-wrapper">
-                      <form>
+                      <form id="form-edit-password" method="POST">
                         <div class="form-group">
-                          <input type="password" class="form-control" id="inputEmail1" placeholder="Ancien mot de passe">
+                          <input type="password" class="form-control" id="old_password_input" name="old_password_input" placeholder="Ancien mot de passe" required>
                         </div>
                         <div class="form-group">
-                          <input type="password" class="form-control" id="inputPassword1" placeholder="Nouveau mot de passe">
+                          <input type="password" class="form-control" id="new_password_input" name="new_password_input" placeholder="Nouveau mot de passe" required>
                         </div>
                         <div class="form-group">
-                          <input type="password" class="form-control" id="inputPassword1" placeholder="Confirmer mot de passe">
+                          <input type="password" class="form-control" id="new_password_verif_input" name="new_password_verif_input" placeholder="Confirmer mot de passe" required>
                         </div>
-                        <button type="submit" class="btn btn-sm btn-primary">Valider</button>
+                        <button type="submit" class="btn btn-sm btn-primary" onclick=push_update_password(this) data-whatever="{{ session['username']}}" name="button">Valider</button>
                       </form>
                     </div>
                   </div>
@@ -101,6 +106,72 @@
       <script>
         $(document).ready(function(){
           $('[data-toggle="tooltip"]').tooltip();
+
+          // check if query_result exist, if it's the case display an error message
+          var split = location.search.replace('?', '').split('&').map(function(val){
+                  return val.split('=');
+                });
+          var query_result = split[0][1];
+          console.log("query result = ", query_result)
+
+          if (typeof query_result !== 'undefined'){
+            console.log("ERROR")
+            var error_message_password = document.getElementById("error_message_password")
+            $('#div_error_message_password').removeAttr('hidden');
+            error_message_password.innerHTML = query_result
+          }else{
+            console.log("NO ERROR")
+            /*var error_message_password = document.getElementById("error_message_password")
+            $('#div_error_message_password').css('background-color', 'green');
+            $('#div_error_message_password').removeAttr('hidden');
+            error_message_password.innerHTML = query_result*/
+          }
+
+          //var div_error_message_password = document.getElementById("div_error_message_password")
+
         });
+
+        
+        function push_update_password(btn){
+          console.log("current data-whatever : ", btn.getAttribute("data-whatever"));
+
+          var split = location.search.replace('?', '').split('&').map(function(val){
+                  return val.split('=');
+                });
+
+          var token = location.href.split("/")[5]
+          console.log("token = "+token)
+          
+          var data = btn.getAttribute("data-whatever");
+          console.log("username : ", data)
+          //console.log()
+          //document.getElementById("form_edit").action = "/admin-home/tables/users/?token=" + token + "&infos=" + data;
+          document.getElementById("form-edit-password").action = "/update_user_password/?username=" + data+"&token=" + token;
+        }
+
+        function push_update_infos(btn){
+          console.log("current data-whatever : ", btn.getAttribute("data-whatever"));
+
+          var split = location.search.replace('?', '').split('&').map(function(val){
+                  return val.split('=');
+                });
+
+          var token = location.href.split("/")[5]
+          console.log("token = "+token)
+          
+          var data = btn.getAttribute("data-whatever");
+          console.log("username : ", data)
+          //console.log()
+          //document.getElementById("form_edit").action = "/admin-home/tables/users/?token=" + token + "&infos=" + data;
+          document.getElementById("form-edit-infos").action = "/update_user_infos/?username=" + data+"&token=" + token;
+        }
+
+
+        window.setTimeout(function () {
+          $(".alert-danger").fadeTo(500, 0).slideUp(500, function () {
+              $(this).remove();
+          });
+        }, 3000);
+
       </script>
 {% endblock %}

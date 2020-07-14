@@ -203,7 +203,8 @@
                                     <table id="categories-table" class="table table-striped table-bordered">
                                       <thead>
                                         <tr>
-                                          <th width="70%"> Category </th>
+                                          <th width="45%"> Category </th>
+                                          <th width="25%"> Dataset_available ? </th>
                                           <th> Edit </th>
                                           <th> Delete </th>
                                         </tr>
@@ -259,10 +260,12 @@
 
                     var tr = document.createElement('tr');
                     var td_category = document.createElement('td');
+                    var td_dataset = document.createElement('td');
                     var td_edit = document.createElement('td');
                     var td_delete = document.createElement('td');
                     
                     td_category.appendChild(document.createTextNode(content[0]));
+                    td_dataset.appendChild(document.createTextNode(content[2]));
 
 
                     td_edit.innerHTML = "<td><a id='button_edit' class='text-primary' href='' data-toggle='modal' data-target='#editModal' data-whatever='"+list[i]+"' onclick=create_modal(this) ><i class='fas fa-pencil-alt text-primary'></i> Edit </a></td>";
@@ -280,6 +283,7 @@
                     
 
                     tr.appendChild(td_category);
+                    tr.appendChild(td_dataset);
                     tr.appendChild(td_edit);
                     tr.appendChild(td_delete);
                     container.appendChild(tr);
