@@ -74,6 +74,8 @@ def connection(token):
 
                 current_year = utils.get_ccurent_date(format="ang", full=False)
                 top_5 = request_bdd.select_top_5()
+                top_5_nb_drawings = request_bdd.select_top_5_nb_drawings()
+                top_5_nb_notation = request_bdd.select_top_5_nb_notation()
                 random_stat = ['En ligne', 'Hors ligne']
 
                 if position == 0:
@@ -83,7 +85,7 @@ def connection(token):
                     session['min'] = str(list(badges.iloc[position-1])[1]).split('-')[0]
                     session['max'] = str(list(badges.iloc[position-1])[1]).split('-')[0]
                 session['position'] = str(position)
-                return render_template("user_app/home_user_app.html", token=token, random_stat=random_stat, current_year=current_year, top_5=top_5, count_notation=session['count_notation'])
+                return render_template("user_app/home_user_app.html", token=token, random_stat=random_stat, current_year=current_year, top_5=top_5, count_notation=session['count_notation'], top_5_nb_drawings=top_5_nb_drawings, top_5_nb_notation=top_5_nb_notation)
 
         return render_template('common/permission.html')
 
@@ -155,6 +157,8 @@ def global_page(token):
 
         # Update notation
         badges = request_bdd.get_all_badge()
+        top_5_nb_drawings = request_bdd.select_top_5_nb_drawings()
+        top_5_nb_notation = request_bdd.select_top_5_nb_notation()
         position = None
         if int(session['count_notation']) > 50:
             for i in range(len(badges)):
@@ -173,7 +177,9 @@ def global_page(token):
         top_5 = request_bdd.select_top_5()
         random_stat = ['En ligne', 'Hors ligne']
 
-        return render_template("user_app/home_user_app.html", token=token, random_stat=random_stat, current_year=current_year, top_5=top_5, count_notation=session['count_notation'])
+        return render_template("user_app/home_user_app.html", token=token, random_stat=random_stat,
+                               current_year=current_year, top_5=top_5, count_notation=session['count_notation'],
+                               top_5_nb_drawings=top_5_nb_drawings, top_5_nb_notation=top_5_nb_notation)
 
     except Exception as e:
         current_date = utils.get_ccurent_date(format="fr")

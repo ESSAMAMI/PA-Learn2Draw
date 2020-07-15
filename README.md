@@ -9,7 +9,7 @@ drawing.
 - SIMON Arnaud
 - ESSAMAMI Hamza
 
-### **Requirments** :rotating_light:
+### **Requirements** :rotating_light:
 
 Please run this command line in your shell to install all of 
 requirements dependencies:

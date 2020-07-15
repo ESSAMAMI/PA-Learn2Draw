@@ -5,13 +5,11 @@ import sqlalchemy
 import pandas as pd
 import numpy as np 
 from PIL import Image
-import cv2
 from models import my_models
 import os
 import shutil
 from datetime import datetime
-import pymysql
-from keras.preprocessing import image
+from uuid import getnode as get_mac
 
 def create_engine_db() -> str:
     config = ConfigParser()
@@ -19,12 +17,19 @@ def create_engine_db() -> str:
 
     config.read(cwd+"/utils/config.ini")
     #config.read("D:/Skoula/utils/config.ini")
-
-    get_connection = 'mysql+pymysql://'\
-                        + config.get('mysql', 'user')\
-                        + ':' + config.get('mysql','pwd')\
-                        + '@' + config.get('mysql', 'host')\
-                        + '/' + config.get('mysql', 'database') + ''
+    mac = get_mac()
+    if str(mac) == "163519832176392":
+        get_connection = 'mysql+pymysql://'\
+                            + config.get('Hamza_mysql', 'user')\
+                            + ':' + config.get('Hamza_mysql','pwd')\
+                            + '@' + config.get('Hamza_mysql', 'host')\
+                            + '/' + config.get('Hamza_mysql', 'database') + ''
+    else:
+        get_connection = 'mysql+pymysql://' \
+                         + config.get('other', 'user') \
+                         + ':' + config.get('other', 'pwd') \
+                         + '@' + config.get('other', 'host') \
+                         + '/' + config.get('other', 'database') + ''
 
     return get_connection
 
@@ -49,6 +54,23 @@ def select_top_5() -> pd.DataFrame:
                        con=db_connection, index_col=None)
 
     return top_5
+
+def select_top_5_nb_drawings() -> pd.DataFrame:
+
+    db_connection = create_engine(create_engine_db())
+    top_5 = pd.read_sql("SELECT u.id, u.username, u.score, count(n.USERS_id) nb_dessins FROM notations n INNER JOIN users u ON n.USERS_id = u.id GROUP BY n.USERS_id ORDER BY nb_dessins desc",
+                       con=db_connection, index_col=None)
+
+    return top_5
+
+def select_top_5_nb_notation() -> pd.DataFrame:
+
+    db_connection = create_engine(create_engine_db())
+    top_5 = pd.read_sql("SELECT * FROM users ORDER BY count_notation DESC",
+                       con=db_connection, index_col=None)
+
+    return top_5
+
 
 def count_notation_by_user(id_user) -> pd.DataFrame:
 

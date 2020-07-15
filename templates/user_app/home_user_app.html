@@ -76,7 +76,7 @@
                     </table>
                   </div>
                   <a data-toggle="modal" data-target="#exampleModalCenter" class="border-top px-3 py-2 d-block text-gray" href="#">
-                    <small class="font-weight-medium"><i class="mdi mdi-information-outline mr-2"></i>En savoir plus</small>
+                    <small class="font-weight-medium"><i class="mdi mdi-information-outline mr-2"></i>Plus de filtre !</small>
                   </a>
                 </div>
               </div>
@@ -92,8 +92,8 @@
               <div style="margin-top: 10px"  class="col-md-5 showcase_content_area">
                   <select id="filter" class="custom-select">
                     <option value="Empty" selected disabled>Aucun filtrer sélectionné</option>
-                    <option value="Nombre de dessins">Nombre de dessins</option>
-                    <option value="Nombre de points">Nombre de points</option>
+                    <option value="Top nombre dessins">Top nombre dessins</option>
+                    <option value="Top nombre notations">Top nombre notations</option>
                   </select>
               </div>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -108,58 +108,90 @@
                   <p class="grid-header" id="filtre-active">Choisir un filtre</p>
                   <div class="item-wrapper">
                     <div class="table-responsive">
-                      <table class="table">
+                      <table class="table" id="nb-dessins" style="display: none">
                         <thead>
                           <tr>
-                            <th>Profile</th>
-                            <th>VatNo.</th>
-                            <th>Created</th>
-                            <th>Status</th>
+                            <th></th>
+                            <th>Pseudo</th>
+                            <th>Classement</th>
+                              <th>Score</th>
+                            <th>Nombre de dessins</th>
                           </tr>
                         </thead>
                         <tbody>
-                          <tr>
-                            <td>Jacob</td>
-                            <td>53275531</td>
-                            <td>12 May 2017</td>
-                            <td>
-                              <label class="badge badge-danger">Pending</label>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>Messsy</td>
-                            <td>53275532</td>
-                            <td>15 May 2017</td>
-                            <td>
-                              <label class="badge badge-warning">In progress</label>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>John</td>
-                            <td>53275533</td>
-                            <td>14 May 2017</td>
-                            <td>
-                              <label class="badge badge-info">Fixed</label>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>Peter</td>
-                            <td>53275534</td>
-                            <td>16 May 2017</td>
-                            <td>
-                              <label class="badge badge-success">Completed</label>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>Dave</td>
-                            <td>53275535</td>
-                            <td>20 May 2017</td>
-                            <td>
-                              <label class="badge badge-warning">In progress</label>
-                            </td>
-                          </tr>
+                          {% for i in range(top_5_nb_drawings|length) %}
+                            <tr>
+                              <td class="pr-0 pl-4">
+                                <img class="profile-img img-sm" src="{{ url_for('static', filename='assets/images/profile/male/image_1.png')}}" alt="toto image">
+                              </td>
+                              <td class="pl-md-0">
+                                <small class="text-black font-weight-medium d-block">
+                                    {% if session['id']|int == top_5_nb_drawings['id'][i]|int %}
+                                        {{ " Vous" }}
+                                    {% else %}
+                                        {{ " "~top_5_nb_drawings['username'][i]}}
+                                    {% endif %}
+                                </small>
+                                <span class="text-gray">
+                                  <span class="status-indicator rounded-indicator small bg-primary"></span> En ligne </span>
+                              </td>
+                               <td style="text-align: center">
+                                   {% if i == 0 %}
+                                        <small style="text-align: center"><label class="badge badge-success">{% set classement = i + 1 %}{{ classement }}</label></small>
+                                   {% else %}
+                                       <small style="text-align: center"><label class="badge badge-warning">{% set classement = i + 1 %}{{ classement }}</label></small>
+                                   {% endif %}
+                               </td>
+                              <td style="text-align: center">
+                                <small>{{ top_5_nb_drawings['score'][i]}}</small>
+                              </td>
+                              <td style="text-align: center"> {{ top_5_nb_drawings['nb_dessins'][i]|int}} <b>dessin(s)</b></td>
+                            </tr>
+                          {% endfor %}
                         </tbody>
                       </table>
+                        <table class="table" id="nb-notation" style="display: none">
+                            <thead>
+                              <tr>
+                                <th></th>
+                                <th>Pseudo</th>
+                                <th>Classement</th>
+                                <th>Score</th>
+                                <th>Nombre de dessins notés</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {% for i in range(top_5_nb_notation|length) %}
+                                <tr>
+                                  <td class="pr-0 pl-4">
+                                    <img class="profile-img img-sm" src="{{ url_for('static', filename='assets/images/profile/male/image_1.png')}}" alt="toto image">
+                                  </td>
+                                  <td class="pl-md-0">
+                                    <small class="text-black font-weight-medium d-block">
+                                        {% if session['id']|int == top_5_nb_notation['id'][i]|int %}
+                                            {{ " Vous" }}
+                                        {% else %}
+                                            {{ " "~top_5_nb_notation['username'][i]}}
+                                        {% endif %}
+                                    </small>
+                                    <span class="text-gray">
+                                      <span class="status-indicator rounded-indicator small bg-primary"></span> En ligne </span>
+                                  </td>
+                                   <td style="text-align: center">
+                                       {% if i == 0 %}
+                                            <small style="text-align: center"><label class="badge badge-success">{% set classement = i + 1 %}{{ classement }}</label></small>
+                                       {% else %}
+                                           <small style="text-align: center"><label class="badge badge-warning">{% set classement = i + 1 %}{{ classement }}</label></small>
+                                       {% endif %}
+                                   </td>
+                                  <td style="text-align: center">
+                                    <small>{{ top_5_nb_notation['score'][i]}}</small>
+                                  </td>
+                                  <td style="text-align: center"> {{ top_5_nb_notation['count_notation'][i]|int}} <b> dessins notés</b></td>
+                                </tr>
+                              {% endfor %}
+                            </tbody>
+                          </table>
                     </div>
                   </div>
                 </div>
@@ -167,8 +199,7 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
+            <button type="button" class="btn btn-primary" data-dismiss="modal">Masquer</button>
           </div>
         </div>
       </div>
@@ -179,6 +210,14 @@
         $(document).ready(function () {
             $('select').on('change', function() {
               document.getElementById("filtre-active").innerHTML = "Filter appliqué par <b>"+this.value+"</b>";
+
+              if(this.value === "Top nombre dessins"){
+                  $("#nb-notation").css('display', 'none');
+                  $("#nb-dessins").css('display', 'block');
+              }else{
+                  $("#nb-notation").css('display', 'block');
+                  $("#nb-dessins").css('display', 'none');
+              }
             });
         })
 
