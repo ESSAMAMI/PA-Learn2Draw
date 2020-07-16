@@ -43,7 +43,7 @@ def create_and_train_cnn_model(new_inputName, new_inputEpochs, new_inputBatchSiz
 		print(filenames)
 
 		# get catego from bdd ==> possible improvment, take only if dataset_available == 1
-		categories_infos = request_bdd.learn2draw_list_all_categories()
+		categories_infos = request_bdd.learn2draw_list_all_categories_available()
 		bdd_categories = []
 		for elt in categories_infos:
 			elt = elt.split(";")
@@ -60,7 +60,7 @@ def create_and_train_cnn_model(new_inputName, new_inputEpochs, new_inputBatchSiz
 		# if delete category triggered, need to remove the selected category 
 		if delete_catego_or_not != "no":
 			print("delete catego triggered, specific model created")
-			shared_categories_filenames.remove(delete_catego_or_not+".npy")
+			#shared_categories_filenames.remove(delete_catego_or_not+".npy")
 
 		print("shared_categories_filenames :",shared_categories_filenames)
 		# usefull variables for models
@@ -252,7 +252,7 @@ def create_and_train_mlp_model(new_inputName, new_inputEpochs, new_inputBatchSiz
 		print(filenames)
 
 		# get catego from bdd ==> maybe not usefull
-		categories_infos = request_bdd.learn2draw_list_all_categories()
+		categories_infos = request_bdd.learn2draw_list_all_categories_available()
 		bdd_categories = []
 		for elt in categories_infos:
 			elt = elt.split(";")
@@ -445,7 +445,7 @@ def get_predict_sample_cnn_baseball_broom_dolphin(image_name: str, category: str
 	labels = list(categories.split(",")) #["baseball", "broom", "dolphin"]
 	print("labels handeled", labels)
 
-	index_cat = labels.index("chat")
+	#index_cat = labels.index("chat")
 
 	# OLD LOAD METHOD
 	# model = load_model('./models/QDrawModel_baseball_broom_dolphin.h5')
@@ -509,7 +509,7 @@ def get_predict_sample_cnn_baseball_broom_dolphin(image_name: str, category: str
 	# change predict final, kill cases with "invalid" indexes
 
 	# change values to be sure that the sum of everything = 1 (percentage)
-	print("cat percent : ", float(str(predict_final[0][index_cat]).replace(',', '.')))
+	#print("chat percent : ", float(str(predict_final[0][index_cat]).replace(',', '.')))
 
 	print("\ntoutes les predict : ", predict_final)
 	print(str(labels[np.argmax(predict_final)]) + ";" + str(predict_final[0][np.argmax(predict_final)]))

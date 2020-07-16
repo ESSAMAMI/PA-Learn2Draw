@@ -701,12 +701,14 @@ def create_category():
         print("WELCOME IN ADD CATEGORY FUNC")
 
         new_category = request.form['category_input']
+        new_dataset_avail = request.form['dataset_avail_input']
         # new_score = request.form['score_input']
         # print("infos : ", infos)
         # print("\nbtn : ", btn)
         print("\ncategory : ", new_category)
+        print("\ndataset avail : ", new_dataset_avail)
 
-        query_result = request_bdd.learn2draw_create_category(new_category)
+        query_result = request_bdd.learn2draw_create_category(new_category, new_dataset_avail)
         
         print("GOOD ROUTE")
         if query_result == "True" or query_result == "False":
@@ -727,10 +729,11 @@ def crud_categories():
         infos = request.args['infos']
         btn = request.form['button']
         new_category = request.form['category_input']
+        new_dataset_avail = request.form['dataset_avail_input']
         print("infos : ", infos)
         print("\nbtn : ", btn)
         print("\ncategory : ", new_category)
-        query_result = request_bdd.learn2draw_update_category(infos, new_category)
+        query_result = request_bdd.learn2draw_update_category(infos, new_category, new_dataset_avail)
 
         print("GOOD ROUTE")
         if query_result == "True" or query_result == "False":
@@ -751,6 +754,7 @@ def delete_category():
         infos = request.args['infos']
         # btn = request.form['button']
         print("WELCOME IN DELETE CATEGORY FUNC")
+        print("infos = ", infos)
 
         query_result = request_bdd.learn2draw_delete_category(infos)
 

@@ -138,6 +138,10 @@
                                                             <label for="category_input"><b>Category</b></label>
                                                             <input name="category_input" type="text" class="form-control" placeholder="Category *" required/>
                                                             <div class="required"></div>
+
+                                                            <label for="dataset_avail_input"><b>dataset available</b></label>
+                                                            <input name="dataset_avail_input" type="number" class="form-control" min="0", max="1" value="0" required/>
+                                                            <div class="required"></div>
                                                         </div>
                                                         <p>(*) Required fields</p>
                                                     </div>
@@ -165,6 +169,10 @@
                                                         <div class="form-group input-rounded">
                                                             <label for="category_input"><b>Category</b></label>
                                                             <input id="category_input" name="category_input" type="text" class="form-control" placeholder="Category *" required/>
+                                                            <div class="required"></div>
+
+                                                            <label for="dataset_avail_input"><b>dataset available</b></label>
+                                                            <input id="dataset_avail_input" name="dataset_avail_input" type="number" class="form-control" min="0" max="1" value="1" required/>
                                                             <div class="required"></div>
                                                         </div>
                                                 </div>
@@ -327,6 +335,7 @@
 
                 document.getElementById("exampleModalLabel").innerHTML = "<b>Edit category " + content[0]+"</b>";
                 document.getElementById("category_input").value = content[0];
+                document.getElementById("dataset_avail_input").value = content[2];
                 //document.getElementById("form_edit").action = "/admin-home/tables/users/?token=" + token + "&infos=" + data;
                 document.getElementById("form-edit").action = "/updating_category/?infos=" + data;
                 

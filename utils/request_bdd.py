@@ -432,13 +432,21 @@ def learn2draw_update_user(informations:str, new_username, new_email, new_score,
 
 def learn2draw_delete_user(informations) -> str:
     try:
-
+        print("delete user informations ", informations)
         #init session to query database, maybe place it in a function later
         db_connection = create_engine(create_engine_db())
         infos=informations.split(';')
 
         my_username = infos[0]
     
+        # first get the d of the user, it will be very usefull to delete drawings and notations
+        users_infos = pd.read_sql("SELECT id FROM USERS WHERE username = %s" % ("'" + my_username + "'"),
+                           con=db_connection, index_col=None).to_dict()
+
+        id_of_user = users_infos['id'][0]
+
+        print("first select done")
+
         Base = declarative_base()
 
         class User(Base):
@@ -468,6 +476,96 @@ def learn2draw_delete_user(informations) -> str:
         session.query(User).filter(User.username == my_username).delete()
         session.commit()
 
+        print("delete username")
+        # now that the user is deleted, delete all drawings and notations associated to the user
+        Base = declarative_base()
+
+        class Drawing(Base):
+            __tablename__ = 'drawings'
+         
+            id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True)
+            users_id = sqlalchemy.Column(sqlalchemy.Integer)
+            categories_id = sqlalchemy.Column(sqlalchemy.Integer)
+            categories_predicted_id = sqlalchemy.Column(sqlalchemy.Integer)
+            location = sqlalchemy.Column(sqlalchemy.String(length=40), nullable=False)
+            status = sqlalchemy.Column(sqlalchemy.Integer)
+            score = sqlalchemy.Column(sqlalchemy.Integer)
+            score_by_votes = sqlalchemy.Column(sqlalchemy.Integer)
+            time = sqlalchemy.Column(sqlalchemy.Integer)
+         
+            def __repr__(self):
+                return "<Drawing(users_id='{0}', categories_id='{1}', categories_predicted_id='{2}', location='{3}', status='{4}', score='{5}', time='{6}')>"\
+                .format(self.users_id, self.categories_id, self.categories_predicted_id, self.location,
+                  self.status, self.score, self.score_by_votes, self.time)
+
+
+        class Notation(Base):
+            __tablename__ = 'notations'
+         
+            id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True)
+            score = sqlalchemy.Column(sqlalchemy.String(length=40), nullable=False)
+            users_id = sqlalchemy.Column(sqlalchemy.Integer)
+            drawings_id = sqlalchemy.Column(sqlalchemy.Integer)
+            drawings_users_id = sqlalchemy.Column(sqlalchemy.Integer)
+            drawings_categories_id = sqlalchemy.Column(sqlalchemy.Integer)
+         
+            def __repr__(self):
+                return "<Notation(score='{0}', users_id='{1}', drawings_id='{2}', drawings_users_id='{3}', drawings_categories_id='{4}')>"\
+                .format(self.score, self.users_id, self.drawings_id,
+                  self.drawings_users_id, self.drawings_categories_id)
+
+
+        # create base
+        Base.metadata.create_all(db_connection)
+
+        # create session
+        Session = sqlalchemy.orm.sessionmaker()
+        Session.configure(bind=db_connection)
+        session = Session()
+
+        # first delete all notations made by the user
+        session.query(Notation).filter(Notation.users_id == id_of_user).delete()
+        session.commit()
+
+        # then get all ids of drawings who need to be deleted (usefull to remove notations)
+        drawings_infos = pd.read_sql("SELECT id FROM DRAWINGS WHERE USERS_id = %s" % ("'" + str(id_of_user) + "'"),
+                           con=db_connection, index_col=None).to_dict()
+
+        print("get all id of drawings soon deleted")
+        drawings_infos = drawings_infos["id"]
+        dictList = []
+        for key, value in drawings_infos.items():
+            dictList.append(value)
+
+        ids_drawings = dictList
+
+        # ids_drawings = []
+        # for i in drawings_infos:
+        #     line.append(drawings_infos["id"][i])
+
+        # print("ids drawings ", ids_drawings)
+
+        #delete all drawings made by the usr
+
+        # create session
+        Session = sqlalchemy.orm.sessionmaker()
+        Session.configure(bind=db_connection)
+        session = Session()
+
+        session.query(Drawing).filter(Drawing.users_id == id_of_user).delete()
+        session.commit()
+
+        # delete all notation in the id drawing list
+        
+        Session = sqlalchemy.orm.sessionmaker()
+        Session.configure(bind=db_connection)
+        session = Session()
+
+        print("ready to delete notations of drawings")
+
+        session.query(Notation).filter(Notation.drawings_id.in_(ids_drawings)).delete(synchronize_session='fetch')
+        session.commit()
+            
         return "True"
         
     except Exception as e:
@@ -674,6 +772,35 @@ def learn2draw_delete_drawing(informations) -> str:
         session.query(Drawing).filter(Drawing.id == my_id).delete()
         session.commit()
 
+        # now that the drawing is deleted, it is possible to delete all notations associated to it    
+        Base = declarative_base()
+
+        class Notation(Base):
+            __tablename__ = 'notations'
+         
+            id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True)
+            score = sqlalchemy.Column(sqlalchemy.String(length=40), nullable=False)
+            users_id = sqlalchemy.Column(sqlalchemy.Integer)
+            drawings_id = sqlalchemy.Column(sqlalchemy.Integer)
+            drawings_users_id = sqlalchemy.Column(sqlalchemy.Integer)
+            drawings_categories_id = sqlalchemy.Column(sqlalchemy.Integer)
+         
+            def __repr__(self):
+                return "<Notation(score='{0}', users_id='{1}', drawings_id='{2}', drawings_users_id='{3}', drawings_categories_id='{4}')>"\
+                .format(self.score, self.users_id, self.drawings_id,
+                  self.drawings_users_id, self.drawings_categories_id)
+
+        # create base
+        Base.metadata.create_all(db_connection)
+
+        # create session
+        Session = sqlalchemy.orm.sessionmaker()
+        Session.configure(bind=db_connection)
+        session = Session()
+
+        session.query(Notation).filter(Notation.drawings_id == my_id).delete()
+        session.commit()
+
         return "True"
         
     except Exception as e:
@@ -690,7 +817,6 @@ def learn2draw_delete_drawing(informations) -> str:
 
         print(e)
         return "False"
-
 
 # categories backoffice
 # list all categories, maybe need to check if user is admin before querying but not now
@@ -715,7 +841,29 @@ def learn2draw_list_all_categories() -> list:
     except Exception as e:
         print(e)
 
-def learn2draw_create_category(new_category) -> str:
+def learn2draw_list_all_categories_available() -> list:
+    try:
+        db_connection = create_engine(create_engine_db())
+        categories_infos = pd.read_sql("SELECT id, name, dataset_available FROM CATEGORIES WHERE dataset_available = 1",
+                           con=db_connection, index_col=None).to_dict()
+        #print("users infos : ", users_infos)
+
+        liste = []
+
+        for i in categories_infos["name"]:
+            #print("i = ", i)
+            line = "{};{};{}".format(categories_infos['name'][i], categories_infos['id'][i], categories_infos["dataset_available"][i])
+            #print("LINE = ", line)
+            liste.append(line)
+
+        #print("USER INFOS : \n", liste)
+        return liste
+
+    except Exception as e:
+        print(e)
+
+
+def learn2draw_create_category(new_category, new_dataset_avail) -> str:
     try:
 
         #init session to query database, maybe place it in a function later
@@ -742,7 +890,7 @@ def learn2draw_create_category(new_category) -> str:
         Session.configure(bind=db_connection)
         session = Session()
 
-        my_new_category = Category(name=new_category, dataset_available=0)
+        my_new_category = Category(name=new_category, dataset_available=new_dataset_avail)
         session.add(my_new_category)
         session.commit()
 
@@ -760,8 +908,9 @@ def learn2draw_create_category(new_category) -> str:
         print(e)
         return "False"
 
-def learn2draw_update_category(informations:str, new_category) -> str:
+def learn2draw_update_category(informations:str, new_category, new_dataset_avail) -> str:
     try:
+        print("\nWelcome on learn2draw_update_category\n")
         #init session to query database, maybe place it in a function later
         db_connection = create_engine(create_engine_db())
         infos=informations.split(';')
@@ -770,6 +919,10 @@ def learn2draw_update_category(informations:str, new_category) -> str:
             return "cant_delete_or_modify_native_categories"
 
         print("infos 0 ", infos[0])
+        print("infos 2 ", infos[2])
+        print("new category = ", new_category)
+        print("new dataset_avail = ", new_dataset_avail)
+
         Base = declarative_base()
 
         class Category(Base):
@@ -813,10 +966,11 @@ def learn2draw_update_category(informations:str, new_category) -> str:
 
         #update = User.update().where(User.c.username=="arnaud_lasticot").values(username="new_name")
             
-        session.query(Category).filter(Category.name == infos[0]).update({Category.name: new_category})
+        session.query(Category).filter(Category.name == infos[0]).update({Category.name: new_category, Category.dataset_available: new_dataset_avail})
         #session.query(User).filter(User.username == infos[0], User.email == infos[1]).update({User.username: new_username}, {User.email: new_email})
         #print("error handle ? : ", test)
         session.commit()
+
 
         # now we need to update names in the model table ("categories_handled")
         session.query(Model).update({Model.categories_handled : func.replace(Model.categories_handled, infos[0], new_category)}, synchronize_session='fetch')
@@ -896,16 +1050,48 @@ def learn2draw_delete_category(informations) -> str:
         Session.configure(bind=db_connection)
         session = Session()
 
+        # get categories handled by our models
+        categories_handled = pd.read_sql("SELECT categories_handled FROM models",
+                           con=db_connection, index_col=None).to_dict()
+
+
+        recreate_model = 0
+
+        print("for loop, check if category is handled by at least one model")
+        for i in categories_handled["categories_handled"]:
+            print(i)
+            if my_id in categories_handled['categories_handled'][i]:
+                print("category handled by a model, need to retrain")
+                recreate_model = 1
+
+        # collect filenames
+        print("collect filename cwd = ", os.getcwd())
+        data_path = "models/dataset_quickdraw/"
+        for (dirpath, dirnames, filenames) in os.walk(data_path):
+             pass # filenames accumulate in list 'filenames'
+        print(filenames)
+
+        print("If category ",  my_id,"inside filenames, delete npy file")
+        if my_id+".npy" in filenames:
+            print("delete npy")
+            os.remove(data_path+my_id+".npy")
+            
+        else:
+            print("my_id ", my_id, " is not in ", filenames)
+    
         # before delete, create new model (cnn default) and set it as current model
         time = int(datetime.now().strftime("%Y%m%d%H%M%S"))
-        create_model = learn2draw_create_model("cnn", "delete_"+str(time), "40", "1024", "adadelta", "0.001", my_id)
-        if "True" not in create_model:
-            return "error_" + create_model
+        if recreate_model == 1:
+            #print("category exist and have dataset == 1, delete the numpy file")
 
-        # set as current (extra param to avoid classic denial behaviour)
-        query_result = change_current_model("cnn_delete_"+str(time))
-        if "True" not in query_result:
-            return "problem_when_changing_current_model_"+query_result
+            create_model = learn2draw_create_model("cnn", "delete_"+str(time), "20", "1024", "adadelta", "0.001", my_id)
+            if "True" not in create_model:
+                return "error_" + create_model
+
+            # set as current (extra param to avoid classic denial behaviour)
+            query_result = change_current_model("cnn_delete_"+str(time))
+            if "True" not in query_result:
+                return "problem_when_changing_current_model_"+query_result
 
         session.query(Category).filter(Category.name == my_id).delete()
         session.commit()
@@ -2006,8 +2192,8 @@ def one_hundred_votes_update(drawing_id, drawing_user_id, current_user_id) -> st
                            con=db_connection, index_col=None).to_dict()
 
         print("votes ", votes)
-        if votes["nb_votes"][0] == 100:
-            print("Time to update status and score of the drawing + update score of winners in one hundred func")
+        if votes["nb_votes"][0] >= 100:
+            print("\nTime to update status and score of the drawing + update score of winners in one hundred func\n")
             # get all yes votes and all users who voted yes
             yes_votes = pd.read_sql("SELECT count(id) as nb_votes_yes FROM notations WHERE DRAWINGS_id = %s and score =%s;" % ("'" + drawing_id + "'", "'" + "yes" + "'"),
                            con=db_connection, index_col=None).to_dict()
