@@ -1,0 +1,8 @@
+Dans notre script sql originel, une catégorie chat a été créée et avec de nombreuses images validées (999 / 1000)
+Il reste une image chat_1050.jpg avec 99 votes -95 oui, 4 non), votes pour cette dernière pour créer un dataset .npy (s'il existe déja, fusion)
+
+Si l'utilisateur votre oui, il empauchera des points
+
+Lorsqu'un modèle sera recréé, cette catégorie sera désormais gérée
+(mais malheureusement, les prédictions faîtes sur ces dernières sont mauvaises (0.00001), ce problème est récurrent chez d'autres
+membres utilisant les données de quickdraw)

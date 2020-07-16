@@ -1,0 +1,10 @@
+Installer toutes les bibliothèques présentes dans le fichier requirements.txt  
+
+Récupérer au moins les datasets broom.npy et baseball.npy (sur ce site) 
+ 
+Exécutez le script learn2draw_db.sql via votre outil mysql
+
+Modifiez le fichier utils/config.ini et mettez vos informations de connexion
+à votre base de données 
+
+Démarrez l’application avec la commande python app.py 

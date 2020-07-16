@@ -1,0 +1,3 @@
+Connexion en tant qu'admin (admin admin)
+
+Possibilité de lister / d'ajouter / modifier / supprimer un user

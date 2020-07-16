@@ -1,0 +1,10 @@
+Connexion 
+
+Page d'accueil des utilisateurs connectés
+
+Page profile pour modifier les informations de compte
+
+Page de notation des dessins
+
+Page de jeu des utilisateurs connectés (proposition libre de catégories)
+

@@ -1,0 +1,15 @@
+Affichage des modèles (+ leurs informations)
+
+Ajout d'une catégorie + d'un dataset quickdraw dolphin
+
+Default pas noté en current model, mais c'est bien cleui utilisé quand il n
+'y en a qu'un
+
+Création d'un modèle (quasiment comme update)
+
+Changement de modèle courant
+
+Suppression d'un modèle et rôle du default model
+
+Cas particulier de la suppression d'une catégorie (suppression du npy et
+recréation du modèle si la catégorie était gérée)

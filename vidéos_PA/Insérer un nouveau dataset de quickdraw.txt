@@ -1,0 +1,15 @@
+Télécharger un fichier npy sur le site
+
+Rajouter une catégorie dans le backend (en précisant 1 pour dataset_available)
+
+Mettre le fichier dans le dossier models/dataset_quickdraw
+
+Entrainer un modèle (update)
+
+et le sélectionner en tant que current model
+
+Prédiction de notre nouvelle catégorie
+
+Suppression de notre catégorie (quand suppression, création d'un nouveau modèle)
+
+Pas possible d'utiliser les modèles qui ont des catégories inconnues, les mettre a jour
