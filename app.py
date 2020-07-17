@@ -1112,7 +1112,7 @@ def get_drawing_session(token):
 
             if id_category == "False":
                 print("need to create new category, name entered by user = ", category)
-                new_category = request_bdd.learn2draw_create_category(category)
+                new_category = request_bdd.learn2draw_create_category(category, "0") #dataset created this way have by default no npy associated so use 0
                 id_category = request_bdd.get_category_id(category)
 
             id_category_predicted = request_bdd.get_category_id(current_prediction.split(";")[0])
