@@ -3,7 +3,7 @@
 
 Flask==1.1.1
 numpy==1.18.1
-tensorflow==2.1.0
+tensorflow==2.5.0
 Keras==2.3.1
 pandas==1.0.3
 pymysql==0.9.3
